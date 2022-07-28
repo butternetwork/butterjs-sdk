@@ -56,7 +56,7 @@ async bridgeToken(
 coming soon.  
 
 
-### Add liquidity
+### Adding liquidity
 Add cross-chain liquidity to our shared liquidity pool
 ````tsx
 async addLiquidity(
@@ -70,3 +70,5 @@ async addLiquidity(
 ) Promise<LPReceipt>
 
 ````
+
+*FYI: The above examples are not final, but just a teaser, all of the contents are subject to change in the future.*
