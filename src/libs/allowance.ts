@@ -9,7 +9,7 @@ import { Token } from '../entities';
  * @param tokenAddress
  * @param contractAddress
  */
-async function checkAllowance(
+async function readAllowance(
   signer: Signer,
   tokenAddress: string,
   contractAddress: string
@@ -48,7 +48,7 @@ export async function getApprovedAmount(
     return;
   }
 
-  const approvedAmount = await checkAllowance(
+  const approvedAmount = await readAllowance(
     signer,
     token.address,
     approvalAddress
@@ -68,7 +68,7 @@ export async function approveToken(
   }
 
   // check if approvalAddress has enough allowance
-  const approvedAmount: BigNumber = await checkAllowance(
+  const approvedAmount: BigNumber = await readAllowance(
     signer,
     token.address,
     approvalAddress
@@ -102,7 +102,7 @@ export async function revokeTokenApproval(
     return;
   }
 
-  const approvedAmount = await checkAllowance(
+  const approvedAmount = await readAllowance(
     signer,
     token.address,
     approvalAddress
