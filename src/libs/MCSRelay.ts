@@ -1,6 +1,6 @@
 import { ethers, Signer } from "ethers";
 import MCSRelayABI from "../abis/MAPCrossChainServiceRelayABI.json"
-import { validateAndParseAddressAndChainId } from "../utils/validateAndParseAddress";
+import { validateAndParseAddressByChainId } from "../utils/addressValidator";
 export class MCSRelay {
     private contract: ethers.Contract;
 
@@ -10,7 +10,7 @@ export class MCSRelay {
 
     async transferOutNative(toAddress: string, toChain: number, amount: string, signer: Signer) {
         // check if address provided is valid, throw error if not
-        toAddress = validateAndParseAddressAndChainId(toAddress, toChain);
+        toAddress = validateAndParseAddressByChainId(toAddress, toChain);
 
         const tx = await this.contract.TransferOutNative(
             toAddress,
@@ -25,6 +25,5 @@ export class MCSRelay {
         const tx = await this.contract.checkAuthToken(tokenAddress);
         console.log(tx);
     }
-    
     
 }

@@ -6,7 +6,7 @@ import { ChainId, ID_TO_NETWORK_NAME } from '../constants/chains';
  * TODO: Different blockchains may have different format of address, consider them all
  * @param address the unchecksummed hex address
  */
-export function validateAndParseAddressAndChainId(address: string, chainId: number): string {
+export function validateAndParseAddressByChainId(address: string, chainId: number): string {
     switch (chainId) {
         case ChainId.MAINNET:
         case ChainId.BSC:
