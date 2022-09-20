@@ -1,1 +1,1 @@
-export * from './validateAndParseAddress'
+export * from './addressValidator'
