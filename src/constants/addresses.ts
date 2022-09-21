@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber';
-import { Token } from '../entities/token';
+import { Token } from '../entities/Token';
 import { ChainId } from './chains';
 
 export const MCSContractAddresses: { [chainId in ChainId]: string } = {

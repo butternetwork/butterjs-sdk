@@ -1,3 +1,3 @@
-export * from './currency'
-export * from './nativeCurrency'
-export * from './token'
+export * from './Currency';
+export * from './NativeCurrency';
+export * from './Token';

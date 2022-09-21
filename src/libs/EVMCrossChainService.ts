@@ -1,15 +1,9 @@
 import { ContractTransaction, ethers, Signer } from 'ethers';
 import MCSRelayABI from '../abis/MAPCrossChainServiceRelayABI.json';
+import { IMapCrossChainService } from './interfaces/IMapCrossChainService';
 
-export class MCSEVM {
-  private contract: ethers.Contract;
-
-  constructor(contractAddress: string, provider: ethers.providers.Provider) {
-    this.contract = new ethers.Contract(contractAddress, MCSRelayABI, provider);
-  }
-
+export class EVMCrossChainService extends IMapCrossChainService {
   async doTransferOutToken(
-    signer: Signer,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -20,8 +14,7 @@ export class MCSEVM {
         tokenAddress,
         toAddress,
         amount,
-        toChain,
-        signer
+        toChain
       );
 
     const receipt = await transferOutTx.wait();
@@ -29,13 +22,12 @@ export class MCSEVM {
   }
 
   async doTransferOutNative(
-    signer: Signer,
     toAddress: string,
     toChain: string,
     amount: string
   ): Promise<void> {
     const transferOutTx: ContractTransaction =
-      await this.contract.transferOutNative(toAddress, toChain, signer, {
+      await this.contract.transferOutNative(toAddress, toChain, {
         value: amount,
       });
 
@@ -44,20 +36,13 @@ export class MCSEVM {
   }
 
   async doDepositOutToken(
-    signer: Signer,
     tokenAddress: string,
     from: string,
     to: string,
     amount: string
   ): Promise<void> {
     const depositOutTx: ContractTransaction =
-      await this.contract.depositOutToken(
-        tokenAddress,
-        from,
-        to,
-        amount,
-        signer
-      );
+      await this.contract.depositOutToken(tokenAddress, from, to, amount);
 
     const receipt = await depositOutTx.wait();
     console.log(receipt);
