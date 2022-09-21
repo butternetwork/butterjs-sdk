@@ -30,12 +30,12 @@ const makaluSigner = new ethers.Wallet(
 async function main() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: new Token(212, '0x0000000000000000000000000000000000000000', 18),
-    fromChainId: ChainId.MAP_TEST,
-    toChainId: ChainId.ETH_PRIV,
+    token: new Token(34434, '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847', 18),
+    fromChainId: ChainId.ETH_PRIV,
+    toChainId: ChainId.MAP_TEST,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
     amount: ethers.utils.parseEther('1').toString(),
-    signer: mapSigner,
+    signer: ethSigner,
   };
 
   console.log(await bridge.bridgeToken(request));

@@ -1,8 +1,24 @@
-import { ContractTransaction, ethers, Signer } from 'ethers';
+import {
+  Contract,
+  ContractInterface,
+  ContractTransaction,
+  ethers,
+  Signer,
+} from 'ethers';
 import MCSRelayABI from '../abis/MAPCrossChainServiceRelayABI.json';
 import { IMapCrossChainService } from './interfaces/IMapCrossChainService';
 
-export class EVMCrossChainService extends IMapCrossChainService {
+export class EVMCrossChainService implements IMapCrossChainService {
+  contract: Contract;
+
+  constructor(
+    contractAddress: string,
+    abi: ContractInterface,
+    signer: ethers.Signer
+  ) {
+    this.contract = new ethers.Contract(contractAddress, abi, signer);
+  }
+
   async doTransferOutToken(
     tokenAddress: string,
     amount: string,
@@ -32,7 +48,7 @@ export class EVMCrossChainService extends IMapCrossChainService {
       });
 
     const receipt = await transferOutTx.wait();
-    console.log(receipt);
+    console.log(receipt.transactionHash);
   }
 
   async doDepositOutToken(

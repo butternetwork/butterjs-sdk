@@ -14,9 +14,8 @@ export enum ChainId {
   BSC = 56,
   MAP = 22776,
   MAP_TEST = 212,
-  ETH_PRIV = 34434
+  ETH_PRIV = 34434,
 }
-
 
 export const ID_TO_CHAIN_ID = (id: number): ChainId => {
   switch (id) {
@@ -49,7 +48,7 @@ export const ID_TO_CHAIN_ID = (id: number): ChainId => {
     case 212:
       return ChainId.MAP_TEST;
     case 34434:
-      return ChainId.ETH_PRIV;                
+      return ChainId.ETH_PRIV;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -69,9 +68,9 @@ export enum ChainName {
   POLYGON = 'polygon-mainnet',
   POLYGON_MUMBAI = 'polygon-mumbai',
   BSC = 'binance-mainnet',
-  MAP = "map-mainnet",
-  MAP_TEST = "map-testnet",
-  ETH_PRIV = "eth-priv"
+  MAP = 'map-mainnet',
+  MAP_TEST = 'map-testnet',
+  ETH_PRIV = 'eth-priv',
 }
 
 export enum NativeCurrencyName {
@@ -79,7 +78,7 @@ export enum NativeCurrencyName {
   ETHER = 'ETH',
   MATIC = 'MATIC',
   BSC = 'BNB',
-  MAP = 'MAP'
+  MAP = 'MAP',
 }
 
 export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
@@ -132,7 +131,7 @@ export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
     case 212:
       return ChainName.MAP_TEST;
     case 34434:
-      return ChainName.ETH_PRIV; 
+      return ChainName.ETH_PRIV;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -173,7 +172,7 @@ export const ID_TO_PROVIDER = (id: ChainId): string => {
     case ChainId.MAP_TEST:
       return process.env.JSON_RPC_PROVIDER_MAP_TEST!;
     case ChainId.ETH_PRIV:
-      return process.env.JSON_RPC_PROVIDER_ETH_PRIV!;          
+      return process.env.JSON_RPC_PROVIDER_ETH_PRIV!;
     default:
       throw new Error(`Chain id: ${id} not supported`);
   }
@@ -312,3 +311,12 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
 //     super(chainId, 18, 'MATIC', 'Polygon Matic');
 //   }
 // }
+export const IS_MAP = (id: number): boolean => {
+  switch (id) {
+    case 22776:
+    case 212:
+      return true;
+    default:
+      return false;
+  }
+};
