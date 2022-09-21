@@ -1,23 +1,25 @@
-import { ContractTransaction, ethers, Signer } from 'ethers';
+import { ContractTransaction, ethers } from 'ethers';
 import MCSRelayABI from '../abis/MAPCrossChainServiceRelayABI.json';
-class MCSRelay {
+import { ContractReceipt } from '@ethersproject/contracts/src.ts';
+
+export class MCSRelay {
   private contract: ethers.Contract;
 
-  constructor(contractAddress: string, provider: ethers.providers.Provider) {
-    this.contract = new ethers.Contract(contractAddress, MCSRelayABI, provider);
+  constructor(contractAddress: string, signer: ethers.Signer) {
+    this.contract = new ethers.Contract(contractAddress, MCSRelayABI, signer);
   }
 
   async transferOutNative(
     toAddress: string,
     toChain: number,
-    amount: string,
-    signer: Signer
-  ): Promise<void> {
+    amount: string
+  ): Promise<ContractReceipt> {
     const transferOutTx: ContractTransaction =
-      await this.contract.TransferOutNative(toAddress, toChain, signer);
+      await this.contract.transferOutNative(toAddress, toChain, {
+        value: amount,
+      });
 
-    const receipt = await transferOutTx.wait();
-    console.log(receipt);
+    return await transferOutTx.wait();
   }
 
   async checkAuthToken(tokenAddress: string) {

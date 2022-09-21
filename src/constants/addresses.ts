@@ -2,12 +2,13 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { Token } from '../entities/token';
 import { ChainId } from './chains';
 
-export const MCSContractAddresses: {[chainId in ChainId] : string} = {
-    [ChainId.MAINNET] : "",
-    [ChainId.BSC] : "",
-    [ChainId.ETH_PRIV] : "0x27A51306c2b727d068c1B6E9895c6d160Edd21B3",
-    [ChainId.MAP] : "",
-    [ChainId.MAP_TEST] : "0x03e148c46f3704F81991ad11AC9A84970b965e81",
-}
+export const MCSContractAddresses: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: '',
+  [ChainId.BSC]: '',
+  [ChainId.ETH_PRIV]: '0xbD96b27fE75E1Ed108DcDaC64B8460154D4B6819',
+  [ChainId.MAP]: '',
+  [ChainId.MAP_TEST]: '0x1902347e9CCC4e4aa0cf0b19844bf528f0031642',
+};
 
-export const TokenRegisterAddress: string = "0x05EEf4f1dafE7E4BAbb17261ef538930fd2267e3";
+export const TokenRegisterAddress: string =
+  '0x05EEf4f1dafE7E4BAbb17261ef538930fd2267e3';
