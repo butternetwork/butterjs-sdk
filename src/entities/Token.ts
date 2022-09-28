@@ -1,5 +1,5 @@
 import invariant from 'tiny-invariant';
-import { validateAndParseAddressByChainId } from '../utils/addressValidator';
+import { validateAndParseAddressByChainId } from '../utils/addressUtil';
 import { BaseCurrency } from './BaseCurrency';
 import { Currency } from './Currency';
 

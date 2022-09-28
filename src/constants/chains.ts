@@ -15,6 +15,7 @@ export enum ChainId {
   MAP = 22776,
   MAP_TEST = 212,
   ETH_PRIV = 34434,
+  NEAR_TESTNET = 1313161555,
 }
 
 export const ID_TO_CHAIN_ID = (id: number): ChainId => {
@@ -49,6 +50,8 @@ export const ID_TO_CHAIN_ID = (id: number): ChainId => {
       return ChainId.MAP_TEST;
     case 34434:
       return ChainId.ETH_PRIV;
+    case 1313161555:
+      return ChainId.NEAR_TESTNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -71,6 +74,7 @@ export enum ChainName {
   MAP = 'map-mainnet',
   MAP_TEST = 'map-testnet',
   ETH_PRIV = 'eth-priv',
+  NEAR_TESTNET = 'near-testnet',
 }
 
 export enum NativeCurrencyName {
@@ -81,22 +85,22 @@ export enum NativeCurrencyName {
   MAP = 'MAP',
 }
 
-export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
-  [ChainId.MAINNET]: NativeCurrencyName.ETHER,
-  // [ChainId.ROPSTEN]: NativeCurrencyName.ETHER,
-  // [ChainId.RINKEBY]: NativeCurrencyName.ETHER,
-  // [ChainId.GÖRLI]: NativeCurrencyName.ETHER,
-  // [ChainId.KOVAN]: NativeCurrencyName.ETHER,
-  // [ChainId.OPTIMISM]: NativeCurrencyName.ETHER,
-  // [ChainId.OPTIMISTIC_KOVAN]: NativeCurrencyName.ETHER,
-  // [ChainId.ARBITRUM_ONE]: NativeCurrencyName.ETHER,
-  // [ChainId.ARBITRUM_RINKEBY]: NativeCurrencyName.ETHER,
-  // [ChainId.POLYGON]: NativeCurrencyName.MATIC,
-  // [ChainId.POLYGON_MUMBAI]: NativeCurrencyName.MATIC,
-  [ChainId.BSC]: NativeCurrencyName.BSC,
-  [ChainId.MAP]: NativeCurrencyName.MAP,
-  [ChainId.MAP_TEST]: NativeCurrencyName.MAP,
-};
+// export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {
+//   [ChainId.MAINNET]: NativeCurrencyName.ETHER,
+//   // [ChainId.ROPSTEN]: NativeCurrencyName.ETHER,
+//   // [ChainId.RINKEBY]: NativeCurrencyName.ETHER,
+//   // [ChainId.GÖRLI]: NativeCurrencyName.ETHER,
+//   // [ChainId.KOVAN]: NativeCurrencyName.ETHER,
+//   // [ChainId.OPTIMISM]: NativeCurrencyName.ETHER,
+//   // [ChainId.OPTIMISTIC_KOVAN]: NativeCurrencyName.ETHER,
+//   // [ChainId.ARBITRUM_ONE]: NativeCurrencyName.ETHER,
+//   // [ChainId.ARBITRUM_RINKEBY]: NativeCurrencyName.ETHER,
+//   // [ChainId.POLYGON]: NativeCurrencyName.MATIC,
+//   // [ChainId.POLYGON_MUMBAI]: NativeCurrencyName.MATIC,
+//   [ChainId.BSC]: NativeCurrencyName.BSC,
+//   [ChainId.MAP]: NativeCurrencyName.MAP,
+//   [ChainId.MAP_TEST]: NativeCurrencyName.MAP,
+// };
 
 export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
   switch (id) {
@@ -132,6 +136,8 @@ export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
       return ChainName.MAP_TEST;
     case 34434:
       return ChainName.ETH_PRIV;
+    case 1313161555:
+      return ChainName.NEAR_TESTNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -283,6 +289,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId in ChainId]: Token } = {
     18,
     'WETH',
     'Wrapped ETH'
+  ),
+  [ChainId.NEAR_TESTNET]: new Token(
+    ChainId.NEAR_TESTNET,
+    'wrap.testnet',
+    22,
+    'WNEAR',
+    'Wrapped NEAR'
   ),
 };
 

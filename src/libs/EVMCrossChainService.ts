@@ -5,7 +5,6 @@ import {
   ethers,
   Signer,
 } from 'ethers';
-import MCSRelayABI from '../abis/MAPCrossChainServiceRelayABI.json';
 import { IMapCrossChainService } from './interfaces/IMapCrossChainService';
 
 export class EVMCrossChainService implements IMapCrossChainService {

@@ -2,7 +2,20 @@ import { ethers } from 'ethers';
 import { BarterBridge } from '../core/bridge/bridge';
 import { BridgeRequestParam } from '../types/requestTypes';
 import { Token } from '../entities';
-import { ChainId } from '../constants/chains';
+import { ChainId, ID_TO_CHAIN_ID, IS_MAP } from '../constants/chains';
+import { MCS_CONTRACT_ADDRESS_SET } from '../constants/addresses';
+import { IMapCrossChainService } from '../libs/interfaces/IMapCrossChainService';
+import { EVMCrossChainService } from '../libs/EVMCrossChainService';
+import MCS_MAP_ABI from '../abis/MAPCrossChainServiceRelayABI.json';
+import TOKEN_REG_ABI from '../abis/TokenRegister.json';
+import MCS_EVM_ABI from '../abis/MAPCrossChainServiceABI.json';
+import { MAPCrossChainService } from '../libs/MAPCrossChainService';
+import { TokenRegister } from '../libs/TokenRegister';
+import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
+import { KeyPair, keyStores, utils } from 'near-api-js';
+import { NearCrossChainService } from '../libs/NearCrossChainService';
+import { hexToDecimalArray } from '../utils';
+import BN from 'bn.js';
 
 require('dotenv/config');
 
@@ -28,17 +41,29 @@ const makaluSigner = new ethers.Wallet(
 );
 
 async function main() {
-  const bridge: BarterBridge = new BarterBridge();
-  const request: BridgeRequestParam = {
-    token: new Token(34434, '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847', 18),
-    fromChainId: ChainId.ETH_PRIV,
-    toChainId: ChainId.MAP_TEST,
-    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('1').toString(),
-    signer: ethSigner,
-  };
+  const keyStore: InMemoryKeyStore = new keyStores.InMemoryKeyStore();
+  const keyPair: KeyPair = KeyPair.fromString(
+    'ed25519:3V1ZUMUD3pZkKyEFJFHpev32WVipYb7HFu6YhnHrGZMw1bArtcBBzB11W9ouFuB3cd11hZL2miXZnX1N36pgywgU'
+  );
+  keyStore.setKey('testnet', 'xyli.testnet', keyPair);
 
-  console.log(await bridge.bridgeToken(request));
+  const nearMcs: NearCrossChainService = new NearCrossChainService({
+    keyStore: keyStore,
+    nodeUrl: 'https://rpc.testnet.near.org',
+    networkId: 'testnet',
+  });
+
+  const toAddress: number[] = hexToDecimalArray(
+    '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    212
+  );
+
+  const txHash: string = await nearMcs.doTransferOutNative(
+    'xyli.testnet',
+    toAddress,
+    212,
+    new BN(utils.format.parseNearAmount('1')!, 10)
+  );
 }
 
 main()

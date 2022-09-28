@@ -3,7 +3,7 @@ import { ChainId, ID_TO_CHAIN_ID, IS_MAP } from '../../constants/chains';
 import { validateAndParseAddressByChainId } from '../../utils';
 import { BridgeRequestParam } from '../../types/requestTypes';
 import { EVMCrossChainService } from '../../libs/EVMCrossChainService';
-import { MCSContractAddresses } from '../../constants/addresses';
+import { MCS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
 import { ContractReceipt } from '@ethersproject/contracts/src.ts';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
 import MCS_EVM_ABI from '../../abis/MAPCrossChainServiceABI.json';
@@ -22,7 +22,7 @@ export class BarterBridge {
 
     const chainId = await signer.getChainId();
     const mcsContractAddress: string =
-      MCSContractAddresses[ID_TO_CHAIN_ID(chainId)];
+      MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
 
     const mcs: IMapCrossChainService = new EVMCrossChainService(
       mcsContractAddress,

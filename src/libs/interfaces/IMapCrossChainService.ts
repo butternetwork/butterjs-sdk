@@ -1,8 +1,4 @@
-import { ethers } from 'ethers';
-
 export interface IMapCrossChainService {
-  contract: ethers.Contract;
-
   doTransferOutToken(
     tokenAddress: string,
     amount: string,

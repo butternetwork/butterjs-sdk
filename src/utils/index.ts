@@ -1,1 +1,1 @@
-export * from './addressValidator'
+export * from './addressUtil';
