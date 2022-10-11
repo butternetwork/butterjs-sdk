@@ -26,10 +26,6 @@ export class NearCrossChainService implements IMapCrossChainService {
     toChainId: string,
     options: TransferOutOptions
   ): Promise<string> {
-    const fromAccountId = options.fromAccount;
-    if (fromAccountId == undefined) {
-      throw new Error('from account must be provided for near');
-    }
     try {
       const mcsAccountId: string =
         this.config.networkId === 'testnet'
@@ -37,7 +33,7 @@ export class NearCrossChainService implements IMapCrossChainService {
           : '';
 
       const near: Near = await connect(this.config);
-      const account = await near.account(fromAccountId);
+      const account = await near.account(this.config.fromAccount);
 
       const nearCallOptions: ChangeFunctionCallOptions = {
         contractId: mcsAccountId,
@@ -66,10 +62,6 @@ export class NearCrossChainService implements IMapCrossChainService {
     amount: string,
     options: TransferOutOptions
   ): Promise<string> {
-    const fromAccountId = options.fromAccount;
-    if (fromAccountId == undefined) {
-      throw new Error('from account must be provided for near');
-    }
     try {
       const mcsAccountId: string =
         this.config.networkId === 'testnet'
@@ -77,7 +69,7 @@ export class NearCrossChainService implements IMapCrossChainService {
           : '';
 
       const near: Near = await connect(this.config);
-      const account = await near.account(fromAccountId);
+      const account = await near.account(this.config.fromAccount);
 
       const nearCallOptions: ChangeFunctionCallOptions = {
         contractId: mcsAccountId,

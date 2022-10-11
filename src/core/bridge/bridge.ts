@@ -19,11 +19,13 @@ import {
 } from '../../constants/addresses';
 import { ContractReceipt } from '@ethersproject/contracts/src.ts';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
-import MCS_EVM_ABI from '../../abis/MAPCrossChainServiceABI.json';
-import MCS_MAP_ABI from '../../abis/MAPCrossChainServiceRelayABI.json';
+
 import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
 import { TokenRegister } from '../../libs/TokenRegister';
 import { FeeCenter } from '../../libs/FeeCenter';
+import { createMCSInstance } from '../../libs/utils/mcsUtils';
+import MCS_EVM_ABI from '../../abis/MAPCrossChainServiceABI.json';
+import MCS_MAP_ABI from '../../abis/MAPCrossChainServiceRelayABI.json';
 
 export class BarterBridge {
   async bridgeToken({
@@ -33,7 +35,7 @@ export class BarterBridge {
     amount,
     signer,
     nearConfig,
-  }: BridgeRequestParam): Promise<void> {
+  }: BridgeRequestParam): Promise<string> {
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
 
@@ -47,8 +49,29 @@ export class BarterBridge {
       throw new Error(`Network config must be provided for NEAR blockchain`);
     }
 
-    switch (token.chainId) {
+    // create mcs instance
+    const mcs: IMapCrossChainService = createMCSInstance(
+      token.chainId,
+      signer,
+      nearConfig
+    );
+
+    let txHash = '';
+    if (token.address == ethers.constants.AddressZero) {
+      txHash = await mcs.doTransferOutNative(
+        toAddress,
+        toChainId.toString(),
+        amount
+      );
+    } else {
+      txHash = await mcs.doTransferOutToken(
+        token.address,
+        amount,
+        toAddress,
+        toChainId.toString()
+      );
     }
+    return txHash;
   }
 
   async addTokenPair({
