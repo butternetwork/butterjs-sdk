@@ -5,9 +5,9 @@ import {
   ethers,
   Signer,
 } from 'ethers';
-import { IMapCrossChainService } from './interfaces/IMapCrossChainService';
+import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 
-export class MAPCrossChainService implements IMapCrossChainService {
+export class RelayCrossChainService implements IMapCrossChainService {
   contract: Contract;
 
   constructor(
@@ -22,32 +22,32 @@ export class MAPCrossChainService implements IMapCrossChainService {
     tokenAddress: string,
     amount: string,
     toAddress: string,
-    toChain: string
-  ): Promise<void> {
+    toChainId: string
+  ): Promise<string> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutToken(
         tokenAddress,
         toAddress,
         amount,
-        toChain
+        toChainId,
+        { gasLimit: 5000000 }
       );
-
     const receipt = await transferOutTx.wait();
-    console.log(receipt);
+    return receipt.transactionHash;
   }
 
   async doTransferOutNative(
     toAddress: string,
-    toChain: string,
+    toChainId: string,
     amount: string
-  ): Promise<void> {
+  ): Promise<string> {
     const transferOutTx: ContractTransaction =
-      await this.contract.transferOutNative(toAddress, toChain, {
+      await this.contract.transferOutNative(toAddress, toChainId, {
         value: amount,
       });
 
     const receipt = await transferOutTx.wait();
-    console.log(receipt.transactionHash);
+    return receipt.transactionHash;
   }
 
   async doDepositOutToken(
@@ -55,12 +55,12 @@ export class MAPCrossChainService implements IMapCrossChainService {
     from: string,
     to: string,
     amount: string
-  ): Promise<void> {
+  ): Promise<string> {
     const depositOutTx: ContractTransaction =
       await this.contract.depositOutToken(tokenAddress, from, to, amount);
 
     const receipt = await depositOutTx.wait();
-    console.log(receipt);
+    return receipt.transactionHash;
   }
 
   async doSetIdTable(chainId: string, id: string): Promise<string> {
@@ -84,8 +84,8 @@ export class MAPCrossChainService implements IMapCrossChainService {
 
   async doSetTokenOtherChainDecimals(
     selfTokenAddress: string,
-    chainId: string,
-    decimals: string
+    chainId: number,
+    decimals: number
   ): Promise<string> {
     const tx: ContractTransaction =
       await this.contract.setTokenOtherChainDecimals(
@@ -106,7 +106,7 @@ export class MAPCrossChainService implements IMapCrossChainService {
     return receipt.transactionHash;
   }
 
-  async setBridgeAddress(
+  async doSetBridgeAddress(
     chainId: string,
     bridgeAddress: string
   ): Promise<string> {

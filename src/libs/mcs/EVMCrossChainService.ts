@@ -5,7 +5,8 @@ import {
   ethers,
   Signer,
 } from 'ethers';
-import { IMapCrossChainService } from './interfaces/IMapCrossChainService';
+import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
+import { TransferOutOptions } from '../../types/requestTypes';
 
 export class EVMCrossChainService implements IMapCrossChainService {
   contract: Contract;
@@ -22,32 +23,32 @@ export class EVMCrossChainService implements IMapCrossChainService {
     tokenAddress: string,
     amount: string,
     toAddress: string,
-    toChain: string
-  ): Promise<void> {
+    toChainId: string
+  ): Promise<string> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutToken(
         tokenAddress,
         toAddress,
         amount,
-        toChain
+        toChainId
       );
 
     const receipt = await transferOutTx.wait();
-    console.log(receipt);
+    return receipt.transactionHash;
   }
 
   async doTransferOutNative(
     toAddress: string,
-    toChain: string,
+    toChainId: string,
     amount: string
-  ): Promise<void> {
+  ): Promise<string> {
     const transferOutTx: ContractTransaction =
-      await this.contract.transferOutNative(toAddress, toChain, {
+      await this.contract.transferOutNative(toAddress, toChainId, {
         value: amount,
       });
 
     const receipt = await transferOutTx.wait();
-    console.log(receipt.transactionHash);
+    return receipt.transactionHash;
   }
 
   async doDepositOutToken(
@@ -55,11 +56,25 @@ export class EVMCrossChainService implements IMapCrossChainService {
     from: string,
     to: string,
     amount: string
-  ): Promise<void> {
+  ): Promise<string> {
     const depositOutTx: ContractTransaction =
       await this.contract.depositOutToken(tokenAddress, from, to, amount);
 
     const receipt = await depositOutTx.wait();
+    return receipt.transactionHash;
+  }
+
+  async doSetCanBridgeToken(
+    tokenAddress: string,
+    toChainId: number,
+    canBridge: boolean
+  ) {
+    const tx: ContractTransaction = await this.contract.setCanBridgeToken(
+      tokenAddress,
+      toChainId,
+      canBridge
+    );
+    const receipt = await tx.wait();
     console.log(receipt);
   }
 }

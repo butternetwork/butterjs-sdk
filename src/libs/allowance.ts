@@ -9,7 +9,7 @@ import { Token } from '../entities';
  * @param tokenAddress
  * @param contractAddress
  */
-async function readAllowance(
+export async function readAllowance(
   signer: Signer,
   tokenAddress: string,
   contractAddress: string
@@ -36,7 +36,7 @@ function doApprove(
 ): Promise<ContractTransaction> {
   const erc20 = new Contract(tokenAddress, ERC20_ABI, signer) as ERC20Contract;
 
-  return erc20.approve(contractAddress, amount);
+  return erc20.approve(contractAddress, amount, { gasLimit: 3000000 });
 }
 
 export async function getApprovedAmount(
@@ -75,6 +75,7 @@ export async function approveToken(
   );
 
   if (approvedAmount.gte(BigNumber.from(amount.toString()))) {
+    console.log('already approved');
     return;
   }
 
