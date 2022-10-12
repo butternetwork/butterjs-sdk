@@ -2,12 +2,11 @@ import { Token } from '../entities';
 import { NativeCurrency } from '../entities/NativeCurrency';
 import { NearNativeCoin } from '../entities/native/Near';
 import { ChainId } from './chains';
+import { Ether } from '../entities/native/Ether';
 
-export const ETH_PRIV_NATIVE = new Token(
-  34434,
-  '0x0000000000000000000000000000000000000000',
-  18
-);
+export const ETH_PRIV_NATIVE = new Ether(ChainId.ETH_PRIV);
+export const MAP_TEST_NATIVE = new Ether(ChainId.MAP_TEST);
+export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
 
 export const ETH_PRIV_LMAP = new Token(
   34434,
@@ -18,12 +17,6 @@ export const ETH_PRIV_LMAP = new Token(
 export const ETH_PRIV_WETH = new Token(
   34434,
   '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B',
-  18
-);
-
-export const MAP_TEST_NATIVE = new Token(
-  212,
-  '0x0000000000000000000000000000000000000000',
   18
 );
 
@@ -44,5 +37,3 @@ export const MAP_TEST_NEAR = new Token(
   '0xAC35D87EfcA068c9dcEf65f89937B7593fA03d37',
   18
 );
-
-export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);

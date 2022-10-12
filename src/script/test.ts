@@ -51,12 +51,13 @@ const nearConfig: NearNetworkConfig = {
   networkId: 'testnet',
 };
 
-const oneEther = ethers.utils.parseEther('2').toString();
+const oneEther = ethers.utils.parseEther('1').toString();
 const oneNear = utils.format.parseNearAmount('1')!;
-const LMAP = '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847';
 const to = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
-async function main() {}
+async function main() {
+  await ethToMapNative();
+}
 
 async function ethToMapNative() {
   const bridge: BarterBridge = new BarterBridge();

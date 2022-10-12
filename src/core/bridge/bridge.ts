@@ -26,7 +26,6 @@ import { FeeCenter } from '../../libs/FeeCenter';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
 import MCS_EVM_ABI from '../../abis/MAPCrossChainServiceABI.json';
 import MCS_MAP_ABI from '../../abis/MAPCrossChainServiceRelayABI.json';
-import { utils } from 'near-api-js';
 
 export class BarterBridge {
   async bridgeToken({
