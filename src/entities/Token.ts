@@ -13,7 +13,7 @@ export class Token extends BaseCurrency {
   /**
    * The contract address on the chain on which this token lives
    */
-  public readonly address: string;
+  public override readonly address: string;
 
   public constructor(
     chainId: number,
@@ -22,7 +22,7 @@ export class Token extends BaseCurrency {
     symbol?: string,
     name?: string
   ) {
-    super(chainId, decimals, symbol, name);
+    super(chainId, decimals, address, symbol, name);
     this.address = validateAndParseAddressByChainId(address, chainId);
   }
 
@@ -44,11 +44,11 @@ export class Token extends BaseCurrency {
    * @throws if the tokens have the same address
    * @throws if the tokens are on different chains
    */
-  public sortsBefore(other: Token): boolean {
-    invariant(this.chainId === other.chainId, 'CHAIN_IDS');
-    invariant(this.address !== other.address, 'ADDRESSES');
-    return this.address.toLowerCase() < other.address.toLowerCase();
-  }
+  // public sortsBefore(other: Token): boolean {
+  //   invariant(this.chainId === other.chainId, 'CHAIN_IDS');
+  //   invariant(this.address !== other.address, 'ADDRESSES');
+  //   return this.address.toLowerCase() < other.address.toLowerCase();
+  // }
 
   /**
    * Return this token, which does not need to be wrapped

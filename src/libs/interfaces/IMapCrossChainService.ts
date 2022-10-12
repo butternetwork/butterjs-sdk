@@ -4,13 +4,13 @@ export interface IMapCrossChainService {
   doTransferOutToken(
     tokenAddress: string,
     amount: string,
-    toAddress: string | number[],
+    toAddress: string,
     toChainId: string,
     options?: TransferOutOptions
   ): Promise<string>;
 
   doTransferOutNative(
-    toAddress: string | number[],
+    toAddress: string,
     toChainId: string,
     amount: string,
     options?: TransferOutOptions

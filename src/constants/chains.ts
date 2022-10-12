@@ -83,6 +83,7 @@ export enum NativeCurrencyName {
   MATIC = 'MATIC',
   BSC = 'BNB',
   MAP = 'MAP',
+  NEAR = 'NEAR',
 }
 
 // export const NATIVE_CURRENCY: { [chainId: number]: NativeCurrencyName } = {

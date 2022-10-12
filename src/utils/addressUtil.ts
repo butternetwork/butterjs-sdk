@@ -51,7 +51,13 @@ export function validateToken(token: Token): string {
   return validateAndParseAddressByChainId(token.address, token.chainId);
 }
 
-export function hexToDecimalArray(address: string, chainId: number): number[] {
+export function hexToDecimalArray(
+  address: string,
+  chainId: number | string
+): number[] {
+  if (typeof chainId === 'string') {
+    chainId = parseInt(chainId);
+  }
   address = validateAndParseAddressByChainId(address, chainId);
   let ret: number[] = [];
   for (let i = 2; i < address.length; i = i + 2) {

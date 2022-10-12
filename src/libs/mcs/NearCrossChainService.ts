@@ -12,6 +12,7 @@ import {
 import BN from 'bn.js';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
+import { hexToDecimalArray } from '../../utils';
 export class NearCrossChainService implements IMapCrossChainService {
   config: NearNetworkConfig;
 
@@ -22,7 +23,7 @@ export class NearCrossChainService implements IMapCrossChainService {
   async doTransferOutToken(
     tokenAddress: string,
     amount: string,
-    toAddress: number[],
+    toAddress: string,
     toChainId: string,
     options: TransferOutOptions
   ): Promise<string> {
@@ -35,12 +36,16 @@ export class NearCrossChainService implements IMapCrossChainService {
       const near: Near = await connect(this.config);
       const account = await near.account(this.config.fromAccount);
 
+      const decimalArrayAddress: number[] = hexToDecimalArray(
+        toAddress,
+        toChainId
+      );
       const nearCallOptions: ChangeFunctionCallOptions = {
         contractId: mcsAccountId,
         methodName: TRANSFER_OUT_TOKEN,
         args: {
           token: tokenAddress,
-          to: toAddress,
+          to: decimalArrayAddress,
           amount: amount,
           to_chain: toChainId,
         },
@@ -57,7 +62,7 @@ export class NearCrossChainService implements IMapCrossChainService {
   }
 
   async doTransferOutNative(
-    toAddress: number[],
+    toAddress: string,
     toChainId: string,
     amount: string,
     options: TransferOutOptions
@@ -71,11 +76,16 @@ export class NearCrossChainService implements IMapCrossChainService {
       const near: Near = await connect(this.config);
       const account = await near.account(this.config.fromAccount);
 
+      const decimalArrayAddress: number[] = hexToDecimalArray(
+        toAddress,
+        toChainId
+      );
+
       const nearCallOptions: ChangeFunctionCallOptions = {
         contractId: mcsAccountId,
         methodName: TRANSFER_OUT_NATIVE,
         args: {
-          to: toAddress,
+          to: decimalArrayAddress,
           to_chain: toChainId,
         },
         attachedDeposit: new BN(amount, 10),

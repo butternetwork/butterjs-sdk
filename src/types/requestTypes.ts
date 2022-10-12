@@ -2,9 +2,10 @@ import { Token } from '../entities';
 import { ChainId } from '../constants/chains';
 import { Signer } from 'ethers';
 import { KeyStore } from 'near-api-js/lib/key_stores';
+import { BaseCurrency } from '../entities/BaseCurrency';
 
 export type BridgeRequestParam = {
-  token: Token;
+  token: BaseCurrency;
   fromChainId: ChainId;
   toChainId: ChainId;
   toAddress: string;
