@@ -17,6 +17,12 @@ export class TokenRegister {
     sourceMapToken: string,
     mapToken: string
   ) {
+    const gas: BigNumber = await this.contract.estimateGas.regToken!(
+      sourceChain,
+      sourceMapToken,
+      mapToken
+    );
+
     const regTokenTx = await this.contract.regToken(
       sourceChain,
       sourceMapToken,

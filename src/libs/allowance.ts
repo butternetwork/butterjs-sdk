@@ -5,11 +5,11 @@ import { Token } from '../entities';
 
 /**
  * get contract allowance for token
- * @param signer
- * @param tokenAddress
- * @param contractAddress
+ * @param signer ethers.js signer
+ * @param tokenAddress the address of token to be approved
+ * @param contractAddress spender address
  */
-async function readAllowance(
+export async function readAllowance(
   signer: Signer,
   tokenAddress: string,
   contractAddress: string
@@ -28,6 +28,13 @@ async function readAllowance(
   }
 }
 
+/**
+ * approve token spend
+ * @param signer ethers.js signer
+ * @param tokenAddress the address of token to be approved
+ * @param contractAddress spender address
+ * @param amount amount to approved in minimal unit
+ */
 function doApprove(
   signer: Signer,
   tokenAddress: string,
@@ -36,7 +43,7 @@ function doApprove(
 ): Promise<ContractTransaction> {
   const erc20 = new Contract(tokenAddress, ERC20_ABI, signer) as ERC20Contract;
 
-  return erc20.approve(contractAddress, amount);
+  return erc20.approve(contractAddress, amount, { gasLimit: 3000000 });
 }
 
 export async function getApprovedAmount(
@@ -75,6 +82,7 @@ export async function approveToken(
   );
 
   if (approvedAmount.gte(BigNumber.from(amount.toString()))) {
+    console.log('already approved');
     return;
   }
 

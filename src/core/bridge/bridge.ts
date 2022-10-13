@@ -1,43 +1,222 @@
 import { ethers, Signer } from 'ethers';
-import { ChainId, ID_TO_CHAIN_ID, IS_MAP } from '../../constants/chains';
+import {
+  ChainId,
+  ID_TO_CHAIN_ID,
+  IS_EVM,
+  IS_MAP,
+  NETWORK_NAME_TO_ID,
+} from '../../constants/chains';
 import { validateAndParseAddressByChainId } from '../../utils';
-import { BridgeRequestParam } from '../../types/requestTypes';
-import { EVMCrossChainService } from '../../libs/EVMCrossChainService';
-import { MCS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
-import { ContractReceipt } from '@ethersproject/contracts/src.ts';
+import {
+  BridgeRequestParam,
+  AddTokenPairParam,
+} from '../../types/requestTypes';
+import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
+import {
+  FEE_CENTER_ADDRESS,
+  MCS_CONTRACT_ADDRESS_SET,
+  TOKEN_REGISTER_ADDRESS,
+} from '../../constants/addresses';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
+
+import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
+import { TokenRegister } from '../../libs/TokenRegister';
+import { FeeCenter } from '../../libs/FeeCenter';
+import { createMCSInstance } from '../../libs/utils/mcsUtils';
 import MCS_EVM_ABI from '../../abis/MAPCrossChainServiceABI.json';
 import MCS_MAP_ABI from '../../abis/MAPCrossChainServiceRelayABI.json';
 
 export class BarterBridge {
+  /**
+   * The BridgeToken method is used to bridge token from one chain to another.
+   * see {@link BridgeRequestParam} for detail
+   * @param token source token, aka token that user provide
+   * @param toChainId target chain id
+   * @param toAddress target chain receiving address
+   * @param amount amount to bridge, in minimal uint. For example wei in Ethereum, yocto in Near
+   * @param signer ethers.js signer, must provide when src chain is EVM chain
+   * @param nearConfig Near config file, must provide when src chain is Near
+   */
   async bridgeToken({
     token,
     toChainId,
     toAddress,
     amount,
     signer,
-  }: BridgeRequestParam): Promise<void> {
+    nearConfig,
+  }: BridgeRequestParam): Promise<string> {
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
 
-    const chainId = await signer.getChainId();
-    const mcsContractAddress: string =
-      MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
+    // if src chain is evm chain, signer must be provided
+    if (IS_EVM(token.chainId) && signer == undefined) {
+      throw new Error(`Signer must be provided for EVM blockchains`);
+    }
 
-    const mcs: IMapCrossChainService = new EVMCrossChainService(
-      mcsContractAddress,
-      IS_MAP(chainId) ? MCS_MAP_ABI : MCS_EVM_ABI,
-      signer
+    // if src chain is near chain, near network config must be provided
+    if (ChainId.NEAR_TESTNET == token.chainId && nearConfig == undefined) {
+      throw new Error(`Network config must be provided for NEAR blockchain`);
+    }
+
+    // create mcs instance base on src token chainId.
+    const mcs: IMapCrossChainService = createMCSInstance(
+      token.chainId,
+      signer,
+      nearConfig
     );
-    if (token != undefined) {
-      await mcs.doTransferOutToken(
+
+    let txHash = '';
+
+    // if input token is Native coin, call transferOutNative method
+    if (token.isNative) {
+      txHash = await mcs.doTransferOutNative(
+        toAddress,
+        toChainId.toString(),
+        amount
+      );
+    } else {
+      txHash = await mcs.doTransferOutToken(
         token.address,
         amount,
         toAddress,
         toChainId.toString()
       );
-    } else {
-      await mcs.doTransferOutNative(toAddress, toChainId.toString(), amount);
     }
+
+    // return the transaction hash
+    return txHash;
+  }
+
+  /**
+   * TODO: need improvement!
+   * Approve the bridge of the token pair provided.
+   * @param srcToken source token
+   * @param targetToken target token
+   * @param feeBP bridge fee in BP(tenth of one percent)
+   * @param mapNetwork map network 'testnet' or 'mainnet'
+   * @param mapSigner map signer to sign transaction
+   * @param srcSigner src chain signer if src chain is a evm blockchain
+   * @param mapToken intermediary map token, if the token pair provided both from other blockchain than map,
+   * provide a map intermediary token
+   */
+  async addTokenPair({
+    srcToken,
+    targetToken,
+    feeBP,
+    mapNetwork,
+    mapSigner,
+    srcSigner,
+    mapToken,
+  }: AddTokenPairParam): Promise<void> {
+    // check if map intermediary token is provided when bridge two chains
+    if (
+      targetToken.chainId != NETWORK_NAME_TO_ID(mapNetwork) &&
+      srcToken.chainId != NETWORK_NAME_TO_ID(mapNetwork) &&
+      mapToken == undefined
+    ) {
+      throw new Error('intermediary map token is not specified');
+    }
+
+    // if src chain is EVM, must provide ethers.js signer
+    if (
+      IS_EVM(srcToken.chainId) &&
+      !IS_MAP(srcToken.chainId) &&
+      srcSigner == undefined
+    ) {
+      throw new Error('src chain signer is not provided');
+    }
+
+    const mcsContractAddress: string =
+      MCS_CONTRACT_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)];
+
+    const mapMCS = new RelayCrossChainService(
+      mcsContractAddress,
+      MCS_MAP_ABI,
+      mapSigner
+    );
+
+    if (IS_EVM(srcToken.chainId) && !IS_MAP(srcToken.chainId)) {
+      const mcsContractAddress: string =
+        MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(srcToken.chainId)];
+
+      const mcsService = new EVMCrossChainService(
+        mcsContractAddress,
+        MCS_EVM_ABI,
+        srcSigner!
+      );
+
+      await mcsService.doSetCanBridgeToken(
+        srcToken.address,
+        targetToken.chainId,
+        true
+      );
+      console.log('done set can bridge token');
+      console.log('srcToken: ', srcToken);
+      console.log('tgtToken: ', targetToken);
+    }
+
+    // set token gas fee compensation in bps
+    const feeCenter = new FeeCenter(FEE_CENTER_ADDRESS, mapSigner);
+    await feeCenter.setChainTokenGasFee(
+      targetToken.chainId,
+      srcToken.address,
+      100000,
+      1000000000000000,
+      feeBP
+    );
+    console.log('done set chain token gas fee');
+
+    // set token mapping in token register
+    const tokenRegister = new TokenRegister(TOKEN_REGISTER_ADDRESS, mapSigner);
+    if (targetToken.chainId == NETWORK_NAME_TO_ID(mapNetwork)) {
+      await tokenRegister.registerToken(
+        srcToken.chainId,
+        srcToken.address,
+        targetToken.address
+      );
+
+      // set token decimals for conversion.
+      await mapMCS.doSetTokenOtherChainDecimals(
+        targetToken.address,
+        srcToken.chainId,
+        srcToken.decimals
+      );
+      await mapMCS.doSetTokenOtherChainDecimals(
+        targetToken.address,
+        targetToken.chainId,
+        targetToken.decimals
+      );
+    } else if (srcToken.chainId == NETWORK_NAME_TO_ID(mapNetwork)) {
+      await tokenRegister.registerToken(
+        targetToken.chainId,
+        targetToken.address,
+        srcToken.address
+      );
+
+      // set token decimals for conversion.
+      await mapMCS.doSetTokenOtherChainDecimals(
+        srcToken.address,
+        srcToken.chainId,
+        srcToken.decimals
+      );
+      await mapMCS.doSetTokenOtherChainDecimals(
+        srcToken.address,
+        targetToken.chainId,
+        targetToken.decimals
+      );
+    } else {
+      await tokenRegister.registerToken(
+        srcToken.chainId,
+        srcToken.address,
+        mapToken!.address
+      );
+
+      await tokenRegister.registerToken(
+        targetToken.chainId,
+        targetToken.address,
+        srcToken.address
+      );
+    }
+    console.log('done reg token');
   }
 }

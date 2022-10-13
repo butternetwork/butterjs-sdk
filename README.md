@@ -1,5 +1,5 @@
 # BarterJS SDK
-BarterJS SDK provides a set of functions that help web3 applications give their users seamlessly cross-chain experience.
+BarterJS SDK provides a set of tools written in typescript that help web3 applications give their users seamlessly cross-chain experience.
 
 ## Preview
 The SDK is still under development, but here is a preview of what we provide.
