@@ -1,5 +1,4 @@
 import { Token } from '../entities';
-import { NativeCurrency } from '../entities/NativeCurrency';
 import { NearNativeCoin } from '../entities/native/Near';
 import { ChainId } from './chains';
 import { Ether } from '../entities/native/Ether';
