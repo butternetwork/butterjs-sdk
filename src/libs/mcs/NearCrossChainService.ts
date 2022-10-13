@@ -20,6 +20,14 @@ export class NearCrossChainService implements IMapCrossChainService {
     this.config = config;
   }
 
+  /**
+   * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param tokenAddress input token address
+   * @param amount amount in minimal unit
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param options see {@link TransferOutOptions} for more detail
+   */
   async doTransferOutToken(
     tokenAddress: string,
     amount: string,
@@ -28,18 +36,23 @@ export class NearCrossChainService implements IMapCrossChainService {
     options: TransferOutOptions
   ): Promise<string> {
     try {
+      // get mcs contract address
       const mcsAccountId: string =
         this.config.networkId === 'testnet'
           ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
 
+      // prep near connection
       const near: Near = await connect(this.config);
       const account = await near.account(this.config.fromAccount);
 
+      // the receiving address on Near need be in the format of number array as input
       const decimalArrayAddress: number[] = hexToDecimalArray(
         toAddress,
         toChainId
       );
+
+      // contract call option
       const nearCallOptions: ChangeFunctionCallOptions = {
         contractId: mcsAccountId,
         methodName: TRANSFER_OUT_TOKEN,
@@ -51,6 +64,8 @@ export class NearCrossChainService implements IMapCrossChainService {
         },
         attachedDeposit: new BN(amount, 10),
       };
+
+      // manual input gas if necessary
       if (options.gas != undefined) {
         nearCallOptions.gas = new BN(options.gas, 10);
       }
@@ -61,6 +76,13 @@ export class NearCrossChainService implements IMapCrossChainService {
     }
   }
 
+  /**
+   * transfer out native coin from source chain to designated token on target chain
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param amount amount to bridge in minimal unit
+   * @param options see {@link TransferOutOptions} for more detail
+   */
   async doTransferOutNative(
     toAddress: string,
     toChainId: string,
@@ -100,6 +122,12 @@ export class NearCrossChainService implements IMapCrossChainService {
     }
   }
 
+  /**
+   * call near smart contract
+   * @param account
+   * @param options
+   * @private
+   */
   private async _doNearFunctionCall(
     account: Account,
     options: ChangeFunctionCallOptions

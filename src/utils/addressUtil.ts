@@ -12,8 +12,6 @@ export function validateAndParseAddressByChainId(
   chainId: number
 ): string {
   switch (chainId) {
-    case ChainId.MAINNET:
-    case ChainId.BSC:
     case ChainId.MAP:
     case ChainId.ETH_PRIV:
     case ChainId.MAP_TEST: {
@@ -51,6 +49,11 @@ export function validateToken(token: Token): string {
   return validateAndParseAddressByChainId(token.address, token.chainId);
 }
 
+/**
+ * convert hex format address to decimal array
+ * @param address
+ * @param chainId
+ */
 export function hexToDecimalArray(
   address: string,
   chainId: number | string

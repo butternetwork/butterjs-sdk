@@ -17,7 +17,6 @@ import {
   MCS_CONTRACT_ADDRESS_SET,
   TOKEN_REGISTER_ADDRESS,
 } from '../../constants/addresses';
-import { ContractReceipt } from '@ethersproject/contracts/src.ts';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
 
 import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
@@ -28,6 +27,16 @@ import MCS_EVM_ABI from '../../abis/MAPCrossChainServiceABI.json';
 import MCS_MAP_ABI from '../../abis/MAPCrossChainServiceRelayABI.json';
 
 export class BarterBridge {
+  /**
+   * The BridgeToken method is used to bridge token from one chain to another.
+   * see {@link BridgeRequestParam} for detail
+   * @param token source token, aka token that user provide
+   * @param toChainId target chain id
+   * @param toAddress target chain receiving address
+   * @param amount amount to bridge, in minimal uint. For example wei in Ethereum, yocto in Near
+   * @param signer ethers.js signer, must provide when src chain is EVM chain
+   * @param nearConfig Near config file, must provide when src chain is Near
+   */
   async bridgeToken({
     token,
     toChainId,
@@ -49,7 +58,7 @@ export class BarterBridge {
       throw new Error(`Network config must be provided for NEAR blockchain`);
     }
 
-    // create mcs instance
+    // create mcs instance base on src token chainId.
     const mcs: IMapCrossChainService = createMCSInstance(
       token.chainId,
       signer,
@@ -57,6 +66,8 @@ export class BarterBridge {
     );
 
     let txHash = '';
+
+    // if input token is Native coin, call transferOutNative method
     if (token.isNative) {
       txHash = await mcs.doTransferOutNative(
         toAddress,
@@ -71,9 +82,23 @@ export class BarterBridge {
         toChainId.toString()
       );
     }
+
+    // return the transaction hash
     return txHash;
   }
 
+  /**
+   * TODO: need improvement!
+   * Approve the bridge of the token pair provided.
+   * @param srcToken source token
+   * @param targetToken target token
+   * @param feeBP bridge fee in BP(tenth of one percent)
+   * @param mapNetwork map network 'testnet' or 'mainnet'
+   * @param mapSigner map signer to sign transaction
+   * @param srcSigner src chain signer if src chain is a evm blockchain
+   * @param mapToken intermediary map token, if the token pair provided both from other blockchain than map,
+   * provide a map intermediary token
+   */
   async addTokenPair({
     srcToken,
     targetToken,
@@ -92,6 +117,7 @@ export class BarterBridge {
       throw new Error('intermediary map token is not specified');
     }
 
+    // if src chain is EVM, must provide ethers.js signer
     if (
       IS_EVM(srcToken.chainId) &&
       !IS_MAP(srcToken.chainId) &&

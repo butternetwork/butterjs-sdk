@@ -5,7 +5,7 @@ import { Token } from '../Token';
 import { WNEAR } from '../wnear';
 
 /**
- * Ether is the main usage of a 'native' currency, i.e. for Ethereum mainnet and all testnets
+ * Near is the main usage of a 'native' currency, i.e. for Near mainnet and all testnets
  */
 export class NearNativeCoin extends NativeCurrency {
   public constructor(chainId: number) {

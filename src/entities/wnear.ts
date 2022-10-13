@@ -1,7 +1,7 @@
 import { Token } from './Token';
 
 /**
- * Known WETH9 implementation addresses, used in our implementation of Ether#wrapped
+ * Wrapped Near implementation addresses, used in our implementation of Near#wrapped
  */
 export const WNEAR: { [chainId: number]: Token } = {
   [1313161555]: new Token(

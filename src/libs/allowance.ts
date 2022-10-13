@@ -5,9 +5,9 @@ import { Token } from '../entities';
 
 /**
  * get contract allowance for token
- * @param signer
- * @param tokenAddress
- * @param contractAddress
+ * @param signer ethers.js signer
+ * @param tokenAddress the address of token to be approved
+ * @param contractAddress spender address
  */
 export async function readAllowance(
   signer: Signer,
@@ -28,6 +28,13 @@ export async function readAllowance(
   }
 }
 
+/**
+ * approve token spend
+ * @param signer ethers.js signer
+ * @param tokenAddress the address of token to be approved
+ * @param contractAddress spender address
+ * @param amount amount to approved in minimal unit
+ */
 function doApprove(
   signer: Signer,
   tokenAddress: string,

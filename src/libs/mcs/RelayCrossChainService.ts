@@ -18,6 +18,13 @@ export class RelayCrossChainService implements IMapCrossChainService {
     this.contract = new ethers.Contract(contractAddress, abi, signer);
   }
 
+  /**
+   * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param tokenAddress input token address
+   * @param amount amount in minimal unit
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   */
   async doTransferOutToken(
     tokenAddress: string,
     amount: string,
@@ -36,6 +43,12 @@ export class RelayCrossChainService implements IMapCrossChainService {
     return receipt.transactionHash;
   }
 
+  /**
+   * transfer out native coin from source chain to designated token on target chain
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param amount amount to bridge in minimal unit
+   */
   async doTransferOutNative(
     toAddress: string,
     toChainId: string,
@@ -63,6 +76,11 @@ export class RelayCrossChainService implements IMapCrossChainService {
     return receipt.transactionHash;
   }
 
+  /**
+   * set id table
+   * @param chainId
+   * @param id
+   */
   async doSetIdTable(chainId: string, id: string): Promise<string> {
     const setIdTableTx: ContractTransaction = await this.contract.setIdTable(
       chainId,
@@ -82,6 +100,12 @@ export class RelayCrossChainService implements IMapCrossChainService {
     return receipt.transactionHash;
   }
 
+  /**
+   * specify token decimal for the convertion of different token on different chain
+   * @param selfTokenAddress
+   * @param chainId
+   * @param decimals
+   */
   async doSetTokenOtherChainDecimals(
     selfTokenAddress: string,
     chainId: number,
@@ -106,6 +130,11 @@ export class RelayCrossChainService implements IMapCrossChainService {
     return receipt.transactionHash;
   }
 
+  /**
+   * set accepted bridge address
+   * @param chainId chain id of the bridge address is residing on
+   * @param bridgeAddress bridge address
+   */
   async doSetBridgeAddress(
     chainId: string,
     bridgeAddress: string

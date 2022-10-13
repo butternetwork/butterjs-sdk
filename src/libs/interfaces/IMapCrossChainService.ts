@@ -1,6 +1,17 @@
 import { TransferOutOptions } from '../../types/requestTypes';
 
+/**
+ * MAP cross-chain service interface.
+ */
 export interface IMapCrossChainService {
+  /**
+   * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param tokenAddress input token address
+   * @param amount amount in minimal unit
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param options see {@link TransferOutOptions} for more detail
+   */
   doTransferOutToken(
     tokenAddress: string,
     amount: string,
@@ -9,6 +20,13 @@ export interface IMapCrossChainService {
     options?: TransferOutOptions
   ): Promise<string>;
 
+  /**
+   * transfer out native coin from source chain to designated token on target chain
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param amount amount to bridge in minimal unit
+   * @param options see {@link TransferOutOptions} for more detail
+   */
   doTransferOutNative(
     toAddress: string,
     toChainId: string,
@@ -16,6 +34,14 @@ export interface IMapCrossChainService {
     options?: TransferOutOptions
   ): Promise<string>;
 
+  /**
+   * TODO: In development
+   * @param tokenAddress
+   * @param from
+   * @param to
+   * @param amount
+   * @param options
+   */
   doDepositOutToken(
     tokenAddress: string,
     from: string,

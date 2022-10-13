@@ -19,6 +19,13 @@ export class EVMCrossChainService implements IMapCrossChainService {
     this.contract = new ethers.Contract(contractAddress, abi, signer);
   }
 
+  /**
+   * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param tokenAddress input token address
+   * @param amount amount in minimal unit
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   */
   async doTransferOutToken(
     tokenAddress: string,
     amount: string,
@@ -37,6 +44,12 @@ export class EVMCrossChainService implements IMapCrossChainService {
     return receipt.transactionHash;
   }
 
+  /**
+   * transfer out native coin from source chain to designated token on target chain
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param amount amount to bridge in minimal unit
+   */
   async doTransferOutNative(
     toAddress: string,
     toChainId: string,
