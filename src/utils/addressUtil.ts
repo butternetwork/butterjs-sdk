@@ -4,7 +4,6 @@ import { Token } from '../entities';
 
 /**
  * Validates an address and returns the parsed (checksummed) version of that address
- * TODO: Different blockchains may have different format of address, consider them all
  * @param address the unchecksummed hex address
  */
 export function validateAndParseAddressByChainId(
@@ -24,7 +23,6 @@ export function validateAndParseAddressByChainId(
       }
     }
     case ChainId.NEAR_TESTNET: {
-      // TODO: validate near address
       address = address.toLowerCase();
       const words: string[] = address.split('.');
       if (words[words.length - 1] != 'testnet') {
