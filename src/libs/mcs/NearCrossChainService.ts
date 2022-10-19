@@ -6,6 +6,8 @@ import {
 import { MCS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
 import { ChainId, ID_TO_CHAIN_ID } from '../../constants/chains';
 import {
+  ADD_MCS_TOKEN_TO_CHAIN,
+  ADD_NATIVE_TO_CHAIN,
   TRANSFER_OUT_NATIVE,
   TRANSFER_OUT_TOKEN,
 } from '../../constants/near_method_names';
@@ -16,6 +18,10 @@ import { hexToDecimalArray } from '../../utils';
 export class NearCrossChainService implements IMapCrossChainService {
   config: NearNetworkConfig;
 
+  /**
+   * we treat account as class member cuz to initialize a near account, async is required
+   * @param config
+   */
   constructor(config: NearNetworkConfig) {
     this.config = config;
   }
@@ -120,6 +126,51 @@ export class NearCrossChainService implements IMapCrossChainService {
     } catch (error) {
       throw error;
     }
+  }
+
+  /**
+   * add tochain to allowed transfer out chains.
+   * @param toChainId
+   */
+  public async addNativeToChain(toChainId: number) {
+    const mcsAccountId: string =
+      this.config.networkId === 'testnet'
+        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+        : '';
+
+    const near: Near = await connect(this.config);
+    const account = await near.account(this.config.fromAccount);
+
+    const nearCallOptions: ChangeFunctionCallOptions = {
+      contractId: mcsAccountId,
+      methodName: ADD_NATIVE_TO_CHAIN,
+      args: {
+        to_chain: toChainId,
+      },
+    };
+
+    return await this._doNearFunctionCall(account, nearCallOptions);
+  }
+
+  public async addTokenToChain(tokenAddress: string, toChainId: number) {
+    const mcsAccountId: string =
+      this.config.networkId === 'testnet'
+        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+        : '';
+
+    const near: Near = await connect(this.config);
+    const account = await near.account(this.config.fromAccount);
+
+    const nearCallOptions: ChangeFunctionCallOptions = {
+      contractId: mcsAccountId,
+      methodName: ADD_MCS_TOKEN_TO_CHAIN,
+      args: {
+        token: tokenAddress,
+        to_chain: toChainId,
+      },
+    };
+
+    return await this._doNearFunctionCall(account, nearCallOptions);
   }
 
   /**

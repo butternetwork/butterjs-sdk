@@ -4,12 +4,14 @@ import {
   ID_TO_CHAIN_ID,
   IS_EVM,
   IS_MAP,
+  IS_NEAR,
   NETWORK_NAME_TO_ID,
 } from '../../constants/chains';
 import { validateAndParseAddressByChainId } from '../../utils';
 import {
   BridgeRequestParam,
   AddTokenPairParam,
+  NearNetworkConfig,
 } from '../../types/requestTypes';
 import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
 import {
@@ -25,6 +27,7 @@ import { FeeCenter } from '../../libs/FeeCenter';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
 import MCS_EVM_ABI from '../../abis/MAPCrossChainServiceABI.json';
 import MCS_MAP_ABI from '../../abis/MAPCrossChainServiceRelayABI.json';
+import { NearCrossChainService } from '../../libs/mcs/NearCrossChainService';
 
 export class BarterBridge {
   /**
@@ -96,6 +99,7 @@ export class BarterBridge {
    * @param mapNetwork map network 'testnet' or 'mainnet'
    * @param mapSigner map signer to sign transaction
    * @param srcSigner src chain signer if src chain is a evm blockchain
+   * @param nearConfig near network configuration see {@link NearNetworkConfig}
    * @param mapToken intermediary map token, if the token pair provided both from other blockchain than map,
    * provide a map intermediary token
    */
@@ -106,9 +110,10 @@ export class BarterBridge {
     mapNetwork,
     mapSigner,
     srcSigner,
+    nearConfig,
     mapToken,
   }: AddTokenPairParam): Promise<void> {
-    // check if map intermediary token is provided when bridge two chains
+    // argument check
     if (
       targetToken.chainId != NETWORK_NAME_TO_ID(mapNetwork) &&
       srcToken.chainId != NETWORK_NAME_TO_ID(mapNetwork) &&
@@ -116,25 +121,17 @@ export class BarterBridge {
     ) {
       throw new Error('intermediary map token is not specified');
     }
-
-    // if src chain is EVM, must provide ethers.js signer
     if (
       IS_EVM(srcToken.chainId) &&
       !IS_MAP(srcToken.chainId) &&
       srcSigner == undefined
     ) {
       throw new Error('src chain signer is not provided');
+    } else if (IS_NEAR(srcToken.chainId) && nearConfig == undefined) {
+      throw new Error('near config is not provided');
     }
 
-    const mcsContractAddress: string =
-      MCS_CONTRACT_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)];
-
-    const mapMCS = new RelayCrossChainService(
-      mcsContractAddress,
-      MCS_MAP_ABI,
-      mapSigner
-    );
-
+    // set allowed transfer out token in evm src chain
     if (IS_EVM(srcToken.chainId) && !IS_MAP(srcToken.chainId)) {
       const mcsContractAddress: string =
         MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(srcToken.chainId)];
@@ -155,7 +152,23 @@ export class BarterBridge {
       console.log('tgtToken: ', targetToken);
     }
 
-    // set token gas fee compensation in bps
+    // set allowed transferout token in near chain
+    else if (IS_NEAR(srcToken.chainId)) {
+      // initialize near contract, nearConfig cannot be undefined cuz we already check previously.
+      const nearMCS = new NearCrossChainService(nearConfig!);
+      if (srcToken.isNative) {
+        await nearMCS.addNativeToChain(targetToken.chainId);
+      } else {
+        await nearMCS.addTokenToChain(srcToken.address, srcToken.chainId);
+      }
+    }
+
+    /**
+     * from this point, we need to set up staffs on Map Relay Chain...
+     * 1. set chain token gas fee: aka bridge fee, used to compensate messenger gas cost
+     * 2. register token: so later on map will know src token will mapped to target token
+     * 3. set decimal: for out amount calculation
+     */
     const feeCenter = new FeeCenter(FEE_CENTER_ADDRESS, mapSigner);
     await feeCenter.setChainTokenGasFee(
       targetToken.chainId,
@@ -164,9 +177,16 @@ export class BarterBridge {
       1000000000000000,
       feeBP
     );
-    console.log('done set chain token gas fee');
 
-    // set token mapping in token register
+    const mcsContractAddress: string =
+      MCS_CONTRACT_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)];
+
+    const mapMCS = new RelayCrossChainService(
+      mcsContractAddress,
+      MCS_MAP_ABI,
+      mapSigner
+    );
+
     const tokenRegister = new TokenRegister(TOKEN_REGISTER_ADDRESS, mapSigner);
     if (targetToken.chainId == NETWORK_NAME_TO_ID(mapNetwork)) {
       await tokenRegister.registerToken(
@@ -181,6 +201,7 @@ export class BarterBridge {
         srcToken.chainId,
         srcToken.decimals
       );
+
       await mapMCS.doSetTokenOtherChainDecimals(
         targetToken.address,
         targetToken.chainId,
@@ -217,6 +238,5 @@ export class BarterBridge {
         srcToken.address
       );
     }
-    console.log('done reg token');
   }
 }

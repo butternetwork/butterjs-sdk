@@ -18,9 +18,10 @@ export type AddTokenPairParam = {
   srcToken: Token;
   targetToken: Token;
   feeBP: number; // one hundredth of a percent
-  mapNetwork: 'map-devnet' | 'map-testnet' | 'map-mainnet';
-  mapToken?: Token; // act as an intermediary, only mandatory when neither tokens from MAP chain
+  mapNetwork: 'network' | 'testnet' | 'mainnet';
   mapSigner: Signer;
+  nearConfig?: NearNetworkConfig;
+  mapToken?: Token; // act as an intermediary, only mandatory when neither tokens from MAP chain
   srcSigner?: Signer; // only mandatory when src chain is EVM compatible
 };
 

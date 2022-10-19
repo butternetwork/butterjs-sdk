@@ -221,6 +221,31 @@ export const IS_MAP = (id: number): boolean => {
   }
 };
 
+export const IS_NEAR = (id: number): boolean => {
+  switch (id) {
+    case 1:
+    case 3:
+    case 4:
+    case 5:
+    case 42:
+    case 10:
+    case 69:
+    case 42161:
+    case 421611:
+    case 137:
+    case 80001:
+    case 56:
+    case 22776:
+    case 212:
+    case 34434:
+      return false;
+    case 1313161555:
+      return true;
+    default:
+      throw new Error(`Unsupported chain id: ${id}`);
+  }
+};
+
 export const IS_EVM = (id: number): boolean => {
   switch (id) {
     case 1:
