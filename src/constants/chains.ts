@@ -1,4 +1,3 @@
-import { Currency, NativeCurrency, Token } from '../entities';
 export enum ChainId {
   MAP = 22776,
   MAP_TEST = 212,

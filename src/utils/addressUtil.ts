@@ -1,6 +1,6 @@
 import { getAddress } from '@ethersproject/address';
 import { ChainId, ID_TO_NETWORK_NAME } from '../constants/chains';
-import { Token } from '../entities';
+import { Token } from '../entities/Token';
 
 /**
  * Validates an address and returns the parsed (checksummed) version of that address
