@@ -88,6 +88,6 @@ export class EVMCrossChainService implements IMapCrossChainService {
       canBridge
     );
     const receipt = await tx.wait();
-    console.log(receipt);
+    console.log('successfully set can bridge token on evm');
   }
 }

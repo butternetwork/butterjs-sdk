@@ -106,7 +106,7 @@ export class BarterBridge {
   async addTokenPair({
     srcToken,
     targetToken,
-    feeBP,
+    feeRate,
     mapNetwork,
     mapSigner,
     srcSigner,
@@ -147,20 +147,19 @@ export class BarterBridge {
         targetToken.chainId,
         true
       );
-      console.log('done set can bridge token');
-      console.log('srcToken: ', srcToken);
-      console.log('tgtToken: ', targetToken);
     }
 
     // set allowed transferout token in near chain
     else if (IS_NEAR(srcToken.chainId)) {
       // initialize near contract, nearConfig cannot be undefined cuz we already check previously.
       const nearMCS = new NearCrossChainService(nearConfig!);
+      console.log('init near mcs');
       if (srcToken.isNative) {
         await nearMCS.addNativeToChain(targetToken.chainId);
       } else {
         await nearMCS.addTokenToChain(srcToken.address, srcToken.chainId);
       }
+      console.log(`add token ${srcToken.name} to ${srcToken.chainId}`);
     }
 
     /**
@@ -173,11 +172,11 @@ export class BarterBridge {
     await feeCenter.setChainTokenGasFee(
       targetToken.chainId,
       srcToken.address,
-      100000,
-      1000000000000000,
-      feeBP
+      feeRate.lowest,
+      feeRate.highest,
+      feeRate.bps
     );
-
+    console.log('set token fee done');
     const mcsContractAddress: string =
       MCS_CONTRACT_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)];
 
@@ -238,5 +237,6 @@ export class BarterBridge {
         srcToken.address
       );
     }
+    console.log('token reg done');
   }
 }

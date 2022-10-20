@@ -1,6 +1,6 @@
 import { Token } from '../entities';
 import { ChainId } from '../constants/chains';
-import { Signer } from 'ethers';
+import { BigNumber, Signer } from 'ethers';
 import { KeyStore } from 'near-api-js/lib/key_stores';
 import { BaseCurrency } from '../entities/BaseCurrency';
 
@@ -15,10 +15,10 @@ export type BridgeRequestParam = {
 };
 
 export type AddTokenPairParam = {
-  srcToken: Token;
-  targetToken: Token;
-  feeBP: number; // one hundredth of a percent
-  mapNetwork: 'network' | 'testnet' | 'mainnet';
+  srcToken: BaseCurrency;
+  targetToken: BaseCurrency;
+  feeRate: FeeRate;
+  mapNetwork: 'map-devnet' | 'map-testnet' | 'map-mainnet';
   mapSigner: Signer;
   nearConfig?: NearNetworkConfig;
   mapToken?: Token; // act as an intermediary, only mandatory when neither tokens from MAP chain
@@ -34,4 +34,10 @@ export type NearNetworkConfig = {
 
 export type TransferOutOptions = {
   gas?: string;
+};
+
+export type FeeRate = {
+  bps: number; // one hundredth of a percent
+  highest: BigNumber; // highest fee in token amount
+  lowest: BigNumber; // lowest fee in token amount
 };

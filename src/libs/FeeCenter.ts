@@ -11,8 +11,8 @@ export class FeeCenter {
   async setChainTokenGasFee(
     toChainId: number,
     tokenAddress: string,
-    lowest: number,
-    highest: number,
+    lowest: BigNumber,
+    highest: BigNumber,
     proportion: number
   ) {
     const setCFTx = await this.contract.setChainTokenGasFee(
