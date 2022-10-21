@@ -1,5 +1,10 @@
 import { getAddress } from '@ethersproject/address';
-import { ChainId, ID_TO_NETWORK_NAME } from '../constants/chains';
+import {
+  ChainId,
+  ID_TO_NETWORK_NAME,
+  IS_EVM,
+  IS_NEAR,
+} from '../constants/chains';
 import { Token } from '../entities/Token';
 
 /**
@@ -74,4 +79,27 @@ export function decimalArrayToHex(decimals: number[]): string {
     ret += String.fromCharCode(decimals[i]!);
   }
   return ret;
+}
+
+export function getHexAddress(token: Token): string {
+  if (IS_EVM(token.chainId)) {
+    return token.address;
+  } else if (IS_NEAR(token.chainId)) {
+    return asciiToHex(token.address);
+  } else {
+    throw new Error(`chain id: ${token.chainId} not supported`);
+  }
+}
+
+/**
+ * @param input
+ * @param hexLength
+ */
+function asciiToHex(input: string): string {
+  let ret = [];
+  for (let i = 0; i < input.length; i++) {
+    let hex = Number(input.charCodeAt(i)).toString(16);
+    ret.push(hex);
+  }
+  return '0x' + ret.join('');
 }

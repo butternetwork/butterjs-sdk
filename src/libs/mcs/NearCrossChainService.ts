@@ -182,10 +182,6 @@ export class NearCrossChainService implements IMapCrossChainService {
     account: Account,
     options: ChangeFunctionCallOptions
   ): Promise<string> {
-    console.log(
-      'calling function...',
-      await account.connection.signer.getPublicKey('xyli.testnet', 'testnet')
-    );
     const response = await account.functionCall(options);
     return response.transaction.hash;
   }

@@ -25,8 +25,8 @@ import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
 import { TokenRegister } from '../../libs/TokenRegister';
 import { FeeCenter } from '../../libs/FeeCenter';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
-import MCS_EVM_ABI from '../../abis/MAPCrossChainServiceABI.json';
-import MCS_MAP_ABI from '../../abis/MAPCrossChainServiceRelayABI.json';
+import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
+import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import { NearCrossChainService } from '../../libs/mcs/NearCrossChainService';
 
 export class BarterBridge {
@@ -113,7 +113,9 @@ export class BarterBridge {
     nearConfig,
     mapToken,
   }: AddTokenPairParam): Promise<void> {
-    // argument check
+    /**
+     * argument check
+     */
     if (
       targetToken.chainId != NETWORK_NAME_TO_ID(mapNetwork) &&
       srcToken.chainId != NETWORK_NAME_TO_ID(mapNetwork) &&
@@ -131,14 +133,17 @@ export class BarterBridge {
       throw new Error('near config is not provided');
     }
 
-    // set allowed transfer out token in evm src chain
+    /**
+     * set allowed transfer token for source chain.
+     */
+    /** case 1: source chain is non-MAP evm chain*/
     if (IS_EVM(srcToken.chainId) && !IS_MAP(srcToken.chainId)) {
       const mcsContractAddress: string =
         MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(srcToken.chainId)];
 
       const mcsService = new EVMCrossChainService(
         mcsContractAddress,
-        MCS_EVM_ABI,
+        MCS_EVM_METADATA.abi,
         srcSigner!
       );
 
@@ -147,10 +152,8 @@ export class BarterBridge {
         targetToken.chainId,
         true
       );
-    }
-
-    // set allowed transferout token in near chain
-    else if (IS_NEAR(srcToken.chainId)) {
+    } else if (IS_NEAR(srcToken.chainId)) {
+      /** case 2: source chain is Near */
       // initialize near contract, nearConfig cannot be undefined cuz we already check previously.
       const nearMCS = new NearCrossChainService(nearConfig!);
       console.log('init near mcs');
@@ -159,7 +162,11 @@ export class BarterBridge {
       } else {
         await nearMCS.addTokenToChain(srcToken.address, srcToken.chainId);
       }
-      console.log(`add token ${srcToken.name} to ${srcToken.chainId}`);
+      console.log(`add token ${srcToken.name} to ${targetToken.chainId}`);
+    } else {
+      throw new Error(
+        `source chainId: ${srcToken.chainId} is not supported yet`
+      );
     }
 
     /**
@@ -168,25 +175,19 @@ export class BarterBridge {
      * 2. register token: so later on map will know src token will mapped to target token
      * 3. set decimal: for out amount calculation
      */
-    const feeCenter = new FeeCenter(FEE_CENTER_ADDRESS, mapSigner);
-    await feeCenter.setChainTokenGasFee(
-      targetToken.chainId,
-      srcToken.address,
-      feeRate.lowest,
-      feeRate.highest,
-      feeRate.bps
-    );
-    console.log('set token fee done');
+
+    // create contract instance
     const mcsContractAddress: string =
       MCS_CONTRACT_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)];
-
     const mapMCS = new RelayCrossChainService(
       mcsContractAddress,
-      MCS_MAP_ABI,
+      MCS_MAP_METADATA.abi,
       mapSigner
     );
-
+    const feeCenter = new FeeCenter(FEE_CENTER_ADDRESS, mapSigner);
     const tokenRegister = new TokenRegister(TOKEN_REGISTER_ADDRESS, mapSigner);
+
+    /** case 1: target chain is map */
     if (targetToken.chainId == NETWORK_NAME_TO_ID(mapNetwork)) {
       await tokenRegister.registerToken(
         srcToken.chainId,
@@ -196,17 +197,27 @@ export class BarterBridge {
 
       // set token decimals for conversion.
       await mapMCS.doSetTokenOtherChainDecimals(
-        targetToken.address,
+        srcToken.address,
         srcToken.chainId,
         srcToken.decimals
       );
 
       await mapMCS.doSetTokenOtherChainDecimals(
-        targetToken.address,
+        srcToken.address,
         targetToken.chainId,
         targetToken.decimals
       );
+
+      // set fees
+      await feeCenter.setChainTokenGasFee(
+        targetToken.chainId,
+        targetToken.address,
+        feeRate.lowest,
+        feeRate.highest,
+        feeRate.bps
+      );
     } else if (srcToken.chainId == NETWORK_NAME_TO_ID(mapNetwork)) {
+      /** case 2: source chain is map */
       await tokenRegister.registerToken(
         targetToken.chainId,
         targetToken.address,
@@ -224,7 +235,17 @@ export class BarterBridge {
         targetToken.chainId,
         targetToken.decimals
       );
+
+      // set fee
+      await feeCenter.setChainTokenGasFee(
+        targetToken.chainId,
+        srcToken.address,
+        feeRate.lowest,
+        feeRate.highest,
+        feeRate.bps
+      );
     } else {
+      /** case 3: neither src chain and target chain is map, then map will act as a relay */
       await tokenRegister.registerToken(
         srcToken.chainId,
         srcToken.address,
@@ -234,7 +255,28 @@ export class BarterBridge {
       await tokenRegister.registerToken(
         targetToken.chainId,
         targetToken.address,
-        srcToken.address
+        mapToken!.address
+      );
+
+      // set token decimals for conversion.
+      await mapMCS.doSetTokenOtherChainDecimals(
+        mapToken!.address,
+        srcToken.chainId,
+        srcToken.decimals
+      );
+      await mapMCS.doSetTokenOtherChainDecimals(
+        mapToken!.address,
+        targetToken.chainId,
+        targetToken.decimals
+      );
+
+      // set fee
+      await feeCenter.setChainTokenGasFee(
+        targetToken.chainId,
+        targetToken.address,
+        feeRate.lowest,
+        feeRate.highest,
+        feeRate.bps
       );
     }
     console.log('token reg done');

@@ -4,8 +4,8 @@ import { RelayCrossChainService } from '../mcs/RelayCrossChainService';
 import { MCS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
 import { Signer } from 'ethers';
 import { NearNetworkConfig } from '../../types/requestTypes';
-import MCS_EVM_ABI from '../../abis/MAPCrossChainServiceABI.json';
-import MCS_MAP_ABI from '../../abis/MAPCrossChainServiceRelayABI.json';
+import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
+import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import { EVMCrossChainService } from '../mcs/EVMCrossChainService';
 import { NearCrossChainService } from '../mcs/NearCrossChainService';
 
@@ -22,7 +22,7 @@ export function createMCSInstance(
       }
       return new RelayCrossChainService(
         MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
-        MCS_MAP_ABI,
+        MCS_MAP_METADATA.abi,
         signer
       );
     case ChainId.ETH_PRIV:
@@ -31,7 +31,7 @@ export function createMCSInstance(
       }
       return new EVMCrossChainService(
         MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
-        MCS_EVM_ABI,
+        MCS_EVM_METADATA.abi,
         signer
       );
     case ChainId.NEAR_TESTNET:

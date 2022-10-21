@@ -1,11 +1,15 @@
 import { BigNumber, ethers, Signer } from 'ethers';
-import FeeCenterABI from '../abis/FeeCenter.json';
+import FeeCenterMetadata from '../abis/FeeCenter.json';
 
 export class FeeCenter {
   private contract: ethers.Contract;
 
   constructor(contractAddress: string, signer: Signer) {
-    this.contract = new ethers.Contract(contractAddress, FeeCenterABI, signer);
+    this.contract = new ethers.Contract(
+      contractAddress,
+      FeeCenterMetadata.abi,
+      signer
+    );
   }
 
   async setChainTokenGasFee(

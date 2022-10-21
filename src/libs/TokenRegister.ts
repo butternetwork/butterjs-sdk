@@ -1,5 +1,5 @@
 import { BigNumber, ethers, Signer } from 'ethers';
-import TokenRegisterAbi from '../abis/TokenRegister.json';
+import TokenRegisterMetadata from '../abis/TokenRegister.json';
 
 export class TokenRegister {
   private contract: ethers.Contract;
@@ -7,7 +7,7 @@ export class TokenRegister {
   constructor(contractAddress: string, signer: Signer) {
     this.contract = new ethers.Contract(
       contractAddress,
-      TokenRegisterAbi,
+      TokenRegisterMetadata.abi,
       signer
     );
   }
