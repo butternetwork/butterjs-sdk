@@ -28,7 +28,6 @@ export class TokenRegister {
       sourceMapToken,
       mapToken
     );
-    console.log(regTokenTx);
   }
 
   async getTargetToken(
