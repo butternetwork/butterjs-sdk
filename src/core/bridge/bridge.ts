@@ -28,6 +28,8 @@ import { createMCSInstance } from '../../libs/utils/mcsUtils';
 import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
 import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import { NearCrossChainService } from '../../libs/mcs/NearCrossChainService';
+import { ContractCallReceipt } from '../../types/responseTypes';
+import BN from 'bn.js';
 
 export class BarterBridge {
   /**
@@ -39,55 +41,59 @@ export class BarterBridge {
    * @param amount amount to bridge, in minimal uint. For example wei in Ethereum, yocto in Near
    * @param signer ethers.js signer, must provide when src chain is EVM chain
    * @param nearConfig Near config file, must provide when src chain is Near
+   * @return BN for gas estimation, ContractCallReceipt for actual contract invocation
    */
   async bridgeToken({
     token,
     toChainId,
     toAddress,
     amount,
-    signer,
-    nearConfig,
-  }: BridgeRequestParam): Promise<string> {
+    gasEstimate,
+    options,
+  }: BridgeRequestParam): Promise<ContractCallReceipt | BN> {
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
 
     // if src chain is evm chain, signer must be provided
-    if (IS_EVM(token.chainId) && signer == undefined) {
+    if (IS_EVM(token.chainId) && options.signer == undefined) {
       throw new Error(`Signer must be provided for EVM blockchains`);
     }
 
     // if src chain is near chain, near network config must be provided
-    if (ChainId.NEAR_TESTNET == token.chainId && nearConfig == undefined) {
+    if (
+      ChainId.NEAR_TESTNET == token.chainId &&
+      options.nearConfig == undefined
+    ) {
       throw new Error(`Network config must be provided for NEAR blockchain`);
     }
 
     // create mcs instance base on src token chainId.
     const mcs: IMapCrossChainService = createMCSInstance(
       token.chainId,
-      signer,
-      nearConfig
+      options
     );
 
-    let txHash = '';
+    let result;
 
     // if input token is Native coin, call transferOutNative method
     if (token.isNative) {
-      txHash = await mcs.doTransferOutNative(
+      result = await mcs.doTransferOutNative(
         toAddress,
         toChainId.toString(),
-        amount
+        amount,
+        gasEstimate
       );
     } else {
-      txHash = await mcs.doTransferOutToken(
+      result = await mcs.doTransferOutToken(
         token.address,
         amount,
         toAddress,
-        toChainId.toString()
+        toChainId.toString(),
+        gasEstimate
       );
     }
 
-    // return the transaction hash
-    return txHash;
+    return result;
   }
 
   /**

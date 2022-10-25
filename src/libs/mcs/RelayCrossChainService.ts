@@ -6,6 +6,9 @@ import {
   Signer,
 } from 'ethers';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
+import { ContractCallReceipt } from '../../types/responseTypes';
+import { adaptEtherReceipt } from '../../utils/responseUtil';
+import BN from 'bn.js';
 
 export class RelayCrossChainService implements IMapCrossChainService {
   contract: Contract;
@@ -24,13 +27,27 @@ export class RelayCrossChainService implements IMapCrossChainService {
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
+   * @param gasEstimation
    */
   async doTransferOutToken(
     tokenAddress: string,
     amount: string,
     toAddress: string,
-    toChainId: string
-  ): Promise<string> {
+    toChainId: string,
+    gasEstimation: boolean
+  ): Promise<ContractCallReceipt | BN> {
+    if (gasEstimation) {
+      const gas = await this.contract.estimateGas.transferOutToken!(
+        tokenAddress,
+        toAddress,
+        amount,
+        toChainId,
+        { gasLimit: 5000000 }
+      );
+
+      return new BN(gas.toString(), 10);
+    }
+
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutToken(
         tokenAddress,
@@ -40,7 +57,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
         { gasLimit: 5000000 }
       );
     const receipt = await transferOutTx.wait();
-    return receipt.transactionHash;
+    return adaptEtherReceipt(receipt);
   }
 
   /**
@@ -48,19 +65,33 @@ export class RelayCrossChainService implements IMapCrossChainService {
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
+   * @param gasEstimation
    */
   async doTransferOutNative(
     toAddress: string,
     toChainId: string,
-    amount: string
-  ): Promise<string> {
+    amount: string,
+    gasEstimation: boolean
+  ): Promise<ContractCallReceipt | BN> {
+    if (gasEstimation) {
+      const gas = await this.contract.estimateGas.transferOutNative!(
+        toAddress,
+        toChainId,
+        {
+          value: amount,
+        }
+      );
+
+      return new BN(gas.toString(), 10);
+    }
+
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutNative(toAddress, toChainId, {
         value: amount,
       });
 
     const receipt = await transferOutTx.wait();
-    return receipt.transactionHash;
+    return adaptEtherReceipt(receipt);
   }
 
   async doDepositOutToken(

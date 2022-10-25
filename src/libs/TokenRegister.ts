@@ -1,5 +1,6 @@
-import { BigNumber, ethers, Signer } from 'ethers';
+import { ethers, Signer } from 'ethers';
 import TokenRegisterMetadata from '../abis/TokenRegister.json';
+import { TransactionReceipt } from '@ethersproject/abstract-provider';
 
 export class TokenRegister {
   private contract: ethers.Contract;
@@ -16,18 +17,14 @@ export class TokenRegister {
     sourceChain: number,
     sourceMapToken: string,
     mapToken: string
-  ) {
-    const gas: BigNumber = await this.contract.estimateGas.regToken!(
-      sourceChain,
-      sourceMapToken,
-      mapToken
-    );
-
+  ): Promise<TransactionReceipt> {
     const regTokenTx = await this.contract.regToken(
       sourceChain,
       sourceMapToken,
       mapToken
     );
+
+    return regTokenTx;
   }
 
   async getTargetToken(
@@ -35,11 +32,10 @@ export class TokenRegister {
     sourceToken: string,
     targetChain: number
   ): Promise<string> {
-    const tokenAddress: string = await this.contract.getTargetToken(
+    return await this.contract.getTargetToken(
       sourceChain,
       sourceToken,
       targetChain
     );
-    return tokenAddress;
   }
 }

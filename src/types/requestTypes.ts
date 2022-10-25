@@ -10,8 +10,13 @@ export type BridgeRequestParam = {
   toChainId: ChainId;
   toAddress: string;
   amount: string;
-  signer?: Signer; // when src is evm chain;
-  nearConfig?: NearNetworkConfig; // when src chain is near chain
+  gasEstimate: boolean; // whether a gas estimate operation or not
+  options: BridgeOptions;
+};
+
+export type BridgeOptions = {
+  signer?: Signer; // mandatory when src chain is evm chain(or ethers.js compatible)
+  nearConfig?: NearNetworkConfig; // mandatory when src chain is near
 };
 
 export type AddTokenPairParam = {

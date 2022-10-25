@@ -1,5 +1,6 @@
 import { BigNumber, ethers, Signer } from 'ethers';
 import FeeCenterMetadata from '../abis/FeeCenter.json';
+import { TransactionReceipt } from '@ethersproject/abstract-provider';
 
 export class FeeCenter {
   private contract: ethers.Contract;
@@ -18,7 +19,7 @@ export class FeeCenter {
     lowest: BigNumber,
     highest: BigNumber,
     proportion: number
-  ) {
+  ): Promise<TransactionReceipt> {
     const setCFTx = await this.contract.setChainTokenGasFee(
       toChainId,
       tokenAddress,
@@ -26,6 +27,6 @@ export class FeeCenter {
       highest,
       proportion
     );
-    console.log(setCFTx);
+    return setCFTx;
   }
 }

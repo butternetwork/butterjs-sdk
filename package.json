@@ -1,6 +1,6 @@
 {
   "name": "barterjs-sdk",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "description": "Barter Network SDK",
   "author": "xyli <moorelee@barternetwork.io>",
   "main": "dist/index.js",
@@ -12,9 +12,14 @@
     "type": "git",
     "url": "https://github.com/barternetwork/barterjs-sdk"
   },
-  "keywords": ["cross-chain", "cross-chain dex", "omnichain"],
+  "keywords": [
+    "cross-chain",
+    "cross-chain dex",
+    "omnichain"
+  ],
   "license": "ISC",
   "devDependencies": {
+    "@ethersproject/abstract-provider": "^5.7.0",
     "@types/bn.js": "^5.1.1",
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
