@@ -1,4 +1,6 @@
 import { TransferOutOptions } from '../../types/requestTypes';
+import { ContractCallReceipt } from '../../types/responseTypes';
+import BN from 'bn.js';
 
 /**
  * MAP cross-chain service interface.
@@ -18,6 +20,14 @@ export interface IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options?: TransferOutOptions
+  ): Promise<ContractCallReceipt>;
+
+  gasEstimateTransferOutToken(
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
+    options?: TransferOutOptions
   ): Promise<string>;
 
   /**
@@ -28,6 +38,13 @@ export interface IMapCrossChainService {
    * @param options see {@link TransferOutOptions} for more detail
    */
   doTransferOutNative(
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    options?: TransferOutOptions
+  ): Promise<ContractCallReceipt>;
+
+  gasEstimateTransferOutNative(
     toAddress: string,
     toChainId: string,
     amount: string,

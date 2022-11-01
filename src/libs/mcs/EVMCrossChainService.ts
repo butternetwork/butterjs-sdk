@@ -1,4 +1,5 @@
 import {
+  BigNumber,
   Contract,
   ContractInterface,
   ContractTransaction,
@@ -6,7 +7,10 @@ import {
   Signer,
 } from 'ethers';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
-import { TransferOutOptions } from '../../types/requestTypes';
+import { ContractCallReceipt } from '../../types/responseTypes';
+import { adaptEtherReceipt } from '../../utils/responseUtil';
+import BN from 'bn.js';
+import { Provider } from '@ethersproject/abstract-provider';
 
 export class EVMCrossChainService implements IMapCrossChainService {
   contract: Contract;
@@ -14,9 +18,9 @@ export class EVMCrossChainService implements IMapCrossChainService {
   constructor(
     contractAddress: string,
     abi: ContractInterface,
-    signer: ethers.Signer
+    signerOrProvider: Signer | Provider
   ) {
-    this.contract = new ethers.Contract(contractAddress, abi, signer);
+    this.contract = new ethers.Contract(contractAddress, abi, signerOrProvider);
   }
 
   /**
@@ -25,13 +29,14 @@ export class EVMCrossChainService implements IMapCrossChainService {
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
+   * @param gasEstimation only estimate gas or not
    */
   async doTransferOutToken(
     tokenAddress: string,
     amount: string,
     toAddress: string,
     toChainId: string
-  ): Promise<string> {
+  ): Promise<ContractCallReceipt> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutToken(
         tokenAddress,
@@ -41,7 +46,24 @@ export class EVMCrossChainService implements IMapCrossChainService {
       );
 
     const receipt = await transferOutTx.wait();
-    return receipt.transactionHash;
+
+    return adaptEtherReceipt(receipt);
+  }
+
+  async gasEstimateTransferOutToken(
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string
+  ): Promise<string> {
+    // gas estimation
+    const gas: BigNumber = await this.contract.estimateGas.transferOutToken!(
+      tokenAddress,
+      toAddress,
+      amount,
+      toChainId
+    );
+    return gas.toString();
   }
 
   /**
@@ -49,19 +71,36 @@ export class EVMCrossChainService implements IMapCrossChainService {
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
+   * @param gasEstimation gas estimation or not
    */
   async doTransferOutNative(
     toAddress: string,
     toChainId: string,
     amount: string
-  ): Promise<string> {
+  ): Promise<ContractCallReceipt> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutNative(toAddress, toChainId, {
         value: amount,
       });
 
     const receipt = await transferOutTx.wait();
-    return receipt.transactionHash;
+    return adaptEtherReceipt(receipt);
+  }
+
+  async gasEstimateTransferOutNative(
+    toAddress: string,
+    toChainId: string,
+    amount: string
+  ): Promise<string> {
+    // gas estimation
+    const gas = await this.contract.estimateGas.transferOutNative!(
+      toAddress,
+      toChainId,
+      {
+        value: amount,
+      }
+    );
+    return gas.toString();
   }
 
   async doDepositOutToken(

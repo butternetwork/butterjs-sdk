@@ -1,4 +1,5 @@
 import {
+  BigNumber,
   Contract,
   ContractInterface,
   ContractTransaction,
@@ -6,6 +7,11 @@ import {
   Signer,
 } from 'ethers';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
+import { ContractCallReceipt } from '../../types/responseTypes';
+import { adaptEtherReceipt } from '../../utils/responseUtil';
+import BN from 'bn.js';
+import { Provider } from '@ethersproject/abstract-provider';
+import { BaseCurrency } from '../../entities';
 
 export class RelayCrossChainService implements IMapCrossChainService {
   contract: Contract;
@@ -13,9 +19,9 @@ export class RelayCrossChainService implements IMapCrossChainService {
   constructor(
     contractAddress: string,
     abi: ContractInterface,
-    signer: ethers.Signer
+    signerOrProvider: Signer | Provider
   ) {
-    this.contract = new ethers.Contract(contractAddress, abi, signer);
+    this.contract = new ethers.Contract(contractAddress, abi, signerOrProvider);
   }
 
   /**
@@ -24,13 +30,14 @@ export class RelayCrossChainService implements IMapCrossChainService {
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
+   * @param gasEstimation
    */
   async doTransferOutToken(
     tokenAddress: string,
     amount: string,
     toAddress: string,
     toChainId: string
-  ): Promise<string> {
+  ): Promise<ContractCallReceipt> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutToken(
         tokenAddress,
@@ -40,7 +47,24 @@ export class RelayCrossChainService implements IMapCrossChainService {
         { gasLimit: 5000000 }
       );
     const receipt = await transferOutTx.wait();
-    return receipt.transactionHash;
+    return adaptEtherReceipt(receipt);
+  }
+
+  async gasEstimateTransferOutToken(
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string
+  ): Promise<string> {
+    const gas = await this.contract.estimateGas.transferOutToken!(
+      tokenAddress,
+      toAddress,
+      amount,
+      toChainId,
+      { gasLimit: 5000000 }
+    );
+
+    return gas.toString();
   }
 
   /**
@@ -48,19 +72,36 @@ export class RelayCrossChainService implements IMapCrossChainService {
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
+   * @param gasEstimation
    */
   async doTransferOutNative(
     toAddress: string,
     toChainId: string,
     amount: string
-  ): Promise<string> {
+  ): Promise<ContractCallReceipt> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutNative(toAddress, toChainId, {
         value: amount,
       });
 
     const receipt = await transferOutTx.wait();
-    return receipt.transactionHash;
+    return adaptEtherReceipt(receipt);
+  }
+
+  async gasEstimateTransferOutNative(
+    toAddress: string,
+    toChainId: string,
+    amount: string
+  ): Promise<string> {
+    const gas = await this.contract.estimateGas.transferOutNative!(
+      toAddress,
+      toChainId,
+      {
+        value: amount,
+      }
+    );
+
+    return gas.toString();
   }
 
   async doDepositOutToken(
@@ -113,7 +154,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
   ): Promise<string> {
     const tx: ContractTransaction =
       await this.contract.setTokenOtherChainDecimals(
-        selfTokenAddress,
+        ethers.constants.AddressZero,
         chainId,
         decimals
       );
@@ -146,5 +187,17 @@ export class RelayCrossChainService implements IMapCrossChainService {
 
     const receipt = await tx.wait();
     return receipt.transactionHash;
+  }
+
+  async getVaultBalance(
+    toChainId: number,
+    tokenAddress: string
+  ): Promise<string> {
+    const balance: BigNumber = await this.contract.vaultBalance(
+      toChainId,
+      tokenAddress
+    );
+
+    return Promise.resolve(balance.toString());
   }
 }

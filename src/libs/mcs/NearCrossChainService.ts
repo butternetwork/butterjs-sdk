@@ -15,6 +15,9 @@ import BN from 'bn.js';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import { hexToDecimalArray } from '../../utils';
+import { ContractCallReceipt } from '../../types/responseTypes';
+import { adaptNearReceipt } from '../../utils/responseUtil';
+import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 export class NearCrossChainService implements IMapCrossChainService {
   config: NearNetworkConfig;
 
@@ -32,6 +35,7 @@ export class NearCrossChainService implements IMapCrossChainService {
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
+   * @param gasEstimation
    * @param options see {@link TransferOutOptions} for more detail
    */
   async doTransferOutToken(
@@ -40,7 +44,7 @@ export class NearCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<string> {
+  ): Promise<ContractCallReceipt> {
     try {
       // get mcs contract address
       const mcsAccountId: string =
@@ -76,7 +80,9 @@ export class NearCrossChainService implements IMapCrossChainService {
         nearCallOptions.gas = new BN(options.gas, 10);
       }
 
-      return await this._doNearFunctionCall(account, nearCallOptions);
+      return adaptNearReceipt(
+        await this._doNearFunctionCall(account, nearCallOptions)
+      );
     } catch (error) {
       throw error;
     }
@@ -87,6 +93,7 @@ export class NearCrossChainService implements IMapCrossChainService {
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
+   * @param gasEstimation
    * @param options see {@link TransferOutOptions} for more detail
    */
   async doTransferOutNative(
@@ -94,7 +101,7 @@ export class NearCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<string> {
+  ): Promise<ContractCallReceipt> {
     try {
       const mcsAccountId: string =
         this.config.networkId === 'testnet'
@@ -122,7 +129,9 @@ export class NearCrossChainService implements IMapCrossChainService {
         nearCallOptions.gas = new BN(options.gas, 10);
       }
 
-      return await this._doNearFunctionCall(account, nearCallOptions);
+      return adaptNearReceipt(
+        await this._doNearFunctionCall(account, nearCallOptions)
+      );
     } catch (error) {
       throw error;
     }
@@ -181,9 +190,9 @@ export class NearCrossChainService implements IMapCrossChainService {
   private async _doNearFunctionCall(
     account: Account,
     options: ChangeFunctionCallOptions
-  ): Promise<string> {
-    const response = await account.functionCall(options);
-    return response.transaction.hash;
+  ): Promise<FinalExecutionOutcome> {
+    const outcome = await account.functionCall(options);
+    return outcome;
   }
 
   doDepositOutToken(
@@ -191,6 +200,25 @@ export class NearCrossChainService implements IMapCrossChainService {
     from: string,
     to: string,
     amount: string,
+    options?: TransferOutOptions
+  ): Promise<string> {
+    return Promise.resolve('');
+  }
+
+  gasEstimateTransferOutNative(
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    options?: TransferOutOptions
+  ): Promise<string> {
+    return Promise.resolve('');
+  }
+
+  gasEstimateTransferOutToken(
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
     options?: TransferOutOptions
   ): Promise<string> {
     return Promise.resolve('');
