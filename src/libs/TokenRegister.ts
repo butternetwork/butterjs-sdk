@@ -1,15 +1,15 @@
 import { ethers, Signer } from 'ethers';
 import TokenRegisterMetadata from '../abis/TokenRegister.json';
-import { TransactionReceipt } from '@ethersproject/abstract-provider';
+import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
 
 export class TokenRegister {
   private contract: ethers.Contract;
 
-  constructor(contractAddress: string, signer: Signer) {
+  constructor(contractAddress: string, signerOrProvider: Signer | Provider) {
     this.contract = new ethers.Contract(
       contractAddress,
       TokenRegisterMetadata.abi,
-      signer
+      signerOrProvider
     );
   }
 

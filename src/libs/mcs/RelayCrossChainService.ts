@@ -1,4 +1,5 @@
 import {
+  BigNumber,
   Contract,
   ContractInterface,
   ContractTransaction,
@@ -9,6 +10,8 @@ import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import { ContractCallReceipt } from '../../types/responseTypes';
 import { adaptEtherReceipt } from '../../utils/responseUtil';
 import BN from 'bn.js';
+import { Provider } from '@ethersproject/abstract-provider';
+import { BaseCurrency } from '../../entities';
 
 export class RelayCrossChainService implements IMapCrossChainService {
   contract: Contract;
@@ -16,9 +19,9 @@ export class RelayCrossChainService implements IMapCrossChainService {
   constructor(
     contractAddress: string,
     abi: ContractInterface,
-    signer: ethers.Signer
+    signerOrProvider: Signer | Provider
   ) {
-    this.contract = new ethers.Contract(contractAddress, abi, signer);
+    this.contract = new ethers.Contract(contractAddress, abi, signerOrProvider);
   }
 
   /**
@@ -144,7 +147,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
   ): Promise<string> {
     const tx: ContractTransaction =
       await this.contract.setTokenOtherChainDecimals(
-        selfTokenAddress,
+        ethers.constants.AddressZero,
         chainId,
         decimals
       );
@@ -177,5 +180,17 @@ export class RelayCrossChainService implements IMapCrossChainService {
 
     const receipt = await tx.wait();
     return receipt.transactionHash;
+  }
+
+  async getVaultBalance(
+    toChainId: number,
+    tokenAddress: string
+  ): Promise<string> {
+    const balance: BigNumber = await this.contract.vaultBalance(
+      toChainId,
+      tokenAddress
+    );
+
+    return Promise.resolve(balance.toString());
   }
 }

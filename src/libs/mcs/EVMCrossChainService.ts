@@ -4,11 +4,13 @@ import {
   ContractInterface,
   ContractTransaction,
   ethers,
+  Signer,
 } from 'ethers';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import { ContractCallReceipt } from '../../types/responseTypes';
 import { adaptEtherReceipt } from '../../utils/responseUtil';
 import BN from 'bn.js';
+import { Provider } from '@ethersproject/abstract-provider';
 
 export class EVMCrossChainService implements IMapCrossChainService {
   contract: Contract;
@@ -16,9 +18,9 @@ export class EVMCrossChainService implements IMapCrossChainService {
   constructor(
     contractAddress: string,
     abi: ContractInterface,
-    signer: ethers.Signer
+    signerOrProvider: Signer | Provider
   ) {
-    this.contract = new ethers.Contract(contractAddress, abi, signer);
+    this.contract = new ethers.Contract(contractAddress, abi, signerOrProvider);
   }
 
   /**
