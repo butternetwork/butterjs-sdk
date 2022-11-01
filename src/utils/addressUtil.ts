@@ -81,13 +81,13 @@ export function decimalArrayToHex(decimals: number[]): string {
   return ret;
 }
 
-export function getHexAddress(token: Token): string {
-  if (IS_EVM(token.chainId)) {
-    return token.address;
-  } else if (IS_NEAR(token.chainId)) {
-    return asciiToHex(token.address);
+export function getHexAddress(address: string, chainId: number): string {
+  if (IS_EVM(chainId)) {
+    return address;
+  } else if (IS_NEAR(chainId)) {
+    return asciiToHex(address);
   } else {
-    throw new Error(`chain id: ${token.chainId} not supported`);
+    throw new Error(`chain id: ${chainId} not supported`);
   }
 }
 

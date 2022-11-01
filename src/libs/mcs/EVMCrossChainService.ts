@@ -35,20 +35,8 @@ export class EVMCrossChainService implements IMapCrossChainService {
     tokenAddress: string,
     amount: string,
     toAddress: string,
-    toChainId: string,
-    gasEstimation: boolean
-  ): Promise<ContractCallReceipt | BN> {
-    // gas estimation
-    if (gasEstimation) {
-      const gas: BigNumber = await this.contract.estimateGas.transferOutToken!(
-        tokenAddress,
-        toAddress,
-        amount,
-        toChainId
-      );
-      return new BN(gas.toString(), 10);
-    }
-
+    toChainId: string
+  ): Promise<ContractCallReceipt> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutToken(
         tokenAddress,
@@ -62,6 +50,22 @@ export class EVMCrossChainService implements IMapCrossChainService {
     return adaptEtherReceipt(receipt);
   }
 
+  async gasEstimateTransferOutToken(
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string
+  ): Promise<string> {
+    // gas estimation
+    const gas: BigNumber = await this.contract.estimateGas.transferOutToken!(
+      tokenAddress,
+      toAddress,
+      amount,
+      toChainId
+    );
+    return gas.toString();
+  }
+
   /**
    * transfer out native coin from source chain to designated token on target chain
    * @param toAddress target chain receiving address
@@ -72,20 +76,8 @@ export class EVMCrossChainService implements IMapCrossChainService {
   async doTransferOutNative(
     toAddress: string,
     toChainId: string,
-    amount: string,
-    gasEstimation: boolean
-  ): Promise<ContractCallReceipt | BN> {
-    // gas estimation
-    if (gasEstimation) {
-      const gas = await this.contract.estimateGas.transferOutNative!(
-        toAddress,
-        toChainId,
-        {
-          value: amount,
-        }
-      );
-      return new BN(gas.toString(), 10);
-    }
+    amount: string
+  ): Promise<ContractCallReceipt> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutNative(toAddress, toChainId, {
         value: amount,
@@ -93,6 +85,22 @@ export class EVMCrossChainService implements IMapCrossChainService {
 
     const receipt = await transferOutTx.wait();
     return adaptEtherReceipt(receipt);
+  }
+
+  async gasEstimateTransferOutNative(
+    toAddress: string,
+    toChainId: string,
+    amount: string
+  ): Promise<string> {
+    // gas estimation
+    const gas = await this.contract.estimateGas.transferOutNative!(
+      toAddress,
+      toChainId,
+      {
+        value: amount,
+      }
+    );
+    return gas.toString();
   }
 
   async doDepositOutToken(

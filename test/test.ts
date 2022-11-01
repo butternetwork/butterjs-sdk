@@ -20,6 +20,7 @@ import {
 } from '../src/constants';
 import BN from 'bn.js';
 import { getBridgeFee, getVaultBalance } from '../src/core/tools/dataFetch';
+import { addTokenPair } from '../src/core/tools/manage';
 
 const mapProvider = new ethers.providers.JsonRpcProvider(
   'http://18.142.54.137:7445',
@@ -54,7 +55,6 @@ const oneNear = utils.format.parseNearAmount('1')!;
 const to = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
 async function main() {
-  // const bridge = new BarterBridge();
   // const addTokenParam: AddTokenPairParam = {
   //   feeRate: {
   //     lowest: BigNumber.from(100000),
@@ -63,16 +63,16 @@ async function main() {
   //   },
   //   mapNetwork: 'map-testnet',
   //   mapSigner: mapSigner,
-  //   srcToken: MAP_TEST_METH,
-  //   targetToken: ETH_PRIV_NATIVE,
-  //   // mapToken: MAP_TEST_NEAR,
+  //   srcToken: ETH_PRIV_NEAR,
+  //   targetToken: NEAR_TEST_NATIVE,
+  //   mapToken: MAP_TEST_NEAR,
   //   // nearConfig,
-  //   srcSigner: mapSigner,
+  //   srcSigner: ethSigner,
   // };
-  // await bridge.addTokenPair(addTokenParam);
+  // await addTokenPair(addTokenParam);
   // await mapToEthNative();
   // console.log(await getBridgeFee(ETH_PRIV_NATIVE, 212, oneEther, mapProvider));
-  console.log(await getVaultBalance(34434, ETH_PRIV_NATIVE, 212, mapProvider));
+  console.log(await getBridgeFee(ETH_PRIV_NEAR, 34434, oneEther, mapProvider));
 }
 
 async function ethToMapNative() {

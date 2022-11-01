@@ -16,22 +16,22 @@ export function createMCSInstance(
   switch (chainId) {
     case ChainId.MAP:
     case ChainId.MAP_TEST:
-      if (options.signer == undefined) {
+      if (options.signerOrProvider == undefined) {
         throw new Error('signer is not provided for MAP chain');
       }
       return new RelayCrossChainService(
         MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
         MCS_MAP_METADATA.abi,
-        options.signer
+        options.signerOrProvider
       );
     case ChainId.ETH_PRIV:
-      if (options.signer == undefined) {
+      if (options.signerOrProvider == undefined) {
         throw new Error(`signer is not provided for chain: ${chainId}`);
       }
       return new EVMCrossChainService(
         MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
         MCS_EVM_METADATA.abi,
-        options.signer
+        options.signerOrProvider
       );
     case ChainId.NEAR_TESTNET:
       if (options.nearConfig == undefined) {

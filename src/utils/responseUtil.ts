@@ -9,7 +9,7 @@ export function adaptEtherReceipt(
   return {
     to: transactionReceipt.to,
     from: transactionReceipt.from,
-    gasUsed: new BN(transactionReceipt.gasUsed.toString(), 10),
+    gasUsed: transactionReceipt.gasUsed.toString(),
     blockHash: transactionReceipt.blockHash,
     transactionHash: transactionReceipt.transactionHash,
     blockNumber: transactionReceipt.blockNumber,
@@ -22,10 +22,9 @@ export function adaptNearReceipt(
   return {
     to: finalExecutionOutcome.transaction.receiver_id,
     from: finalExecutionOutcome.transaction.signer_id,
-    gasUsed: new BN(
-      finalExecutionOutcome.transaction_outcome.outcome.gas_burnt,
-      10
-    ),
+    gasUsed:
+      finalExecutionOutcome.transaction_outcome.outcome.gas_burnt.toString(),
+
     transactionHash: finalExecutionOutcome.transaction.hash,
   };
 }

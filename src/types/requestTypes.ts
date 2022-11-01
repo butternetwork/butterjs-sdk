@@ -3,6 +3,7 @@ import { ChainId } from '../constants/chains';
 import { BigNumber, Signer } from 'ethers';
 import { KeyStore } from 'near-api-js/lib/key_stores';
 import { BaseCurrency } from '../entities/BaseCurrency';
+import { Provider } from '@ethersproject/abstract-provider';
 
 export type BridgeRequestParam = {
   token: BaseCurrency;
@@ -10,13 +11,13 @@ export type BridgeRequestParam = {
   toChainId: ChainId;
   toAddress: string;
   amount: string;
-  gasEstimate: boolean; // whether a gas estimate operation or not
   options: BridgeOptions;
 };
 
 export type BridgeOptions = {
-  signer?: Signer; // mandatory when src chain is evm chain(or ethers.js compatible)
+  signerOrProvider?: Signer | Provider; // mandatory when src chain is evm chain(or ethers.js compatible)
   nearConfig?: NearNetworkConfig; // mandatory when src chain is near
+  gas?: string;
 };
 
 export type AddTokenPairParam = {

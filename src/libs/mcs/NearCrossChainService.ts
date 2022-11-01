@@ -43,7 +43,6 @@ export class NearCrossChainService implements IMapCrossChainService {
     amount: string,
     toAddress: string,
     toChainId: string,
-    gasEstimation: boolean,
     options: TransferOutOptions
   ): Promise<ContractCallReceipt> {
     try {
@@ -101,7 +100,6 @@ export class NearCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     amount: string,
-    gasEstimation: boolean,
     options: TransferOutOptions
   ): Promise<ContractCallReceipt> {
     try {
@@ -202,6 +200,25 @@ export class NearCrossChainService implements IMapCrossChainService {
     from: string,
     to: string,
     amount: string,
+    options?: TransferOutOptions
+  ): Promise<string> {
+    return Promise.resolve('');
+  }
+
+  gasEstimateTransferOutNative(
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    options?: TransferOutOptions
+  ): Promise<string> {
+    return Promise.resolve('');
+  }
+
+  gasEstimateTransferOutToken(
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
     options?: TransferOutOptions
   ): Promise<string> {
     return Promise.resolve('');

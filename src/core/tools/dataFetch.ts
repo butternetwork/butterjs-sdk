@@ -105,6 +105,13 @@ export async function getVaultBalance(
     fromToken.address,
     toChainId
   );
+
+  if (toChainTokenAddress === '0x') {
+    throw new Error(
+      'Internal Error: Cannot find corresponding target token on target chain'
+    );
+  }
+
   return Promise.resolve({
     token: getTokenByAddressAndChainId(toChainTokenAddress, toChainId),
     balance: tokenBalance,

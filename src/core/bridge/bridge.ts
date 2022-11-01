@@ -1,35 +1,11 @@
-import { ethers, Signer } from 'ethers';
-import {
-  ChainId,
-  ID_TO_CHAIN_ID,
-  IS_EVM,
-  IS_MAP,
-  IS_NEAR,
-  NETWORK_NAME_TO_ID,
-} from '../../constants/chains';
-import { validateAndParseAddressByChainId } from '../../utils';
-import {
-  BridgeRequestParam,
-  AddTokenPairParam,
-  NearNetworkConfig,
-} from '../../types/requestTypes';
-import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
-import {
-  FEE_CENTER_ADDRESS_SET,
-  MCS_CONTRACT_ADDRESS_SET,
-  TOKEN_REGISTER_ADDRESS_SET,
-} from '../../constants/addresses';
+import { ChainId, IS_EVM, IS_NEAR } from '../../constants/chains';
+import { getHexAddress, validateAndParseAddressByChainId } from '../../utils';
+import { BridgeRequestParam } from '../../types/requestTypes';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
-
-import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
-import { TokenRegister } from '../../libs/TokenRegister';
-import { FeeCenter } from '../../libs/FeeCenter';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
-import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
-import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
-import { NearCrossChainService } from '../../libs/mcs/NearCrossChainService';
 import { ContractCallReceipt } from '../../types/responseTypes';
 import BN from 'bn.js';
+import { hexlify } from 'ethers/lib/utils';
 
 export class BarterBridge {
   /**
@@ -48,14 +24,12 @@ export class BarterBridge {
     toChainId,
     toAddress,
     amount,
-    gasEstimate,
     options,
-  }: BridgeRequestParam): Promise<ContractCallReceipt | BN> {
+  }: BridgeRequestParam): Promise<ContractCallReceipt> {
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
-
     // if src chain is evm chain, signer must be provided
-    if (IS_EVM(token.chainId) && options.signer == undefined) {
+    if (IS_EVM(token.chainId) && options.signerOrProvider == undefined) {
       throw new Error(`Signer must be provided for EVM blockchains`);
     }
 
@@ -74,14 +48,18 @@ export class BarterBridge {
     );
 
     let result;
-
-    // if input token is Native coin, call transferOutNative method
+    if (IS_NEAR(toChainId)) {
+      toAddress = getHexAddress(toAddress, toChainId);
+    }
     if (token.isNative) {
+      // if input token is Native coin, call transferOutNative method
       result = await mcs.doTransferOutNative(
         toAddress,
         toChainId.toString(),
         amount,
-        gasEstimate
+        {
+          gas: options.gas,
+        }
       );
     } else {
       result = await mcs.doTransferOutToken(
@@ -89,10 +67,59 @@ export class BarterBridge {
         amount,
         toAddress,
         toChainId.toString(),
-        gasEstimate
+        {
+          gas: options.gas,
+        }
       );
     }
 
     return result;
+  }
+
+  async gasEstimateBridgeToken({
+    token,
+    toChainId,
+    toAddress,
+    amount,
+    options,
+  }: BridgeRequestParam): Promise<string> {
+    // check validity of toAddress according to toChainId
+    toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
+
+    // if src chain is evm chain, signer must be provided
+    if (IS_EVM(token.chainId) && options.signerOrProvider == undefined) {
+      throw new Error(`Provider must be provided`);
+    }
+
+    // near doesn't provide gas estimation yet
+
+    // create mcs instance base on src token chainId.
+    const mcs: IMapCrossChainService = createMCSInstance(
+      token.chainId,
+      options
+    );
+
+    if (IS_NEAR(toChainId)) {
+      toAddress = getHexAddress(toAddress, toChainId);
+    }
+
+    let gas;
+    // if input token is Native coin, call transferOutNative method
+    if (token.isNative) {
+      gas = await mcs.gasEstimateTransferOutNative(
+        toAddress,
+        toChainId.toString(),
+        amount
+      );
+    } else {
+      gas = await mcs.gasEstimateTransferOutToken(
+        token.address,
+        amount,
+        toAddress,
+        toChainId.toString()
+      );
+    }
+
+    return gas;
   }
 }

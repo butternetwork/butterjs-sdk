@@ -12,7 +12,6 @@ export interface IMapCrossChainService {
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
-   * @param gasEstimation do gas estimate or not
    * @param options see {@link TransferOutOptions} for more detail
    */
   doTransferOutToken(
@@ -20,25 +19,37 @@ export interface IMapCrossChainService {
     amount: string,
     toAddress: string,
     toChainId: string,
-    gasEstimation: boolean,
     options?: TransferOutOptions
-  ): Promise<ContractCallReceipt | BN>;
+  ): Promise<ContractCallReceipt>;
+
+  gasEstimateTransferOutToken(
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
+    options?: TransferOutOptions
+  ): Promise<string>;
 
   /**
    * transfer out native coin from source chain to designated token on target chain
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
-   * @param gasEstimation do gas estimate or not
    * @param options see {@link TransferOutOptions} for more detail
    */
   doTransferOutNative(
     toAddress: string,
     toChainId: string,
     amount: string,
-    gasEstimation: boolean,
     options?: TransferOutOptions
-  ): Promise<ContractCallReceipt | BN>;
+  ): Promise<ContractCallReceipt>;
+
+  gasEstimateTransferOutNative(
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    options?: TransferOutOptions
+  ): Promise<string>;
 
   /**
    * TODO: In development

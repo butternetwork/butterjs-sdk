@@ -36,21 +36,8 @@ export class RelayCrossChainService implements IMapCrossChainService {
     tokenAddress: string,
     amount: string,
     toAddress: string,
-    toChainId: string,
-    gasEstimation: boolean
-  ): Promise<ContractCallReceipt | BN> {
-    if (gasEstimation) {
-      const gas = await this.contract.estimateGas.transferOutToken!(
-        tokenAddress,
-        toAddress,
-        amount,
-        toChainId,
-        { gasLimit: 5000000 }
-      );
-
-      return new BN(gas.toString(), 10);
-    }
-
+    toChainId: string
+  ): Promise<ContractCallReceipt> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutToken(
         tokenAddress,
@@ -63,6 +50,23 @@ export class RelayCrossChainService implements IMapCrossChainService {
     return adaptEtherReceipt(receipt);
   }
 
+  async gasEstimateTransferOutToken(
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string
+  ): Promise<string> {
+    const gas = await this.contract.estimateGas.transferOutToken!(
+      tokenAddress,
+      toAddress,
+      amount,
+      toChainId,
+      { gasLimit: 5000000 }
+    );
+
+    return gas.toString();
+  }
+
   /**
    * transfer out native coin from source chain to designated token on target chain
    * @param toAddress target chain receiving address
@@ -73,21 +77,8 @@ export class RelayCrossChainService implements IMapCrossChainService {
   async doTransferOutNative(
     toAddress: string,
     toChainId: string,
-    amount: string,
-    gasEstimation: boolean
-  ): Promise<ContractCallReceipt | BN> {
-    if (gasEstimation) {
-      const gas = await this.contract.estimateGas.transferOutNative!(
-        toAddress,
-        toChainId,
-        {
-          value: amount,
-        }
-      );
-
-      return new BN(gas.toString(), 10);
-    }
-
+    amount: string
+  ): Promise<ContractCallReceipt> {
     const transferOutTx: ContractTransaction =
       await this.contract.transferOutNative(toAddress, toChainId, {
         value: amount,
@@ -95,6 +86,22 @@ export class RelayCrossChainService implements IMapCrossChainService {
 
     const receipt = await transferOutTx.wait();
     return adaptEtherReceipt(receipt);
+  }
+
+  async gasEstimateTransferOutNative(
+    toAddress: string,
+    toChainId: string,
+    amount: string
+  ): Promise<string> {
+    const gas = await this.contract.estimateGas.transferOutNative!(
+      toAddress,
+      toChainId,
+      {
+        value: amount,
+      }
+    );
+
+    return gas.toString();
   }
 
   async doDepositOutToken(

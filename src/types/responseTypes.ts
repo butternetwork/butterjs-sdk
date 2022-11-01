@@ -5,7 +5,7 @@ import { BaseCurrency } from '../entities';
 export interface ContractCallReceipt {
   to: string;
   from: string;
-  gasUsed: BN;
+  gasUsed: string;
   transactionHash: string;
   blockHash?: string;
   blockNumber?: number;
@@ -24,6 +24,6 @@ export type BarterFeeDistribution = {
 };
 
 export interface VaultBalance {
-  token: BaseCurrency;
-  balance: string;
+  token: BaseCurrency; // vault token
+  balance: string; // amount in minimal uint
 }
