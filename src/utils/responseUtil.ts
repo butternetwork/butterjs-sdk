@@ -1,10 +1,11 @@
-import { TransactionReceipt } from '@ethersproject/abstract-provider';
+import { TransactionReceipt as EthersTransactionReceipt } from '@ethersproject/abstract-provider';
 import { ContractCallReceipt } from '../types/responseTypes';
 import BN from 'bn.js';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
+import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
 
-export function adaptEtherReceipt(
-  transactionReceipt: TransactionReceipt
+export function adaptEthReceipt(
+  transactionReceipt: EthersTransactionReceipt | Web3TransactionReceipt
 ): ContractCallReceipt {
   return {
     to: transactionReceipt.to,

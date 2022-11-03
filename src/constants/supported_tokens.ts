@@ -1,5 +1,4 @@
-import { ChainId } from './chains';
-import { BaseCurrency, Token } from '../entities';
+import { BaseCurrency } from '../entities';
 import {
   ETH_PRIV_LMAP,
   ETH_PRIV_NATIVE,

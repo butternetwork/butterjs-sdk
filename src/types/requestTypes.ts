@@ -4,6 +4,7 @@ import { BigNumber, Signer } from 'ethers';
 import { KeyStore } from 'near-api-js/lib/key_stores';
 import { BaseCurrency } from '../entities/BaseCurrency';
 import { Provider } from '@ethersproject/abstract-provider';
+import { Eth } from 'web3-eth';
 
 export type BridgeRequestParam = {
   token: BaseCurrency;
@@ -15,7 +16,7 @@ export type BridgeRequestParam = {
 };
 
 export type BridgeOptions = {
-  signerOrProvider?: Signer | Provider; // mandatory when src chain is evm chain(or ethers.js compatible)
+  signerOrProvider?: Signer | Provider | Eth; // mandatory when src chain is evm chain(or ethers.js compatible)
   nearConfig?: NearNetworkConfig; // mandatory when src chain is near
   gas?: string;
 };
