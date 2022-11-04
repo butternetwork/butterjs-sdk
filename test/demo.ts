@@ -56,6 +56,7 @@ async function demo() {
     url: 'http://18.142.54.137:7445',
     chainId: 212,
   };
+
   // 1. 获取费用信息
   const fee: BarterFee = await getBridgeFee(
     ETH_PRIV_NEAR,

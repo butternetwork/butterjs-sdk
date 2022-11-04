@@ -3,11 +3,11 @@ import { Currency } from './Currency';
 import { Token } from './Token';
 
 /**
- * A currency is any fungible financial instrument, including Ether, all ERC20 tokens, and other chain-native currencies
+ * A currency is any fungible financial instrument, including EVMNativCoin, all ERC20 tokens, and other chain-native currencies
  */
 export abstract class BaseCurrency {
   /**
-   * Returns whether the currency is native to the chain and must be wrapped (e.g. Ether)
+   * Returns whether the currency is native to the chain and must be wrapped (e.g. EVMNativCoin)
    */
   public abstract readonly isNative: boolean;
   /**

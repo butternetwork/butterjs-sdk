@@ -6,11 +6,16 @@ import { WETH9 } from '../weth9';
 import { ZERO_ADDRESS } from '../../constants';
 
 /**
- * Ether is the main usage of a 'native' currency, i.e. for Ethereum mainnet and all testnets
+ * EVMNativCoin is the main usage of a 'native' currency, i.e. for Ethereum mainnet and all testnets
  */
-export class Ether extends NativeCurrency {
-  public constructor(chainId: number) {
-    super(chainId, 18, ZERO_ADDRESS, 'ETH', 'Ether');
+export class EVMNativeCoin extends NativeCurrency {
+  public constructor(
+    chainId: number,
+    decimal: number,
+    symbol?: string,
+    name?: string
+  ) {
+    super(chainId, decimal, ZERO_ADDRESS, symbol, name);
   }
 
   public get wrapped(): Token {
@@ -19,14 +24,7 @@ export class Ether extends NativeCurrency {
     return weth9;
   }
 
-  private static _etherCache: { [chainId: number]: Ether } = {};
-
-  public static onChain(chainId: number): Ether {
-    return (
-      this._etherCache[chainId] ??
-      (this._etherCache[chainId] = new Ether(chainId))
-    );
-  }
+  private static _etherCache: { [chainId: number]: EVMNativeCoin } = {};
 
   public equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId;

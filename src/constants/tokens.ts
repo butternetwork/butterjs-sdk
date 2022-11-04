@@ -1,10 +1,20 @@
 import { Token } from '../entities/Token';
 import { NearNativeCoin } from '../entities/native/Near';
 import { ChainId } from './chains';
-import { Ether } from '../entities/native/Ether';
+import { EVMNativeCoin } from '../entities/native/EVMNativeCoin';
 
-export const ETH_PRIV_NATIVE = new Ether(ChainId.ETH_PRIV);
-export const MAP_TEST_NATIVE = new Ether(ChainId.MAP_TEST);
+export const ETH_PRIV_NATIVE = new EVMNativeCoin(
+  ChainId.ETH_PRIV,
+  18,
+  'ETH',
+  'ether'
+);
+export const MAP_TEST_NATIVE = new EVMNativeCoin(
+  ChainId.MAP_TEST,
+  18,
+  'MAP',
+  'MAP Protocol'
+);
 export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
 
 export const ETH_PRIV_LMAP = new Token(
