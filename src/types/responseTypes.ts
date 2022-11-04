@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber';
 import BN from 'bn.js';
 import { BaseCurrency } from '../entities';
 
-export interface ContractCallReceipt {
+export interface BarterContractCallReceipt {
   to: string;
   from: string;
   gasUsed: string;

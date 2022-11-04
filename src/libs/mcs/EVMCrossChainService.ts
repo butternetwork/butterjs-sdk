@@ -8,21 +8,21 @@ import {
 import { Contract as Web3Contract } from 'web3-eth-contract';
 import { Eth } from 'web3-eth';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
-import { ContractCallReceipt } from '../../types/responseTypes';
+import { BarterContractCallReceipt } from '../../types/responseTypes';
 import { adaptEthReceipt } from '../../utils/responseUtil';
 
 import { Provider } from '@ethersproject/abstract-provider';
-import { TransactionReceipt } from 'web3-core';
 import { TransferOutOptions } from '../../types';
+import { BarterContractType, BarterProviderType } from '../../types/paramTypes';
 
 export class EVMCrossChainService implements IMapCrossChainService {
-  contract: EthersContract | Web3Contract;
-  provider: Signer | Provider | Eth;
+  contract: BarterContractType;
+  provider: BarterProviderType;
 
   constructor(
     contractAddress: string,
     abi: any,
-    signerOrProvider: Signer | Provider | Eth
+    signerOrProvider: BarterProviderType
   ) {
     if (
       signerOrProvider instanceof Signer ||
@@ -53,7 +53,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<ContractCallReceipt> {
+  ): Promise<BarterContractCallReceipt> {
     let receipt;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
@@ -96,9 +96,11 @@ export class EVMCrossChainService implements IMapCrossChainService {
       );
       estimatedGas = gas.toString();
     } else {
+      const eth = this.provider as Eth;
+
       const gas = await this.contract.methods
         .transferOutToken(tokenAddress, toAddress, amount, toChainId)
-        .estimateGas();
+        .estimateGas({ from: eth.defaultAccount });
       estimatedGas = gas.toString();
     }
     return estimatedGas;
@@ -116,7 +118,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<ContractCallReceipt> {
+  ): Promise<BarterContractCallReceipt> {
     let receipt;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =

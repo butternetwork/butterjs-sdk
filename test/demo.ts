@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
 import { KeyPair, keyStores } from 'near-api-js';
 import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
@@ -12,12 +12,14 @@ import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
 import { getBridgeFee, getVaultBalance } from '../src/core/tools/dataFetch';
 import {
   BarterFee,
-  ContractCallReceipt,
+  BarterContractCallReceipt,
   VaultBalance,
 } from '../src/types/responseTypes';
 import { BarterBridge } from '../src';
 import { approveToken } from '../src/libs/allowance';
 import Web3 from 'web3';
+import { JsonRpcProvider } from 'near-api-js/lib/providers';
+import { BarterJsonRpcProvider } from '../src/types/paramTypes';
 require('dotenv/config');
 const web3 = new Web3('http://18.138.248.113:8545');
 const account = web3.eth.accounts.privateKeyToAccount(
@@ -25,22 +27,6 @@ const account = web3.eth.accounts.privateKeyToAccount(
 );
 web3.eth.accounts.wallet.add(account);
 web3.eth.defaultAccount = account.address;
-
-// MAP Test Signer
-const mapProvider = new ethers.providers.JsonRpcProvider(
-  'http://18.142.54.137:7445',
-  212
-);
-
-// ETH Private Signer
-const ethProvider = new ethers.providers.JsonRpcProvider(
-  'http://18.138.248.113:8545',
-  34434
-);
-const ethSigner = new ethers.Wallet(
-  '939ae45116ea2d4ef9061f13534bc451e9f9835e94f191970f23aac0299d5f7a',
-  ethProvider
-);
 
 // NEAR Network 配置 等同于ethers.js的signer, 如果src chain是Near需要配置
 const keyStore: InMemoryKeyStore = new keyStores.InMemoryKeyStore();
@@ -66,23 +52,27 @@ const nearConfig: NearNetworkConfig = {
  *    3. bridgeToken
  *  */
 async function demo() {
+  const provider: BarterJsonRpcProvider = {
+    url: 'http://18.142.54.137:7445',
+    chainId: 212,
+  };
   // 1. 获取费用信息
-  // const fee: BarterFee = await getBridgeFee(
-  //   ETH_PRIV_NEAR,
-  //   ChainId.ETH_PRIV,
-  //   ethers.utils.parseEther('1').toString(),
-  //   mapProvider
-  // );
-  // console.log('bridge fee', fee);
-  //
-  // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
-  // const balance: VaultBalance = await getVaultBalance(
-  //   ChainId.ETH_PRIV,
-  //   ETH_PRIV_NEAR,
-  //   ChainId.NEAR_TESTNET,
-  //   mapProvider
-  // );
-  // console.log('vault balance', balance);
+  const fee: BarterFee = await getBridgeFee(
+    ETH_PRIV_NEAR,
+    ChainId.NEAR_TESTNET,
+    ethers.utils.parseEther('1').toString(),
+    provider
+  );
+  console.log('bridge fee', fee);
+
+  // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
+  const balance: VaultBalance = await getVaultBalance(
+    ChainId.ETH_PRIV,
+    ETH_PRIV_NEAR,
+    ChainId.NEAR_TESTNET,
+    provider
+  );
+  console.log('vault balance', balance);
   //
   // // 2.a approve spend token if necessary
   //
@@ -93,7 +83,7 @@ async function demo() {
   //   MCS_CONTRACT_ADDRESS_SET[ChainId.ETH_PRIV],
   //   true
   // );
-  //
+  // //
   // // // 3. Bridge(先estimate gas)
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
@@ -106,6 +96,10 @@ async function demo() {
   };
   const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
 
+  const adjustedGas = Math.floor(
+    Number.parseFloat(estimatedGas) * 1.2
+  ).toString();
+
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
     token: ETH_PRIV_NEAR,
@@ -113,9 +107,14 @@ async function demo() {
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: 'xyli.testnet',
     amount: ethers.utils.parseEther('1').toString(),
-    options: { signerOrProvider: web3.eth, gas: estimatedGas },
+    options: {
+      signerOrProvider: web3.eth,
+      gas: adjustedGas,
+    },
   };
-  const receipt: ContractCallReceipt = await bridge.bridgeToken(bridgeRequest);
+  const receipt: BarterContractCallReceipt = await bridge.bridgeToken(
+    bridgeRequest
+  );
   console.log('tx receipt', receipt);
 }
 

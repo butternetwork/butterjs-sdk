@@ -3,6 +3,7 @@ import {
   ChainId,
   FEE_CENTER_ADDRESS_SET,
   ID_TO_CHAIN_ID,
+  ID_TO_DEFAULT_PROVIDER,
   IS_MAP,
   MCS_CONTRACT_ADDRESS_SET,
   NETWORK_NAME_TO_ID,
@@ -16,21 +17,27 @@ import { BigNumber, ethers } from 'ethers';
 import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
 import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import { getTokenByAddressAndChainId } from '../../utils/tokenUtil';
+import { BarterJsonRpcProvider } from '../../types/paramTypes';
 
 /**
  * get fee for bridging srcToken to targetChain
  * @param srcToken
  * @param targetChain
  * @param amount
- * @param mapProvider
+ * @param rpcProvider use default rpcProvider when not specified
  */
 export async function getBridgeFee(
   srcToken: BaseCurrency,
   targetChain: number,
   amount: string,
-  mapProvider: Provider
+  rpcProvider: BarterJsonRpcProvider
 ): Promise<BarterFee> {
-  const chainId: number = (await mapProvider.getNetwork()).chainId;
+  const chainId: number = rpcProvider.chainId;
+
+  const mapChainId: number = rpcProvider.chainId;
+  const mapProvider = new ethers.providers.JsonRpcProvider(
+    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_PROVIDER(mapChainId)
+  );
   const feeCenter = new FeeCenter(
     FEE_CENTER_ADDRESS_SET[chainId]!,
     mapProvider
@@ -40,7 +47,6 @@ export async function getBridgeFee(
     TOKEN_REGISTER_ADDRESS_SET[chainId]!,
     mapProvider
   );
-
   const targetTokenAddress = await tokenRegister.getTargetToken(
     srcToken.chainId,
     srcToken.address,
@@ -64,23 +70,26 @@ export async function getBridgeFee(
  * @param fromChainId
  * @param fromToken
  * @param toChainId
- * @param mapProvider
+ * @param rpcProvider
  */
 export async function getVaultBalance(
   fromChainId: number,
   fromToken: BaseCurrency,
   toChainId: number,
-  mapProvider: Provider
+  rpcProvider: BarterJsonRpcProvider
 ): Promise<VaultBalance> {
   if (fromChainId != fromToken.chainId) {
     throw new Error("Request Error: chainId and token.chainId doesn't match");
   }
 
-  const mapChainId: number = (await mapProvider.getNetwork()).chainId;
+  const mapChainId: number = rpcProvider.chainId;
+  const provider = new ethers.providers.JsonRpcProvider(
+    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_PROVIDER(mapChainId)
+  );
 
   const tokenRegister = new TokenRegister(
     TOKEN_REGISTER_ADDRESS_SET[mapChainId]!,
-    mapProvider
+    provider
   );
 
   const mapTokenAddress = IS_MAP(fromChainId)
@@ -96,7 +105,7 @@ export async function getVaultBalance(
   const mapMCS = new RelayCrossChainService(
     mcsContractAddress,
     MCS_MAP_METADATA.abi,
-    mapProvider
+    provider
   );
 
   const tokenBalance = await mapMCS.getVaultBalance(toChainId, mapTokenAddress);

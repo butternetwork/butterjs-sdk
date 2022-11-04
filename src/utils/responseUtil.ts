@@ -1,12 +1,10 @@
-import { TransactionReceipt as EthersTransactionReceipt } from '@ethersproject/abstract-provider';
-import { ContractCallReceipt } from '../types/responseTypes';
-import BN from 'bn.js';
+import { BarterContractCallReceipt } from '../types/responseTypes';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
-import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
+import { BarterReceiptType } from '../types/paramTypes';
 
 export function adaptEthReceipt(
-  transactionReceipt: EthersTransactionReceipt | Web3TransactionReceipt
-): ContractCallReceipt {
+  transactionReceipt: BarterReceiptType
+): BarterContractCallReceipt {
   return {
     to: transactionReceipt.to,
     from: transactionReceipt.from,
@@ -19,7 +17,7 @@ export function adaptEthReceipt(
 
 export function adaptNearReceipt(
   finalExecutionOutcome: FinalExecutionOutcome
-): ContractCallReceipt {
+): BarterContractCallReceipt {
   return {
     to: finalExecutionOutcome.transaction.receiver_id,
     from: finalExecutionOutcome.transaction.signer_id,

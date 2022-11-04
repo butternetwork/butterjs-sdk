@@ -9,20 +9,21 @@ import {
 import { Contract as Web3Contract } from 'web3-eth-contract';
 
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
-import { ContractCallReceipt } from '../../types/responseTypes';
+import { BarterContractCallReceipt } from '../../types/responseTypes';
 import { adaptEthReceipt } from '../../utils/responseUtil';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
 import { TransferOutOptions } from '../../types';
+import { BarterProviderType } from '../../types/paramTypes';
 
 export class RelayCrossChainService implements IMapCrossChainService {
   contract: EthersContract | Web3Contract;
-  provider: Signer | Provider | Eth;
+  provider: BarterProviderType;
 
   constructor(
     contractAddress: string,
     abi: any,
-    signerOrProvider: Signer | Provider | Eth
+    signerOrProvider: BarterProviderType
   ) {
     if (
       signerOrProvider instanceof Signer ||
@@ -53,7 +54,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<ContractCallReceipt> {
+  ): Promise<BarterContractCallReceipt> {
     let receipt;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
@@ -114,7 +115,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<ContractCallReceipt> {
+  ): Promise<BarterContractCallReceipt> {
     let receipt;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
@@ -260,7 +261,24 @@ export class RelayCrossChainService implements IMapCrossChainService {
       throw new Error('need ethers provider');
     }
   }
+  async setVaultBalance(
+    toChain: number,
+    address: string,
+    amount: string
+  ): Promise<string> {
+    if (this.contract instanceof EthersContract) {
+      const tx: ContractTransaction = await this.contract.setVaultBalance(
+        toChain,
+        address,
+        amount
+      );
 
+      const receipt = await tx.wait();
+      return receipt.transactionHash;
+    } else {
+      throw new Error('need ethers provider');
+    }
+  }
   async getVaultBalance(
     toChainId: number,
     tokenAddress: string

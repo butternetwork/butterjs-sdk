@@ -15,7 +15,7 @@ import BN from 'bn.js';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import { hexToDecimalArray } from '../../utils';
-import { ContractCallReceipt } from '../../types/responseTypes';
+import { BarterContractCallReceipt } from '../../types/responseTypes';
 import { adaptNearReceipt } from '../../utils/responseUtil';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 export class NearCrossChainService implements IMapCrossChainService {
@@ -44,7 +44,7 @@ export class NearCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<ContractCallReceipt> {
+  ): Promise<BarterContractCallReceipt> {
     try {
       // get mcs contract address
       const mcsAccountId: string =
@@ -101,7 +101,7 @@ export class NearCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<ContractCallReceipt> {
+  ): Promise<BarterContractCallReceipt> {
     try {
       const mcsAccountId: string =
         this.config.networkId === 'testnet'

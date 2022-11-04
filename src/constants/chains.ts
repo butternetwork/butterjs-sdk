@@ -82,12 +82,12 @@ export const CHAIN_IDS_LIST = Object.values(ChainId).map((c) =>
   c.toString()
 ) as string[];
 
-export const ID_TO_PROVIDER = (id: ChainId): string => {
+export const ID_TO_DEFAULT_PROVIDER = (id: ChainId): string => {
   switch (id) {
     case ChainId.MAP:
       return process.env.JSON_RPC_PROVIDER_MAP!;
     case ChainId.MAP_TEST:
-      return process.env.JSON_RPC_PROVIDER_MAP_TEST!;
+      return 'http://18.142.54.137:7445';
     case ChainId.ETH_PRIV:
       return process.env.JSON_RPC_PROVIDER_ETH_PRIV!;
     default:
