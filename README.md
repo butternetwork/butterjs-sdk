@@ -8,7 +8,7 @@ BarterJS SDK aims to facilitate the development of cross-chain functionality by 
 4. [Vault Balance](#vaultbalance)
 5. [Asset Bridging](#assetbridge)
 6. [Cross-chain Swap(Still Under Development)](#crosschainswap)
-7. [Omnichain Payment(Still Under Development)](#payment)
+7. [Omnichain Payment(Still Under Development)](#omnipayment)
 
 
 
@@ -526,7 +526,7 @@ const bestRoute: CrossChainSwapRoute = getBestRoute(swapRouteRequest);
 
 const result = await omniSwap(bestRoute);
 ```
-<a name="payment"></a>
+<a name="omnipayment"></a>
 ## Omnichain Payment(Still Under Development) 
 Pay whatever crypto users want, merchant will always get their desired token.
 ### getPaymentInfo
