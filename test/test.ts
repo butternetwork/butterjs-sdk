@@ -78,7 +78,7 @@ async function main() {
 async function ethToMapNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: ETH_PRIV_NATIVE,
+    fromToken: ETH_PRIV_NATIVE,
     fromChainId: ETH_PRIV_NATIVE.chainId,
     toChainId: ChainId.MAP_TEST,
     toAddress: to,
@@ -91,7 +91,7 @@ async function ethToMapNative() {
 async function ethToMapToken() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: ETH_PRIV_LMAP,
+    fromToken: ETH_PRIV_LMAP,
     fromChainId: ETH_PRIV_WETH.chainId,
     toChainId: ChainId.MAP_TEST,
     toAddress: to,
@@ -104,7 +104,7 @@ async function ethToMapToken() {
 async function mapToEthNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: MAP_TEST_NATIVE,
+    fromToken: MAP_TEST_NATIVE,
     fromChainId: MAP_TEST_NATIVE.chainId,
     toChainId: ChainId.ETH_PRIV,
     toAddress: to,
@@ -117,7 +117,7 @@ async function mapToEthNative() {
 async function mapToEthToken() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: MAP_TEST_METH,
+    fromToken: MAP_TEST_METH,
     fromChainId: MAP_TEST_METH.chainId,
     toChainId: ChainId.ETH_PRIV,
     toAddress: 'xyli.testnet',
@@ -130,7 +130,7 @@ async function mapToEthToken() {
 async function mapToNearNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: MAP_TEST_NATIVE,
+    fromToken: MAP_TEST_NATIVE,
     fromChainId: MAP_TEST_NATIVE.chainId,
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: to,
@@ -143,7 +143,7 @@ async function mapToNearNative() {
 async function mapToNearToken() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: MAP_TEST_NEAR,
+    fromToken: MAP_TEST_NEAR,
     fromChainId: MAP_TEST_NEAR.chainId,
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: to,
@@ -156,7 +156,7 @@ async function mapToNearToken() {
 async function nearToMapNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: NEAR_TEST_NATIVE,
+    fromToken: NEAR_TEST_NATIVE,
     fromChainId: ChainId.NEAR_TESTNET,
     toChainId: ChainId.MAP_TEST,
     toAddress: to,

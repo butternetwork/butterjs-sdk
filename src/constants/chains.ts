@@ -4,7 +4,7 @@ export enum ChainId {
   ETH_PRIV = 34434,
   NEAR_TESTNET = 1313161555,
 }
-
+// TODO: return chain info
 export const ID_TO_CHAIN_ID = (id: number): ChainId => {
   switch (id) {
     case 22776:
@@ -78,7 +78,7 @@ export const NETWORK_NAME_TO_ID = (network: string): ChainId => {
   }
 };
 
-export const CHAIN_IDS_LIST = Object.values(ChainId).map((c) =>
+export const SUPPORTED_CHAIN_IDS_LIST = Object.values(ChainId).map((c) =>
   c.toString()
 ) as string[];
 

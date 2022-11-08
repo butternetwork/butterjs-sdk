@@ -5,8 +5,7 @@ import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
 import {
   ChainId,
   ETH_PRIV_NEAR,
-  MCS_CONTRACT_ADDRESS_SET,
-  NEAR_TEST_NATIVE,
+  SUPPORTED_CHAIN_IDS_LIST,
 } from '../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
 import { getBridgeFee, getVaultBalance } from '../src/core/tools/dataFetch';
@@ -20,6 +19,7 @@ import { approveToken } from '../src/libs/allowance';
 import Web3 from 'web3';
 import { JsonRpcProvider } from 'near-api-js/lib/providers';
 import { BarterJsonRpcProvider } from '../src/types/paramTypes';
+
 require('dotenv/config');
 const web3 = new Web3('http://18.138.248.113:8545');
 const account = web3.eth.accounts.privateKeyToAccount(
@@ -32,7 +32,6 @@ web3.eth.defaultAccount = account.address;
 const keyStore: InMemoryKeyStore = new keyStores.InMemoryKeyStore();
 const keyPair: KeyPair = KeyPair.fromString(process.env.NEAR_PRIVATE_KEY!);
 keyStore.setKey('testnet', 'xyli.testnet', keyPair);
-
 const nearConfig: NearNetworkConfig = {
   fromAccount: 'xyli.testnet',
   keyStore: keyStore,
@@ -43,7 +42,7 @@ const nearConfig: NearNetworkConfig = {
 /** 支持的链 {@link ChainId} 调试中仅支持MAP测试网，ETH私链，和Near测试网**/
 
 /** 支持的token {@link supported_token.ts} **/
-// console.log('supported token', ID_TO_SUPPORTED_TOKEN(ChainId.ETH_PRIV));
+console.log('supported token', ID_TO_SUPPORTED_TOKEN(ChainId.ETH_PRIV));
 
 /** 下面假设我们要从讲Near代币从ETH链Bridge到NEAR链从而获得NEAR上的原生Near代币
  *  整个过程需要3个接口
@@ -88,7 +87,7 @@ async function demo() {
   // // // 3. Bridge(先estimate gas)
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: ETH_PRIV_NEAR,
+    fromToken: ETH_PRIV_NEAR,
     fromChainId: ChainId.ETH_PRIV,
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: 'abc.testnet',
@@ -103,7 +102,7 @@ async function demo() {
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
-    token: ETH_PRIV_NEAR,
+    fromToken: ETH_PRIV_NEAR,
     fromChainId: ChainId.ETH_PRIV,
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: 'xyli.testnet',
