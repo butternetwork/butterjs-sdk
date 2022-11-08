@@ -55,36 +55,35 @@ const oneNear = utils.format.parseNearAmount('1')!;
 const to = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
 async function main() {
-  // const addTokenParam: AddTokenPairParam = {
-  //   feeRate: {
-  //     lowest: BigNumber.from(100000),
-  //     highest: BigNumber.from(10000000000000),
-  //     bps: 100,
-  //   },
-  //   mapNetwork: 'map-testnet',
-  //   mapSigner: mapSigner,
-  //   srcToken: ETH_PRIV_NEAR,
-  //   targetToken: NEAR_TEST_NATIVE,
-  //   mapToken: MAP_TEST_NEAR,
-  //   // nearConfig,
-  //   srcSigner: ethSigner,
-  // };
-  // await addTokenPair(addTokenParam);
+  const addTokenParam: AddTokenPairParam = {
+    feeRate: {
+      lowest: BigNumber.from(100000),
+      highest: BigNumber.from(10000000000000),
+      bps: 100,
+    },
+    mapNetwork: 'map-testnet',
+    mapSigner: mapSigner,
+    srcToken: ETH_PRIV_NATIVE,
+    targetToken: MAP_TEST_METH,
+    // mapToken: MAP_TEST_NEAR,
+    nearConfig,
+    srcSigner: ethSigner,
+  };
+  await addTokenPair(addTokenParam);
   // await mapToEthNative();
   // console.log(await getBridgeFee(ETH_PRIV_NATIVE, 212, oneEther, mapProvider));
-  console.log(await getBridgeFee(ETH_PRIV_NEAR, 34434, oneEther, mapProvider));
+  // console.log(await getBridgeFee(ETH_PRIV_NEAR, 34434, oneEther, mapProvider));
 }
 
 async function ethToMapNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: ETH_PRIV_NATIVE,
+    fromToken: ETH_PRIV_NATIVE,
     fromChainId: ETH_PRIV_NATIVE.chainId,
     toChainId: ChainId.MAP_TEST,
     toAddress: to,
     amount: oneEther,
-    gasEstimate: true,
-    options: { signer: ethSigner },
+    options: { signerOrProvider: ethSigner },
   };
   const ret = await bridge.bridgeToken(request);
 }
@@ -92,13 +91,12 @@ async function ethToMapNative() {
 async function ethToMapToken() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: ETH_PRIV_LMAP,
+    fromToken: ETH_PRIV_LMAP,
     fromChainId: ETH_PRIV_WETH.chainId,
     toChainId: ChainId.MAP_TEST,
     toAddress: to,
     amount: oneEther,
-    gasEstimate: false,
-    options: { signer: ethSigner },
+    options: { signerOrProvider: ethSigner },
   };
   await bridge.bridgeToken(request);
 }
@@ -106,13 +104,12 @@ async function ethToMapToken() {
 async function mapToEthNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: MAP_TEST_NATIVE,
+    fromToken: MAP_TEST_NATIVE,
     fromChainId: MAP_TEST_NATIVE.chainId,
     toChainId: ChainId.ETH_PRIV,
     toAddress: to,
     amount: oneEther,
-    gasEstimate: true,
-    options: { signer: mapSigner },
+    options: { signerOrProvider: mapSigner },
   };
   await bridge.bridgeToken(request);
 }
@@ -120,13 +117,12 @@ async function mapToEthNative() {
 async function mapToEthToken() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: MAP_TEST_METH,
+    fromToken: MAP_TEST_METH,
     fromChainId: MAP_TEST_METH.chainId,
     toChainId: ChainId.ETH_PRIV,
     toAddress: 'xyli.testnet',
     amount: oneEther,
-    gasEstimate: false,
-    options: { signer: mapSigner },
+    options: { signerOrProvider: mapSigner },
   };
   await bridge.bridgeToken(request);
 }
@@ -134,13 +130,12 @@ async function mapToEthToken() {
 async function mapToNearNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: MAP_TEST_NATIVE,
+    fromToken: MAP_TEST_NATIVE,
     fromChainId: MAP_TEST_NATIVE.chainId,
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: to,
     amount: oneEther,
-    gasEstimate: false,
-    options: { signer: mapSigner },
+    options: { signerOrProvider: mapSigner },
   };
   await bridge.bridgeToken(request);
 }
@@ -148,13 +143,12 @@ async function mapToNearNative() {
 async function mapToNearToken() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: MAP_TEST_NEAR,
+    fromToken: MAP_TEST_NEAR,
     fromChainId: MAP_TEST_NEAR.chainId,
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: to,
     amount: oneEther,
-    gasEstimate: false,
-    options: { signer: mapSigner },
+    options: { signerOrProvider: mapSigner },
   };
   await bridge.bridgeToken(request);
 }
@@ -162,12 +156,11 @@ async function mapToNearToken() {
 async function nearToMapNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
-    token: NEAR_TEST_NATIVE,
+    fromToken: NEAR_TEST_NATIVE,
     fromChainId: ChainId.NEAR_TESTNET,
     toChainId: ChainId.MAP_TEST,
     toAddress: to,
     amount: oneNear,
-    gasEstimate: false,
     options: { nearConfig: nearConfig },
   };
 

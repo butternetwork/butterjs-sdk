@@ -1,7 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber';
-import { Token } from '../entities/Token';
 import { ChainId } from './chains';
-import { ethers } from 'ethers';
 
 /**
  * MCS contract address by chainId
@@ -29,4 +26,4 @@ export const FEE_CENTER_ADDRESS_SET: { [chainId: number]: string } = {
   212: '0xE0c5F1100a8963ea428F5567509fFF853257F7b6',
 };
 
-export const ZERO_ADDRESS = ethers.constants.AddressZero;
+export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

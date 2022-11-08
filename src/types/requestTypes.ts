@@ -4,9 +4,10 @@ import { BigNumber, Signer } from 'ethers';
 import { KeyStore } from 'near-api-js/lib/key_stores';
 import { BaseCurrency } from '../entities/BaseCurrency';
 import { Provider } from '@ethersproject/abstract-provider';
+import { Eth } from 'web3-eth';
 
 export type BridgeRequestParam = {
-  token: BaseCurrency;
+  fromToken: BaseCurrency;
   fromChainId: ChainId;
   toChainId: ChainId;
   toAddress: string;
@@ -14,8 +15,24 @@ export type BridgeRequestParam = {
   options: BridgeOptions;
 };
 
+export type SwapRequestParam = {
+  fromToken: BaseCurrency;
+  toToken: BaseCurrency;
+  amountIn: string;
+  amountOutMin: string;
+  tradeType: number; // 0 for EXACT_IN, 1 for EXACT_OUT
+  options: SwapOptions;
+};
+
+export type SwapOptions = {
+  signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider infor or Web3.js Eth info
+  nearConfig?: NearNetworkConfig; // mandatory when src chain is near
+  useAggregator?: boolean; // whether Barter's Smart Router Aggregator or not
+  gas?: string;
+};
+
 export type BridgeOptions = {
-  signerOrProvider?: Signer | Provider; // mandatory when src chain is evm chain(or ethers.js compatible)
+  signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider infor or Web3.js Eth info
   nearConfig?: NearNetworkConfig; // mandatory when src chain is near
   gas?: string;
 };

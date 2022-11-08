@@ -1,6 +1,6 @@
 {
   "name": "barterjs-sdk",
-  "version": "1.0.0-beta.8",
+  "version": "1.0.0-beta.13",
   "description": "Barter Network SDK",
   "author": "xyli <moorelee@barternetwork.io>",
   "main": "dist/index.js",
@@ -17,21 +17,22 @@
     "cross-chain dex",
     "omnichain"
   ],
-  "license": "ISC",
+  "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "@ethersproject/abstract-provider": "^5.7.0",
-    "@types/bn.js": "^5.1.1",
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "jest": "^28.1.3",
-    "near-api-js": "^1.0.0",
     "prettier": "^2.7.1",
-    "tiny-invariant": "^1.2.0",
-    "ts-jest": "^28.0.7"
+    "ts-jest": "^28.0.7",
+    "web3": "^1.8.0",
+    "ethers": "^5.7.0"
   },
   "dependencies": {
     "bn.js": "^5.2.1",
-    "ethers": "^5.7.0"
+    "tiny-invariant": "^1.2.0",
+    "near-api-js": "^1.0.0",
+    "@ethersproject/abstract-provider": "^5.7.0",
+    "@types/bn.js": "^5.1.1"
   }
 }

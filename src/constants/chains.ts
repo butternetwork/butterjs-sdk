@@ -4,7 +4,7 @@ export enum ChainId {
   ETH_PRIV = 34434,
   NEAR_TESTNET = 1313161555,
 }
-
+// TODO: return chain info
 export const ID_TO_CHAIN_ID = (id: number): ChainId => {
   switch (id) {
     case 22776:
@@ -78,16 +78,16 @@ export const NETWORK_NAME_TO_ID = (network: string): ChainId => {
   }
 };
 
-export const CHAIN_IDS_LIST = Object.values(ChainId).map((c) =>
+export const SUPPORTED_CHAIN_IDS_LIST = Object.values(ChainId).map((c) =>
   c.toString()
 ) as string[];
 
-export const ID_TO_PROVIDER = (id: ChainId): string => {
+export const ID_TO_DEFAULT_PROVIDER = (id: ChainId): string => {
   switch (id) {
     case ChainId.MAP:
       return process.env.JSON_RPC_PROVIDER_MAP!;
     case ChainId.MAP_TEST:
-      return process.env.JSON_RPC_PROVIDER_MAP_TEST!;
+      return 'http://18.142.54.137:7445';
     case ChainId.ETH_PRIV:
       return process.env.JSON_RPC_PROVIDER_ETH_PRIV!;
     default:
@@ -101,63 +101,63 @@ export const ID_TO_PROVIDER = (id: ChainId): string => {
 //     '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
 //     18,
 //     'WETH',
-//     'Wrapped Ether'
+//     'Wrapped EVMNativCoin'
 //   ),
 //   // [ChainId.ROPSTEN]: new Token(
 //   //   3,
 //   //   '0xc778417E063141139Fce010982780140Aa0cD5Ab',
 //   //   18,
 //   //   'WETH',
-//   //   'Wrapped Ether'
+//   //   'Wrapped EVMNativCoin'
 //   // ),
 //   // [ChainId.RINKEBY]: new Token(
 //   //   4,
 //   //   '0xc778417E063141139Fce010982780140Aa0cD5Ab',
 //   //   18,
 //   //   'WETH',
-//   //   'Wrapped Ether'
+//   //   'Wrapped EVMNativCoin'
 //   // ),
 //   // [ChainId.GÖRLI]: new Token(
 //   //   5,
 //   //   '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
 //   //   18,
 //   //   'WETH',
-//   //   'Wrapped Ether'
+//   //   'Wrapped EVMNativCoin'
 //   // ),
 //   // [ChainId.KOVAN]: new Token(
 //   //   42,
 //   //   '0xd0A1E359811322d97991E03f863a0C30C2cF029C',
 //   //   18,
 //   //   'WETH',
-//   //   'Wrapped Ether'
+//   //   'Wrapped EVMNativCoin'
 //   // ),
 //   // [ChainId.OPTIMISM]: new Token(
 //   //   ChainId.OPTIMISM,
 //   //   '0x4200000000000000000000000000000000000006',
 //   //   18,
 //   //   'WETH',
-//   //   'Wrapped Ether'
+//   //   'Wrapped EVMNativCoin'
 //   // ),
 //   // [ChainId.OPTIMISTIC_KOVAN]: new Token(
 //   //   ChainId.OPTIMISTIC_KOVAN,
 //   //   '0x4200000000000000000000000000000000000006',
 //   //   18,
 //   //   'WETH',
-//   //   'Wrapped Ether'
+//   //   'Wrapped EVMNativCoin'
 //   // ),
 //   // [ChainId.ARBITRUM_ONE]: new Token(
 //   //   ChainId.ARBITRUM_ONE,
 //   //   '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
 //   //   18,
 //   //   'WETH',
-//   //   'Wrapped Ether'
+//   //   'Wrapped EVMNativCoin'
 //   // ),
 //   // [ChainId.ARBITRUM_RINKEBY]: new Token(
 //   //   ChainId.ARBITRUM_RINKEBY,
 //   //   '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681',
 //   //   18,
 //   //   'WETH',
-//   //   'Wrapped Ether'
+//   //   'Wrapped EVMNativCoin'
 //   // ),
 //   // [ChainId.POLYGON]: new Token(
 //   //   ChainId.POLYGON,

@@ -1,27 +1,43 @@
 import {
   BigNumber,
-  Contract,
+  Contract as EthersContract,
   ContractInterface,
   ContractTransaction,
   ethers,
   Signer,
 } from 'ethers';
+import { Contract as Web3Contract } from 'web3-eth-contract';
+
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
-import { ContractCallReceipt } from '../../types/responseTypes';
-import { adaptEtherReceipt } from '../../utils/responseUtil';
-import BN from 'bn.js';
+import { BarterContractCallReceipt } from '../../types/responseTypes';
+import { adaptEthReceipt } from '../../utils/responseUtil';
 import { Provider } from '@ethersproject/abstract-provider';
-import { BaseCurrency } from '../../entities';
+import { Eth } from 'web3-eth';
+import { TransferOutOptions } from '../../types';
+import { BarterProviderType } from '../../types/paramTypes';
 
 export class RelayCrossChainService implements IMapCrossChainService {
-  contract: Contract;
+  contract: EthersContract | Web3Contract;
+  provider: BarterProviderType;
 
   constructor(
     contractAddress: string,
-    abi: ContractInterface,
-    signerOrProvider: Signer | Provider
+    abi: any,
+    signerOrProvider: BarterProviderType
   ) {
-    this.contract = new ethers.Contract(contractAddress, abi, signerOrProvider);
+    if (
+      signerOrProvider instanceof Signer ||
+      signerOrProvider instanceof Provider
+    ) {
+      this.contract = new ethers.Contract(
+        contractAddress,
+        abi,
+        signerOrProvider
+      );
+    } else {
+      this.contract = new signerOrProvider.Contract(abi, contractAddress);
+    }
+    this.provider = signerOrProvider;
   }
 
   /**
@@ -30,24 +46,36 @@ export class RelayCrossChainService implements IMapCrossChainService {
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
-   * @param gasEstimation
+   * @param options
    */
   async doTransferOutToken(
     tokenAddress: string,
     amount: string,
     toAddress: string,
-    toChainId: string
-  ): Promise<ContractCallReceipt> {
-    const transferOutTx: ContractTransaction =
-      await this.contract.transferOutToken(
-        tokenAddress,
-        toAddress,
-        amount,
-        toChainId,
-        { gasLimit: 5000000 }
-      );
-    const receipt = await transferOutTx.wait();
-    return adaptEtherReceipt(receipt);
+    toChainId: string,
+    options: TransferOutOptions
+  ): Promise<BarterContractCallReceipt> {
+    let receipt;
+    if (this.contract instanceof EthersContract) {
+      const transferOutTx: ContractTransaction =
+        await this.contract.transferOutToken(
+          tokenAddress,
+          toAddress,
+          amount,
+          toChainId
+        );
+
+      receipt = await transferOutTx.wait();
+    } else {
+      receipt = await this.contract.methods
+        .transferOutToken(tokenAddress, toAddress, amount, toChainId)
+        .send({
+          from: (this.provider as Eth).defaultAccount,
+          gas: options.gas,
+        });
+    }
+
+    return adaptEthReceipt(receipt);
   }
 
   async gasEstimateTransferOutToken(
@@ -56,15 +84,23 @@ export class RelayCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string
   ): Promise<string> {
-    const gas = await this.contract.estimateGas.transferOutToken!(
-      tokenAddress,
-      toAddress,
-      amount,
-      toChainId,
-      { gasLimit: 5000000 }
-    );
-
-    return gas.toString();
+    // gas estimation
+    let estimatedGas = '';
+    if (this.contract instanceof EthersContract) {
+      const gas: BigNumber = await this.contract.estimateGas.transferOutToken!(
+        tokenAddress,
+        toAddress,
+        amount,
+        toChainId
+      );
+      estimatedGas = gas.toString();
+    } else {
+      const gas = await this.contract.methods
+        .transferOutToken(tokenAddress, toAddress, amount, toChainId)
+        .estimateGas();
+      estimatedGas = gas.toString();
+    }
+    return estimatedGas;
   }
 
   /**
@@ -72,20 +108,32 @@ export class RelayCrossChainService implements IMapCrossChainService {
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
-   * @param gasEstimation
+   * @param options
    */
   async doTransferOutNative(
     toAddress: string,
     toChainId: string,
-    amount: string
-  ): Promise<ContractCallReceipt> {
-    const transferOutTx: ContractTransaction =
-      await this.contract.transferOutNative(toAddress, toChainId, {
-        value: amount,
-      });
+    amount: string,
+    options: TransferOutOptions
+  ): Promise<BarterContractCallReceipt> {
+    let receipt;
+    if (this.contract instanceof EthersContract) {
+      const transferOutTx: ContractTransaction =
+        await this.contract.transferOutNative(toAddress, toChainId, {
+          value: amount,
+        });
 
-    const receipt = await transferOutTx.wait();
-    return adaptEtherReceipt(receipt);
+      receipt = await transferOutTx.wait();
+    } else {
+      receipt = await this.contract.methods
+        .transferOutToken(toAddress, toChainId)
+        .send({
+          value: amount,
+          from: (this.provider as Eth).defaultAccount,
+          gas: options.gas,
+        });
+    }
+    return adaptEthReceipt(receipt);
   }
 
   async gasEstimateTransferOutNative(
@@ -93,15 +141,24 @@ export class RelayCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string
   ): Promise<string> {
-    const gas = await this.contract.estimateGas.transferOutNative!(
-      toAddress,
-      toChainId,
-      {
-        value: amount,
-      }
-    );
-
-    return gas.toString();
+    // gas estimation
+    let estimatedGas;
+    if (this.contract instanceof EthersContract) {
+      const gas = await this.contract.estimateGas.transferOutNative!(
+        toAddress,
+        toChainId,
+        {
+          value: amount,
+        }
+      );
+      estimatedGas = gas.toString();
+    } else {
+      const gas = await this.contract.methods
+        .transferOutNative(toAddress, toChainId)
+        .estimateGas();
+      estimatedGas = gas.toString();
+    }
+    return estimatedGas;
   }
 
   async doDepositOutToken(
@@ -110,11 +167,15 @@ export class RelayCrossChainService implements IMapCrossChainService {
     to: string,
     amount: string
   ): Promise<string> {
-    const depositOutTx: ContractTransaction =
-      await this.contract.depositOutToken(tokenAddress, from, to, amount);
+    if (this.contract instanceof EthersContract) {
+      const depositOutTx: ContractTransaction =
+        await this.contract.depositOutToken(tokenAddress, from, to, amount);
 
-    const receipt = await depositOutTx.wait();
-    return receipt.transactionHash;
+      const receipt = await depositOutTx.wait();
+      return receipt.transactionHash;
+    } else {
+      throw new Error('provider not supported');
+    }
   }
 
   /**
@@ -122,24 +183,24 @@ export class RelayCrossChainService implements IMapCrossChainService {
    * @param chainId
    * @param id
    */
-  async doSetIdTable(chainId: string, id: string): Promise<string> {
-    const setIdTableTx: ContractTransaction = await this.contract.setIdTable(
-      chainId,
-      id
-    );
-
-    const receipt = await setIdTableTx.wait();
-    return receipt.transactionHash;
-  }
-
-  async doSetNearHash(hash: string): Promise<string> {
-    const setNearHashTx: ContractTransaction = await this.contract.setNearHash(
-      hash
-    );
-
-    const receipt = await setNearHashTx.wait();
-    return receipt.transactionHash;
-  }
+  // async doSetIdTable(chainId: string, id: string): Promise<string> {
+  //   const setIdTableTx: ContractTransaction = await this.contract.setIdTable(
+  //     chainId,
+  //     id
+  //   );
+  //
+  //   const receipt = await setIdTableTx.wait();
+  //   return receipt.transactionHash;
+  // }
+  //
+  // async doSetNearHash(hash: string): Promise<string> {
+  //   const setNearHashTx: ContractTransaction = await this.contract.setNearHash(
+  //     hash
+  //   );
+  //
+  //   const receipt = await setNearHashTx.wait();
+  //   return receipt.transactionHash;
+  // }
 
   /**
    * specify token decimal for the convertion of different token on different chain
@@ -152,23 +213,31 @@ export class RelayCrossChainService implements IMapCrossChainService {
     chainId: number,
     decimals: number
   ): Promise<string> {
-    const tx: ContractTransaction =
-      await this.contract.setTokenOtherChainDecimals(
-        ethers.constants.AddressZero,
-        chainId,
-        decimals
-      );
+    if (this.contract instanceof EthersContract) {
+      const tx: ContractTransaction =
+        await this.contract.setTokenOtherChainDecimals(
+          ethers.constants.AddressZero,
+          chainId,
+          decimals
+        );
 
-    const receipt = await tx.wait();
-    return receipt.transactionHash;
+      const receipt = await tx.wait();
+      return receipt.transactionHash;
+    } else {
+      throw new Error('need ethers provider');
+    }
   }
 
   async doAddAuthToken(tokens: string[]): Promise<string> {
-    const addAuthTokenTx: ContractTransaction =
-      await this.contract.addAuthToken(tokens);
+    if (this.contract instanceof EthersContract) {
+      const addAuthTokenTx: ContractTransaction =
+        await this.contract.addAuthToken(tokens);
 
-    const receipt = await addAuthTokenTx.wait();
-    return receipt.transactionHash;
+      const receipt = await addAuthTokenTx.wait();
+      return receipt.transactionHash;
+    } else {
+      throw new Error('need ethers provider');
+    }
   }
 
   /**
@@ -180,24 +249,49 @@ export class RelayCrossChainService implements IMapCrossChainService {
     chainId: string,
     bridgeAddress: string
   ): Promise<string> {
-    const tx: ContractTransaction = await this.contract.setBridgeAddress(
-      chainId,
-      bridgeAddress
-    );
+    if (this.contract instanceof EthersContract) {
+      const tx: ContractTransaction = await this.contract.setBridgeAddress(
+        chainId,
+        bridgeAddress
+      );
 
-    const receipt = await tx.wait();
-    return receipt.transactionHash;
+      const receipt = await tx.wait();
+      return receipt.transactionHash;
+    } else {
+      throw new Error('need ethers provider');
+    }
   }
+  async setVaultBalance(
+    toChain: number,
+    address: string,
+    amount: string
+  ): Promise<string> {
+    if (this.contract instanceof EthersContract) {
+      const tx: ContractTransaction = await this.contract.setVaultBalance(
+        toChain,
+        address,
+        amount
+      );
 
+      const receipt = await tx.wait();
+      return receipt.transactionHash;
+    } else {
+      throw new Error('need ethers provider');
+    }
+  }
   async getVaultBalance(
     toChainId: number,
     tokenAddress: string
   ): Promise<string> {
-    const balance: BigNumber = await this.contract.vaultBalance(
-      toChainId,
-      tokenAddress
-    );
+    if (this.contract instanceof EthersContract) {
+      const balance: BigNumber = await this.contract.vaultBalance(
+        toChainId,
+        tokenAddress
+      );
 
-    return Promise.resolve(balance.toString());
+      return Promise.resolve(balance.toString());
+    } else {
+      throw new Error('need ethers provider');
+    }
   }
 }

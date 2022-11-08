@@ -3,7 +3,7 @@ import { getHexAddress, validateAndParseAddressByChainId } from '../../utils';
 import { BridgeRequestParam } from '../../types/requestTypes';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
-import { ContractCallReceipt } from '../../types/responseTypes';
+import { BarterContractCallReceipt } from '../../types/responseTypes';
 import BN from 'bn.js';
 import { hexlify } from 'ethers/lib/utils';
 
@@ -20,22 +20,22 @@ export class BarterBridge {
    * @return BN for gas estimation, ContractCallReceipt for actual contract invocation
    */
   async bridgeToken({
-    token,
+    fromToken,
     toChainId,
     toAddress,
     amount,
     options,
-  }: BridgeRequestParam): Promise<ContractCallReceipt> {
+  }: BridgeRequestParam): Promise<BarterContractCallReceipt> {
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
-    if (IS_EVM(token.chainId) && options.signerOrProvider == undefined) {
+    if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
       throw new Error(`Signer must be provided for EVM blockchains`);
     }
 
     // if src chain is near chain, near network config must be provided
     if (
-      ChainId.NEAR_TESTNET == token.chainId &&
+      ChainId.NEAR_TESTNET == fromToken.chainId &&
       options.nearConfig == undefined
     ) {
       throw new Error(`Network config must be provided for NEAR blockchain`);
@@ -43,7 +43,7 @@ export class BarterBridge {
 
     // create mcs instance base on src token chainId.
     const mcs: IMapCrossChainService = createMCSInstance(
-      token.chainId,
+      fromToken.chainId,
       options
     );
 
@@ -51,7 +51,7 @@ export class BarterBridge {
     if (IS_NEAR(toChainId)) {
       toAddress = getHexAddress(toAddress, toChainId);
     }
-    if (token.isNative) {
+    if (fromToken.isNative) {
       // if input token is Native coin, call transferOutNative method
       result = await mcs.doTransferOutNative(
         toAddress,
@@ -63,7 +63,7 @@ export class BarterBridge {
       );
     } else {
       result = await mcs.doTransferOutToken(
-        token.address,
+        fromToken.address,
         amount,
         toAddress,
         toChainId.toString(),
@@ -77,7 +77,7 @@ export class BarterBridge {
   }
 
   async gasEstimateBridgeToken({
-    token,
+    fromToken,
     toChainId,
     toAddress,
     amount,
@@ -87,7 +87,7 @@ export class BarterBridge {
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
 
     // if src chain is evm chain, signer must be provided
-    if (IS_EVM(token.chainId) && options.signerOrProvider == undefined) {
+    if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
       throw new Error(`Provider must be provided`);
     }
 
@@ -95,7 +95,7 @@ export class BarterBridge {
 
     // create mcs instance base on src token chainId.
     const mcs: IMapCrossChainService = createMCSInstance(
-      token.chainId,
+      fromToken.chainId,
       options
     );
 
@@ -105,7 +105,7 @@ export class BarterBridge {
 
     let gas;
     // if input token is Native coin, call transferOutNative method
-    if (token.isNative) {
+    if (fromToken.isNative) {
       gas = await mcs.gasEstimateTransferOutNative(
         toAddress,
         toChainId.toString(),
@@ -113,7 +113,7 @@ export class BarterBridge {
       );
     } else {
       gas = await mcs.gasEstimateTransferOutToken(
-        token.address,
+        fromToken.address,
         amount,
         toAddress,
         toChainId.toString()

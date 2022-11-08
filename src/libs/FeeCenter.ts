@@ -1,16 +1,30 @@
 import { BigNumber, ethers, Signer } from 'ethers';
 import FeeCenterMetadata from '../abis/FeeCenter.json';
-import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
+import { Provider } from '@ethersproject/abstract-provider';
+import { BarterContractType, BarterProviderType } from '../types/paramTypes';
+import { BarterContractCallReceipt } from '../types/responseTypes';
+import { adaptEthReceipt } from '../utils/responseUtil';
 
 export class FeeCenter {
-  private contract: ethers.Contract;
-
-  constructor(contractAddress: string, signerOrProvider: Signer | Provider) {
-    this.contract = new ethers.Contract(
-      contractAddress,
-      FeeCenterMetadata.abi,
-      signerOrProvider
-    );
+  private readonly contract: BarterContractType;
+  private readonly provider: BarterProviderType;
+  constructor(contractAddress: string, signerOrProvider: BarterProviderType) {
+    if (
+      signerOrProvider instanceof Signer ||
+      signerOrProvider instanceof Provider
+    ) {
+      this.contract = new ethers.Contract(
+        contractAddress,
+        FeeCenterMetadata.abi,
+        signerOrProvider
+      );
+    } else {
+      this.contract = new signerOrProvider.Contract(
+        FeeCenterMetadata.abi as any,
+        contractAddress
+      );
+    }
+    this.provider = signerOrProvider;
   }
 
   async setChainTokenGasFee(
@@ -19,31 +33,48 @@ export class FeeCenter {
     lowest: BigNumber,
     highest: BigNumber,
     proportion: number
-  ): Promise<TransactionReceipt> {
-    const setCFTx = await this.contract.setChainTokenGasFee(
-      toChainId,
-      tokenAddress,
-      lowest,
-      highest,
-      proportion
-    );
-    return setCFTx;
+  ): Promise<BarterContractCallReceipt> {
+    let setCFTx;
+    if (this.provider instanceof Signer || this.provider instanceof Provider) {
+      setCFTx = await (this.contract as ethers.Contract).setChainTokenGasFee(
+        toChainId,
+        tokenAddress,
+        lowest,
+        highest,
+        proportion
+      );
+      setCFTx = await setCFTx.wait();
+    } else {
+      setCFTx = await this.contract.methods
+        .setChainTokenGasFee(
+          toChainId,
+          tokenAddress,
+          lowest,
+          highest,
+          proportion
+        )
+        .send({ from: this.provider.defaultAccount });
+    }
+    return adaptEthReceipt(setCFTx);
   }
 
   async getTokenFee(
     toChainId: number,
     tokenAddress: string,
     amount: BigNumber
-  ): Promise<BigNumber> {
-    const fee = await this.contract.getTokenFee(
-      toChainId,
-      tokenAddress,
-      amount
-    );
-    return fee;
-  }
-
-  async getVaultToken(tokenAddress: string): Promise<string> {
-    return await this.contract.getVaultToken(tokenAddress);
+  ): Promise<string> {
+    let tokenFee;
+    if (this.provider instanceof Signer || this.provider instanceof Provider) {
+      tokenFee = await (this.contract as ethers.Contract).getTokenFee(
+        toChainId,
+        tokenAddress,
+        amount
+      );
+    } else {
+      tokenFee = await this.contract.methods
+        .getTokenFee(toChainId, tokenAddress, amount)
+        .call();
+    }
+    return tokenFee.toString();
   }
 }
