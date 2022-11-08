@@ -573,7 +573,7 @@ PaymentInfo: {
 ```
 
 ### payment
-do payment
+make a payment
 ```typescript
 async function omniPay(paymentInfo: PaymentInfo);
 ```
@@ -594,3 +594,4 @@ const paymentInfo: PaymentInfo = await getPaymentInfo(paymentInfoRequest);
 const result = await omniPay(paymentInfo);
 ```
 
+***_Note: BarterJS SDK is still under development, all contents are subject to change. Stay tuned for our first relase!_***
