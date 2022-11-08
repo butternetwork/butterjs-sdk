@@ -7,7 +7,7 @@ BarterJS SDK aims to facilitate the development of cross-chain functionality by 
 3. [Fees](#fees)
 4. [Vault Balance](#vaultbalance)
 5. [Asset Bridging](#assetbridge)
-6. [Cross-chain Swap(Still Under Development)](#swap)
+6. [Cross-chain Swap(Still Under Development)](#crosschainswap)
 7. [Omnichain Payment(Still Under Development)](#payment)
 
 
@@ -22,8 +22,8 @@ npm i --save-dev barterjs-sdk
 # yarn
 yarn add barterjs-sdk
 ```
-
-## Tokens and Chains <a name="tokenandchain"></a>
+<a name="tokenandchain"></a>
+## Tokens and Chains 
 Currently Barter only support limited chains and tokens and Barter will provide lists of supported chains and tokens in the format of constants.
 
 ```typescript
@@ -164,7 +164,7 @@ async function gasEstimateBridgeToken({
     options,
 }: BridgeRequestParam): Promise<string>; // estimated gas in string
 ```
-### Parameters <a name = "bridgeparam"></a>
+### Parameters
 ```typescript
 // BridgeRequestParam
 type BridgeRequestParam = {
@@ -244,9 +244,10 @@ tx receipt {
 ```
 
 
-
-## Cross-chain Swap(Still Under Development) <a name="swap"></a>
-### getSwapRoute <a name="getroute"></a>
+<a name="crosschainswap"></a>
+## Cross-chain Swap(Still Under Development)
+<a name="getroute"></a>
+### getSwapRoute 
 get the best swap route calculated by Barter Smart Router
 
 ```typescript
@@ -525,8 +526,8 @@ const bestRoute: CrossChainSwapRoute = getBestRoute(swapRouteRequest);
 
 const result = await omniSwap(bestRoute);
 ```
-
-## Omnichain Payment(Still Under Development) <a name="payment"></a>
+<a name="payment"></a>
+## Omnichain Payment(Still Under Development) 
 Pay whatever crypto users want, merchant will always get their desired token.
 ### getPaymentInfo
 get minimal amount of token needed to meet required price, as well as the swap route.
