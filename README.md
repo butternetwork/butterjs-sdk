@@ -1,5 +1,5 @@
 # BarterJS SDK
-BarterJS SDK aims to facilitate the development of cross-chain functionality to let developers integrate asset cross-chain feature in their application with minimal effort possible.
+BarterJS SDK aims to facilitate the development of cross-chain functionality by letting developers integrate asset cross-chain feature in their application with minimal effort possible.
 
 ## Table of Contents
 1. [Installation](#installation)
@@ -13,8 +13,8 @@ BarterJS SDK aims to facilitate the development of cross-chain functionality to 
 
 
 
-
-### Installation <a name="installation"></a>
+<a name="installation"></a>
+## Installation
 ```shell
 # npm
 npm i --save-dev barterjs-sdk
@@ -23,7 +23,7 @@ npm i --save-dev barterjs-sdk
 yarn add barterjs-sdk
 ```
 
-### Tokens and Chains <a name="tokenandchain"></a>
+## Tokens and Chains <a name="tokenandchain"></a>
 Currently Barter only support limited chains and tokens and Barter will provide lists of supported chains and tokens in the format of constants.
 
 ```typescript
@@ -34,10 +34,11 @@ const supportedChainIdList = SUPPORTED_CHAIN_IDS_LIST
 const supportedTokenList = ID_TO_SUPPORTED_TOKEN(ChainId.Mainnet)
 ```
 
-### Fees <a name="fees"></a>
+<a name="fees"></a>
+## Fees
 Barter charges a small fees for bridging or exchanging cross-chain assets. It is subject to what kind of token you want to bridge or swap.
 <br>
-#### Bridging Fee
+### Bridging Fee
 To get the bridging fee, use the following method:
 ```typescript
 async function getBridgeFee(
@@ -66,7 +67,7 @@ type BarterFeeDistribution = {
     lp?: number;
 };
 ```
-###### Example: get the fee for bridging 1 Ether from Ehtereum Mainnet to BSC Mainnet.
+##### Example: get the fee for bridging 1 Ether from Ehtereum Mainnet to BSC Mainnet.
 
 ```typescript
 const mapRpcProvider = {
@@ -84,7 +85,7 @@ const fee: BarterFee = await getBridgeFee(
 
 console.log("brige fee", fee);
 ``` 
-###### Output
+##### Output
 ```
 bridge fee {
     feeToken: Token {
@@ -104,9 +105,9 @@ bridge fee {
 }
 
 ```
-
-### Vault Balance <a name="vaultbalance"></a>
-In Barter, we deploy a Vault smart contract to hold assets for each blockchain we connected. To get the balance of certain token in the vault
+<a name="vaultbalance"></a>
+## Vault Balance 
+In Barter, we deploy one `Vault` smart contract for each blockchain we connected in order to hold asset on that chain. To get the balance of certain token in the vault
 ```typescript
 async function getVaultBalance(
   fromChainId: number, // from chain id
@@ -122,7 +123,7 @@ interface VaultBalance {
 }
 ```
 
-###### Example: get the balance of Near native token in the vault of Near chain where source chain is Ethereum
+##### Example: get the balance of Near native token in the vault of Near chain where source chain is Ethereum
 ```typescript
   const balance: VaultBalance = await getVaultBalance(
     ChainId.ETH_MAINNET,
@@ -133,8 +134,8 @@ interface VaultBalance {
   console.log('vault balance', balance);
 ```
 
-###### Output:
-```json
+##### Output:
+```
 vault balance {
   token: NearNativeCoin {
     address: '0x0000000000000000000000000000000000000000',
@@ -149,11 +150,11 @@ vault balance {
 }
 
 ```
-
-### Asset Bridging <a name="assetbridge"></a>
+<a name="assetbridge"></a>
+## Asset Bridging
 Barter Bridge allows bridging supported tokens from one blockchain to another.<br>
 
-#### Gas estimation
+### Gas estimation
 ```typescript
 async function gasEstimateBridgeToken({
     token,
@@ -163,7 +164,7 @@ async function gasEstimateBridgeToken({
     options,
 }: BridgeRequestParam): Promise<string>; // estimated gas in string
 ```
-#### Parameters <a name = "bridgeparam"></a>
+### Parameters <a name = "bridgeparam"></a>
 ```typescript
 // BridgeRequestParam
 type BridgeRequestParam = {
@@ -193,7 +194,7 @@ interface BarterContractCallReceipt {
 }
 ```
 
-#### Bridge
+### bridgeToken
 ```typescript
 async function bridgeToken({
     fromToken,
@@ -205,7 +206,7 @@ async function bridgeToken({
  ```
 for more detail on `BridgeRequestParam` and `BarterContractCallRecept`, please see [parameters](#bridgeparam).
 
-###### Example: Bridge 1 ethNear from Ethereum Mainnet to Near Network so the `toAddress` will receive 1 native Near coin.
+##### Example: Bridge 1 ethNear from Ethereum Mainnet to Near Network so the `toAddress` will receive 1 native Near coin.
 
 ```typescript
 // initiate BarterBridge Class
@@ -230,8 +231,8 @@ const receipt: BarterContractCallReceipt = await bridge.bridgeToken(
 
 console.log('tx receipt', receipt);
 ```
-###### Output:
-```json
+##### Output:
+```
 tx receipt {
   to: '0x...726f1',
   from: '0x...386cc',
@@ -244,8 +245,8 @@ tx receipt {
 
 
 
-### Cross-chain Swap(Still Under Development) <a name="swap"></a>
-#### getSwapRoute <a name="getroute"></a>
+## Cross-chain Swap(Still Under Development) <a name="swap"></a>
+### getSwapRoute <a name="getroute"></a>
 get the best swap route calculated by Barter Smart Router
 
 ```typescript
@@ -360,7 +361,7 @@ class Pair {
     reserve1: string;
 }
 ```
-###### Example: Get the best route swapping 100 Ether on Ethereum Mainnet for at least 43200 Near on Near Network
+##### Example: Get the best route swapping 100 Ether on Ethereum Mainnet for at least 43200 Near on Near Network
 
 ```typescript
 const swapRouteRequest: SwapRouteRequest = {
@@ -378,8 +379,8 @@ const swapRouteRequest: SwapRouteRequest = {
 const bestRoute: CrossChainSwapRoute = getBestRoute(SwapRouteRequest);
 console.log(bestRoute);
 ```
-###### Output
-```json
+##### Output
+```
 CrossChainSwapRoute: {
   // srcRoute: swap 100 ether for 134000 usdt on Uniswap      
   srcRoute: {
@@ -500,14 +501,14 @@ CrossChainSwapRoute: {
   },
 }
 ```
-#### swap
+### swap
 do cross-chain swap
 ```typescript
 async function omniSwap({
     ... // too long... omitted for simplicity
 }: CrossChainSwapRoute) // the input is what we get after invoking getBestRoute
 ```
-###### Example: swap 100 ethers on Ethereum Mainnet for at least 43200 nears on Near network
+##### Example: swap 100 ethers on Ethereum Mainnet for at least 43200 nears on Near network
 ```typescript
 const swapRouteRequest: SwapRouteRequestParam = {
     fromToken: ETH_MAINNET, 
@@ -525,9 +526,9 @@ const bestRoute: CrossChainSwapRoute = getBestRoute(swapRouteRequest);
 const result = await omniSwap(bestRoute);
 ```
 
-### Omnichain Payment(Still Under Development) <a name="payment"></a>
+## Omnichain Payment(Still Under Development) <a name="payment"></a>
 Pay whatever crypto users want, merchant will always get their desired token.
-#### getPaymentInfo
+### getPaymentInfo
 get minimal amount of token needed to meet required price, as well as the swap route.
 
 ```typescript
@@ -546,7 +547,7 @@ type PaymentInfo = {
 ```
 For more information on `CrossChainSwapRoute`, please see [getSwapRoute](#getroute).
 
-###### Example: get the payment info of Alice paying Ether on Ethereum Mainnet to get a NFT that requires Near coin as payment price at 100 $Near.
+##### Example: get the payment info of Alice paying Ether on Ethereum Mainnet to get a NFT that requires Near coin as payment price at 100 $Near.
 ```typescript
 const paymentInfoRequest: PaymentInfoRequest = {
     paidToken: Ether,
@@ -561,8 +562,8 @@ const paymentInfoRequest: PaymentInfoRequest = {
 const paymentInfo: PaymentInfo = await getPaymentInfo(paymentInfoRequest);
 console.log(paymentInfo);
 ```
-###### Output
-```typescript
+##### Output
+```
 PaymentInfo: {
     paidToken: Ether,
     amountInMin: '400000000000000000', // at least 0.4 ether required
@@ -570,12 +571,12 @@ PaymentInfo: {
 }
 ```
 
-#### payment
+### payment
 do payment
 ```typescript
 async function omniPay(paymentInfo: PaymentInfo);
 ```
-###### Example: pay ether for a NFT on Near that requires 100 $Near.
+##### Example: pay ether for a NFT on Near that requires 100 $Near.
 ```typescript
 const paymentInfoRequest: PaymentInfoRequest = {
     paidToken: Ether,
