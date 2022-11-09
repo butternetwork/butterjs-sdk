@@ -10,7 +10,14 @@ import { ZERO_ADDRESS } from '../../constants';
  */
 export class NearNativeCoin extends NativeCurrency {
   public constructor(chainId: number) {
-    super(chainId, 24, ZERO_ADDRESS, 'NEAR', 'NEAR');
+    super(
+      chainId,
+      24,
+      ZERO_ADDRESS,
+      'NEAR',
+      'NEAR',
+      'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+    );
   }
 
   public get wrapped(): Token {

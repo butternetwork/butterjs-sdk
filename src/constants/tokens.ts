@@ -7,13 +7,15 @@ export const ETH_PRIV_NATIVE = new EVMNativeCoin(
   ChainId.ETH_PRIV,
   18,
   'ETH',
-  'ether'
+  'ether',
+  'https://files.maplabs.io/bridge/eth.png'
 );
 export const MAP_TEST_NATIVE = new EVMNativeCoin(
   ChainId.MAP_TEST,
   18,
   'MAP',
-  'MAP Protocol'
+  'MAP Protocol',
+  'https://files.maplabs.io/bridge/map.png'
 );
 export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
 
@@ -22,7 +24,8 @@ export const ETH_PRIV_LMAP = new Token(
   '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847',
   18,
   'lMAP',
-  'MAP Token'
+  'Wrapped MAP Token',
+  ''
 );
 
 export const ETH_PRIV_NEAR = new Token(
@@ -30,7 +33,8 @@ export const ETH_PRIV_NEAR = new Token(
   '0x152fB50d334a66F7fD8559F6Dad057Ac13b3eD44',
   18,
   'bNear',
-  'Near Token'
+  'Wrapped Near Token',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
 
 export const ETH_PRIV_WETH = new Token(
@@ -38,7 +42,8 @@ export const ETH_PRIV_WETH = new Token(
   '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B',
   18,
   'WETH',
-  'Wrapped ETH'
+  'Wrapped ETH',
+  'https://files.maplabs.io/bridge/eth.png'
 );
 
 export const MAP_TEST_WMAP = new Token(
@@ -46,7 +51,8 @@ export const MAP_TEST_WMAP = new Token(
   '0x13CB04d4a5Dfb6398Fc5AB005a6c84337256eE23',
   18,
   'WMAP',
-  'Wrapped MAP'
+  'Wrapped MAP',
+  'https://files.maplabs.io/bridge/map.png'
 );
 
 export const MAP_TEST_METH = new Token(
@@ -54,7 +60,8 @@ export const MAP_TEST_METH = new Token(
   '0x41358EFc7d49d19F76E1E3bdD694f3bff9af3b36',
   18,
   'METH',
-  'MAP ETH'
+  'MAP ETH',
+  'https://files.maplabs.io/bridge/eth.png'
 );
 
 export const MAP_TEST_NEAR = new Token(
@@ -62,5 +69,6 @@ export const MAP_TEST_NEAR = new Token(
   '0x9C1A0718e61C1dD802cb7F5290Eb22E83FC578aC',
   18,
   'MNear',
-  'MAP Near'
+  'MAP Near',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );

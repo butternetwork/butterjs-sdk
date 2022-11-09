@@ -13,9 +13,10 @@ export class EVMNativeCoin extends NativeCurrency {
     chainId: number,
     decimal: number,
     symbol?: string,
-    name?: string
+    name?: string,
+    logo?: string
   ) {
-    super(chainId, decimal, ZERO_ADDRESS, symbol, name);
+    super(chainId, decimal, ZERO_ADDRESS, symbol, name, logo);
   }
 
   public get wrapped(): Token {

@@ -38,19 +38,25 @@ export abstract class BaseCurrency {
   public readonly name?: string;
 
   /**
+   * logo of the token, for display only
+   */
+  public readonly logo?: string;
+  /**
    * Constructs an instance of the base class `BaseCurrency`.
    * @param chainId the chain ID on which this currency resides
    * @param decimals decimals of the currency
    * @param address address of the currency
    * @param symbol symbol of the currency
    * @param name of the currency
+   * @param logo of the currency
    */
   protected constructor(
     chainId: number,
     decimals: number,
     address: string,
     symbol?: string,
-    name?: string
+    name?: string,
+    logo?: string
   ) {
     invariant(Number.isSafeInteger(chainId), 'CHAIN_ID');
     invariant(
@@ -62,6 +68,7 @@ export abstract class BaseCurrency {
     this.decimals = decimals;
     this.symbol = symbol;
     this.name = name;
+    this.logo = logo;
   }
 
   /**

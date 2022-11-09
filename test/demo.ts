@@ -2,11 +2,7 @@ import { BigNumber, ethers } from 'ethers';
 import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
 import { KeyPair, keyStores } from 'near-api-js';
 import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
-import {
-  ChainId,
-  ETH_PRIV_NEAR,
-  SUPPORTED_CHAIN_IDS_LIST,
-} from '../src/constants';
+import { ChainId, ETH_PRIV_NEAR, SUPPORTED_CHAIN_LIST } from '../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
 import { getBridgeFee, getVaultBalance } from '../src/core/tools/dataFetch';
 import {
@@ -40,7 +36,7 @@ const nearConfig: NearNetworkConfig = {
 };
 
 /** 支持的链 {@link ChainId} 调试中仅支持MAP测试网，ETH私链，和Near测试网**/
-
+console.log('supported chain', SUPPORTED_CHAIN_LIST);
 /** 支持的token {@link supported_token.ts} **/
 console.log('supported token', ID_TO_SUPPORTED_TOKEN(ChainId.ETH_PRIV));
 

@@ -20,9 +20,10 @@ export class Token extends BaseCurrency {
     address: string,
     decimals: number,
     symbol?: string,
-    name?: string
+    name?: string,
+    logo?: string
   ) {
-    super(chainId, decimals, address, symbol, name);
+    super(chainId, decimals, address, symbol, name, logo);
     this.address = validateAndParseAddressByChainId(address, chainId);
   }
 

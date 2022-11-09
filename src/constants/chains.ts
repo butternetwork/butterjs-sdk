@@ -1,9 +1,42 @@
+import { Chain } from '../entities/Chain';
+
 export enum ChainId {
   MAP = 22776,
   MAP_TEST = 212,
   ETH_PRIV = 34434,
   NEAR_TESTNET = 1313161555,
 }
+
+export const MAP_MAINNET_CHAIN = new Chain(
+  ChainId.MAP,
+  'MAP Mainnet',
+  'https://poc3-rpc.maplabs.io/',
+  'https://makalu.mapscan.io/',
+  'https://files.maplabs.io/bridge/map.png'
+);
+export const MAP_TEST_CHAIN = new Chain(
+  212,
+  'MAP Testnet',
+  'http://18.142.54.137:7445',
+  'http://18.139.224.21:9001/',
+  'https://files.maplabs.io/bridge/map.png'
+);
+
+export const ETH_PRIV_CHAIN = new Chain(
+  34434,
+  'Ethereum Private',
+  'http://18.138.248.113:8545',
+  '',
+  'https://files.maplabs.io/bridge/eth.png'
+);
+
+export const NEAR_TEST_CHAIN = new Chain(
+  1313161555,
+  'Near Testnet',
+  'https://rpc.testnet.near.org',
+  'https://explorer.testnet.near.org/',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);
 // TODO: return chain info
 export const ID_TO_CHAIN_ID = (id: number): ChainId => {
   switch (id) {
@@ -78,9 +111,12 @@ export const NETWORK_NAME_TO_ID = (network: string): ChainId => {
   }
 };
 
-export const SUPPORTED_CHAIN_IDS_LIST = Object.values(ChainId).map((c) =>
-  c.toString()
-) as string[];
+export const SUPPORTED_CHAIN_LIST = [
+  MAP_MAINNET_CHAIN,
+  MAP_TEST_CHAIN,
+  ETH_PRIV_CHAIN,
+  NEAR_TEST_CHAIN,
+];
 
 export const ID_TO_DEFAULT_PROVIDER = (id: ChainId): string => {
   switch (id) {
