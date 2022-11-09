@@ -1,4 +1,5 @@
 import { Chain } from '../entities/Chain';
+import { MAP_TEST_NATIVE } from './tokens';
 
 export enum ChainId {
   MAP = 22776,
@@ -12,14 +13,16 @@ export const MAP_MAINNET_CHAIN = new Chain(
   'MAP Mainnet',
   'https://poc3-rpc.maplabs.io/',
   'https://makalu.mapscan.io/',
-  'https://files.maplabs.io/bridge/map.png'
+  'https://files.maplabs.io/bridge/map.png',
+  'MAP'
 );
 export const MAP_TEST_CHAIN = new Chain(
   212,
   'MAP Testnet',
   'http://18.142.54.137:7445',
   'http://18.139.224.21:9001/',
-  'https://files.maplabs.io/bridge/map.png'
+  'https://files.maplabs.io/bridge/map.png',
+  'MAP'
 );
 
 export const ETH_PRIV_CHAIN = new Chain(
@@ -27,7 +30,8 @@ export const ETH_PRIV_CHAIN = new Chain(
   'Ethereum Private',
   'http://18.138.248.113:8545',
   '',
-  'https://files.maplabs.io/bridge/eth.png'
+  'https://files.maplabs.io/bridge/eth.png',
+  'ETH'
 );
 
 export const NEAR_TEST_CHAIN = new Chain(
@@ -35,7 +39,8 @@ export const NEAR_TEST_CHAIN = new Chain(
   'Near Testnet',
   'https://rpc.testnet.near.org',
   'https://explorer.testnet.near.org/',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png',
+  'NEAR'
 );
 // TODO: return chain info
 export const ID_TO_CHAIN_ID = (id: number): ChainId => {
