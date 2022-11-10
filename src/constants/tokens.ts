@@ -10,6 +10,13 @@ export const ETH_PRIV_NATIVE = new EVMNativeCoin(
   'ether',
   'https://files.maplabs.io/bridge/eth.png'
 );
+export const BSC_TEST_NATIVE = new EVMNativeCoin(
+  ChainId.BSC_TEST,
+  18,
+  'BNB',
+  'BNB',
+  'https://files.maplabs.io/bridge/bnb.png'
+);
 export const MAP_TEST_NATIVE = new EVMNativeCoin(
   ChainId.MAP_TEST,
   18,
@@ -64,11 +71,38 @@ export const MAP_TEST_METH = new Token(
   'https://files.maplabs.io/bridge/eth.png'
 );
 
+export const MAP_TEST_BNB = new Token(
+  212,
+  '0x41358EFc7d49d19F76E1E3bdD694f3bff9af3b36',
+  18,
+  'METH',
+  'MAP ETH',
+  'https://files.maplabs.io/bridge/eth.png'
+);
+
 export const MAP_TEST_NEAR = new Token(
   212,
   '0x9C1A0718e61C1dD802cb7F5290Eb22E83FC578aC',
   18,
   'MNear',
   'MAP Near',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);
+
+export const BSC_TEST_MAP = new Token(
+  97,
+  '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273',
+  18,
+  'MAP',
+  'MAP Protocol',
+  'https://files.maplabs.io/bridge/map.png'
+);
+
+export const BSC_TEST_NEAR = new Token(
+  97,
+  '0xf54bAF8506769E769a379a39816cAD778577b936',
+  18,
+  'Near',
+  'Near',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );

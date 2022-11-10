@@ -8,6 +8,8 @@ import {
 } from '../src/types';
 import { BarterBridge } from '../src';
 import {
+  BSC_TEST_CHAIN,
+  BSC_TEST_NATIVE,
   ChainId,
   ETH_PRIV_LMAP,
   ETH_PRIV_NATIVE,
@@ -38,6 +40,15 @@ const ethSigner = new ethers.Wallet(
   '939ae45116ea2d4ef9061f13534bc451e9f9835e94f191970f23aac0299d5f7a',
   ethProvider
 );
+
+const bscProvider = new ethers.providers.JsonRpcProvider(
+  BSC_TEST_CHAIN.rpc,
+  BSC_TEST_CHAIN.chainId
+);
+const bscSigner = new ethers.Wallet(
+  '939ae45116ea2d4ef9061f13534bc451e9f9835e94f191970f23aac0299d5f7a',
+  bscProvider
+);
 const keyStore: InMemoryKeyStore = new keyStores.InMemoryKeyStore();
 const keyPair: KeyPair = KeyPair.fromString(
   'ed25519:3V1ZUMUD3pZkKyEFJFHpev32WVipYb7HFu6YhnHrGZMw1bArtcBBzB11W9ouFuB3cd11hZL2miXZnX1N36pgywgU'
@@ -63,7 +74,7 @@ async function main() {
     },
     mapNetwork: 'map-testnet',
     mapSigner: mapSigner,
-    srcToken: ETH_PRIV_NATIVE,
+    srcToken: BSC_TEST_NATIVE,
     targetToken: MAP_TEST_METH,
     // mapToken: MAP_TEST_NEAR,
     nearConfig,
@@ -83,7 +94,7 @@ async function ethToMapNative() {
     toChainId: ChainId.MAP_TEST,
     toAddress: to,
     amount: oneEther,
-    options: { signerOrProvider: ethSigner },
+    options: { signerOrProvider: bscSigner },
   };
   const ret = await bridge.bridgeToken(request);
 }

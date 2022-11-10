@@ -5,6 +5,7 @@ export enum ChainId {
   MAP = 22776,
   MAP_TEST = 212,
   ETH_PRIV = 34434,
+  BSC_TEST = 97,
   NEAR_TESTNET = 1313161555,
 }
 
@@ -23,6 +24,14 @@ export const MAP_TEST_CHAIN = new Chain(
   'http://18.139.224.21:9001/',
   'https://files.maplabs.io/bridge/map.png',
   'MAP'
+);
+export const BSC_TEST_CHAIN = new Chain(
+  97,
+  'BSC Testnet',
+  'https://data-seed-prebsc-1-s1.binance.org:8545',
+  'https://testnet.bscscan.com/',
+  'https://files.maplabs.io/bridge/bsc.png',
+  'BSC'
 );
 
 export const ETH_PRIV_CHAIN = new Chain(
@@ -49,6 +58,8 @@ export const ID_TO_CHAIN_ID = (id: number): ChainId => {
       return ChainId.MAP;
     case 212:
       return ChainId.MAP_TEST;
+    case 97:
+      return ChainId.BSC_TEST;
     case 34434:
       return ChainId.ETH_PRIV;
     case 1313161555:
@@ -63,6 +74,7 @@ export enum ChainName {
   MAP_TEST = 'map-testnet',
   ETH_PRIV = 'eth-priv',
   NEAR_TESTNET = 'near-testnet',
+  BSC_TEST = 'bsc-testnet',
 }
 
 export enum NativeCurrencyName {
@@ -99,6 +111,8 @@ export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
       return ChainName.MAP_TEST;
     case 34434:
       return ChainName.ETH_PRIV;
+    case 97:
+      return ChainName.BSC_TEST;
     case 1313161555:
       return ChainName.NEAR_TESTNET;
     default:
@@ -117,10 +131,11 @@ export const NETWORK_NAME_TO_ID = (network: string): ChainId => {
 };
 
 export const SUPPORTED_CHAIN_LIST = [
-  MAP_MAINNET_CHAIN,
+  // MAP_MAINNET_CHAIN,
   MAP_TEST_CHAIN,
-  ETH_PRIV_CHAIN,
+  // ETH_PRIV_CHAIN,
   NEAR_TEST_CHAIN,
+  BSC_TEST_CHAIN,
 ];
 
 export const ID_TO_DEFAULT_PROVIDER = (id: ChainId): string => {
@@ -131,6 +146,8 @@ export const ID_TO_DEFAULT_PROVIDER = (id: ChainId): string => {
       return 'http://18.142.54.137:7445';
     case ChainId.ETH_PRIV:
       return process.env.JSON_RPC_PROVIDER_ETH_PRIV!;
+    case ChainId.BSC_TEST:
+      return BSC_TEST_CHAIN.rpc!;
     default:
       throw new Error(`Chain id: ${id} not supported`);
   }
@@ -270,6 +287,7 @@ export const IS_NEAR = (id: number): boolean => {
     case 42:
     case 10:
     case 69:
+    case 97:
     case 42161:
     case 421611:
     case 137:
@@ -298,6 +316,7 @@ export const IS_EVM = (id: number): boolean => {
     case 42161:
     case 421611:
     case 137:
+    case 97:
     case 80001:
     case 56:
     case 22776:
