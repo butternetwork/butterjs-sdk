@@ -13,6 +13,7 @@ import {
   getBridgeFee,
   getTargetToken,
   getVaultBalance,
+  getTokenCandidates,
 } from '../src/core/tools/dataFetch';
 import {
   BarterFee,
@@ -82,15 +83,15 @@ async function demo() {
   console.log('vault balance', balance);
 
   // 3. 获取targetToken
-  const targetToken: BaseCurrency = await getTargetToken(
-    BSC_TEST_NEAR,
+  const tokenCandidates = await getTokenCandidates(
+    ChainId.BSC_TEST,
     ChainId.NEAR_TESTNET,
     {
       url: 'http://18.142.54.137:7445',
       chainId: 212,
     }
   );
-  console.log('target token', targetToken);
+  console.log('token candidates', tokenCandidates);
   //
   // // 2.a approve spend token if necessary
   //
