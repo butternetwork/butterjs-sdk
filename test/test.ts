@@ -76,8 +76,8 @@ async function main() {
     mapNetwork: 'map-testnet',
     mapSigner: mapSigner,
     srcToken: BSC_TEST_NEAR,
-    targetToken: NEAR_TEST_NATIVE,
-    mapToken: MAP_TEST_NEAR,
+    targetToken: MAP_TEST_NEAR,
+    // mapToken: MAP_TEST_NEAR,
     nearConfig,
     srcSigner: bscSigner,
   };

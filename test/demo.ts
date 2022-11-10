@@ -3,9 +3,12 @@ import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
 import { KeyPair, keyStores } from 'near-api-js';
 import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
 import {
+  BSC_TEST_CHAIN,
   BSC_TEST_NEAR,
   ChainId,
   ETH_PRIV_NEAR,
+  MCS_CONTRACT_ADDRESS_SET,
+  NEAR_TEST_NATIVE,
   SUPPORTED_CHAIN_LIST,
 } from '../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
@@ -45,7 +48,14 @@ const nearConfig: NearNetworkConfig = {
   nodeUrl: 'https://rpc.testnet.near.org',
   networkId: 'testnet',
 };
-
+const bscProvider = new ethers.providers.JsonRpcProvider(
+  BSC_TEST_CHAIN.rpc,
+  BSC_TEST_CHAIN.chainId
+);
+const bscSigner = new ethers.Wallet(
+  'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
+  bscProvider
+);
 /** 支持的链 {@link ChainId} 调试中仅支持MAP测试网，ETH私链，和Near测试网**/
 console.log('supported chain', SUPPORTED_CHAIN_LIST);
 /** 支持的token {@link supported_token.ts} **/
@@ -75,9 +85,9 @@ async function demo() {
 
   // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
-    ChainId.BSC_TEST,
-    BSC_TEST_NEAR,
     ChainId.NEAR_TESTNET,
+    NEAR_TEST_NATIVE,
+    ChainId.BSC_TEST,
     provider
   );
   console.log('vault balance', balance);
@@ -95,13 +105,13 @@ async function demo() {
   //
   // // 2.a approve spend token if necessary
   //
-  // await approveToken(
-  //   ethSigner,
-  //   ETH_PRIV_NEAR,
-  //   '1',
-  //   MCS_CONTRACT_ADDRESS_SET[ChainId.ETH_PRIV],
-  //   true
-  // );
+  await approveToken(
+    bscSigner,
+    BSC_TEST_NEAR,
+    '1',
+    MCS_CONTRACT_ADDRESS_SET[ChainId.BSC_TEST],
+    true
+  );
   // //
   // // // 3. Bridge(先estimate gas)
   const bridge: BarterBridge = new BarterBridge();
