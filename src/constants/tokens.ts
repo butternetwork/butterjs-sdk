@@ -73,16 +73,16 @@ export const MAP_TEST_METH = new Token(
 
 export const MAP_TEST_BNB = new Token(
   212,
-  '0x41358EFc7d49d19F76E1E3bdD694f3bff9af3b36',
+  '0xF84AB41c8623D91382a030299cE270FFc09360c3',
   18,
-  'METH',
-  'MAP ETH',
+  'BNB',
+  'MAP BNB',
   'https://files.maplabs.io/bridge/eth.png'
 );
 
 export const MAP_TEST_NEAR = new Token(
   212,
-  '0x9C1A0718e61C1dD802cb7F5290Eb22E83FC578aC',
+  '0x080513434dE30757bc490ad52573CF669FD19EC0',
   18,
   'MNear',
   'MAP Near',
@@ -100,7 +100,7 @@ export const BSC_TEST_MAP = new Token(
 
 export const BSC_TEST_NEAR = new Token(
   97,
-  '0xf54bAF8506769E769a379a39816cAD778577b936',
+  '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c',
   18,
   'Near',
   'Near',

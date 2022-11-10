@@ -10,6 +10,7 @@ import { BarterBridge } from '../src';
 import {
   BSC_TEST_CHAIN,
   BSC_TEST_NATIVE,
+  BSC_TEST_NEAR,
   ChainId,
   ETH_PRIV_LMAP,
   ETH_PRIV_NATIVE,
@@ -29,24 +30,24 @@ const mapProvider = new ethers.providers.JsonRpcProvider(
   212
 );
 const mapSigner = new ethers.Wallet(
-  '939ae45116ea2d4ef9061f13534bc451e9f9835e94f191970f23aac0299d5f7a',
+  'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
   mapProvider
 );
-const ethProvider = new ethers.providers.JsonRpcProvider(
-  'http://18.138.248.113:8545',
-  34434
-);
-const ethSigner = new ethers.Wallet(
-  '939ae45116ea2d4ef9061f13534bc451e9f9835e94f191970f23aac0299d5f7a',
-  ethProvider
-);
+// const ethProvider = new ethers.providers.JsonRpcProvider(
+//   'http://18.138.248.113:8545',
+//   34434
+// );
+// const ethSigner = new ethers.Wallet(
+//   'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
+//   ethProvider
+// );
 
 const bscProvider = new ethers.providers.JsonRpcProvider(
   BSC_TEST_CHAIN.rpc,
   BSC_TEST_CHAIN.chainId
 );
 const bscSigner = new ethers.Wallet(
-  '939ae45116ea2d4ef9061f13534bc451e9f9835e94f191970f23aac0299d5f7a',
+  'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
   bscProvider
 );
 const keyStore: InMemoryKeyStore = new keyStores.InMemoryKeyStore();
@@ -68,17 +69,17 @@ const to = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 async function main() {
   const addTokenParam: AddTokenPairParam = {
     feeRate: {
-      lowest: BigNumber.from(100000),
+      lowest: BigNumber.from(1),
       highest: BigNumber.from(10000000000000),
-      bps: 100,
+      bps: 1,
     },
     mapNetwork: 'map-testnet',
     mapSigner: mapSigner,
-    srcToken: BSC_TEST_NATIVE,
-    targetToken: MAP_TEST_METH,
-    // mapToken: MAP_TEST_NEAR,
+    srcToken: BSC_TEST_NEAR,
+    targetToken: NEAR_TEST_NATIVE,
+    mapToken: MAP_TEST_NEAR,
     nearConfig,
-    srcSigner: ethSigner,
+    srcSigner: bscSigner,
   };
   await addTokenPair(addTokenParam);
   // await mapToEthNative();
@@ -107,7 +108,7 @@ async function ethToMapToken() {
     toChainId: ChainId.MAP_TEST,
     toAddress: to,
     amount: oneEther,
-    options: { signerOrProvider: ethSigner },
+    options: { signerOrProvider: bscSigner },
   };
   await bridge.bridgeToken(request);
 }

@@ -2,9 +2,18 @@ import { BigNumber, ethers } from 'ethers';
 import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
 import { KeyPair, keyStores } from 'near-api-js';
 import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
-import { ChainId, ETH_PRIV_NEAR, SUPPORTED_CHAIN_LIST } from '../src/constants';
+import {
+  BSC_TEST_NEAR,
+  ChainId,
+  ETH_PRIV_NEAR,
+  SUPPORTED_CHAIN_LIST,
+} from '../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
-import { getBridgeFee, getVaultBalance } from '../src/core/tools/dataFetch';
+import {
+  getBridgeFee,
+  getTargetToken,
+  getVaultBalance,
+} from '../src/core/tools/dataFetch';
 import {
   BarterFee,
   BarterContractCallReceipt,
@@ -15,11 +24,12 @@ import { approveToken } from '../src/libs/allowance';
 import Web3 from 'web3';
 import { JsonRpcProvider } from 'near-api-js/lib/providers';
 import { BarterJsonRpcProvider } from '../src/types/paramTypes';
+import { BaseCurrency } from '../src/entities';
 
 require('dotenv/config');
 const web3 = new Web3('http://18.138.248.113:8545');
 const account = web3.eth.accounts.privateKeyToAccount(
-  '0x' + '939ae45116ea2d4ef9061f13534bc451e9f9835e94f191970f23aac0299d5f7a'
+  '0x' + 'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b'
 );
 web3.eth.accounts.wallet.add(account);
 web3.eth.defaultAccount = account.address;
@@ -55,7 +65,7 @@ async function demo() {
 
   // 1. 获取费用信息
   const fee: BarterFee = await getBridgeFee(
-    ETH_PRIV_NEAR,
+    BSC_TEST_NEAR,
     ChainId.NEAR_TESTNET,
     ethers.utils.parseEther('1').toString(),
     provider
@@ -64,12 +74,23 @@ async function demo() {
 
   // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
-    ChainId.ETH_PRIV,
-    ETH_PRIV_NEAR,
+    ChainId.BSC_TEST,
+    BSC_TEST_NEAR,
     ChainId.NEAR_TESTNET,
     provider
   );
   console.log('vault balance', balance);
+
+  // 3. 获取targetToken
+  const targetToken: BaseCurrency = await getTargetToken(
+    BSC_TEST_NEAR,
+    ChainId.NEAR_TESTNET,
+    {
+      url: 'http://18.142.54.137:7445',
+      chainId: 212,
+    }
+  );
+  console.log('target token', targetToken);
   //
   // // 2.a approve spend token if necessary
   //

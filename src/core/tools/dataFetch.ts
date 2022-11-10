@@ -126,3 +126,26 @@ export async function getVaultBalance(
     balance: tokenBalance,
   });
 }
+
+export async function getTargetToken(
+  srcToken: BaseCurrency,
+  targetChainId: number,
+  rpcProvider: BarterJsonRpcProvider
+) {
+  const mapChainId: number = rpcProvider.chainId;
+  const provider = new ethers.providers.JsonRpcProvider(
+    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_PROVIDER(mapChainId)
+  );
+  const tokenRegister = new TokenRegister(
+    TOKEN_REGISTER_ADDRESS_SET[mapChainId]!,
+    provider
+  );
+
+  const targetTokenAddress = await tokenRegister.getTargetToken(
+    srcToken.chainId,
+    srcToken.address,
+    targetChainId
+  );
+
+  return getTokenByAddressAndChainId(targetTokenAddress, targetChainId);
+}
