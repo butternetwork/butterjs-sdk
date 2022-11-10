@@ -47,6 +47,7 @@ console.log('supported token', ID_TO_SUPPORTED_TOKEN(ChainId.ETH_PRIV));
  *    3. bridgeToken
  *  */
 async function demo() {
+  console.log('start demo');
   const provider: BarterJsonRpcProvider = {
     url: 'http://18.142.54.137:7445',
     chainId: 212,
