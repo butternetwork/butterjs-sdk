@@ -39,6 +39,7 @@ export class NearCrossChainService implements IMapCrossChainService {
    * @param options see {@link TransferOutOptions} for more detail
    */
   async doTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -97,6 +98,7 @@ export class NearCrossChainService implements IMapCrossChainService {
    * @param options see {@link TransferOutOptions} for more detail
    */
   async doTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
@@ -206,6 +208,7 @@ export class NearCrossChainService implements IMapCrossChainService {
   }
 
   gasEstimateTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
@@ -215,6 +218,7 @@ export class NearCrossChainService implements IMapCrossChainService {
   }
 
   gasEstimateTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,

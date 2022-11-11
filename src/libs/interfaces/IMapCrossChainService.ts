@@ -8,6 +8,7 @@ import BN from 'bn.js';
 export interface IMapCrossChainService {
   /**
    * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param fromAddress
    * @param tokenAddress input token address
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
@@ -15,6 +16,7 @@ export interface IMapCrossChainService {
    * @param options see {@link TransferOutOptions} for more detail
    */
   doTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -23,6 +25,7 @@ export interface IMapCrossChainService {
   ): Promise<BarterContractCallReceipt>;
 
   gasEstimateTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -32,12 +35,14 @@ export interface IMapCrossChainService {
 
   /**
    * transfer out native coin from source chain to designated token on target chain
+   * @param fromAddress
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
    * @param options see {@link TransferOutOptions} for more detail
    */
   doTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
@@ -45,6 +50,7 @@ export interface IMapCrossChainService {
   ): Promise<BarterContractCallReceipt>;
 
   gasEstimateTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,

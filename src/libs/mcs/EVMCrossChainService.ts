@@ -41,6 +41,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param fromAddress
    * @param tokenAddress input token address
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
@@ -48,6 +49,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
    * @param options
    */
   async doTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -67,11 +69,10 @@ export class EVMCrossChainService implements IMapCrossChainService {
 
       receipt = await transferOutTx.wait();
     } else {
-      const eth = this.provider as Eth;
       receipt = await this.contract.methods
         .transferOutToken(tokenAddress, toAddress, amount, toChainId)
         .send({
-          from: eth.defaultAccount,
+          from: fromAddress,
           gas: Number.parseInt(options.gas!.toString()),
         });
     }
@@ -80,6 +81,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
   }
 
   async gasEstimateTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -96,11 +98,9 @@ export class EVMCrossChainService implements IMapCrossChainService {
       );
       estimatedGas = gas.toString();
     } else {
-      const eth = this.provider as Eth;
-
       const gas = await this.contract.methods
         .transferOutToken(tokenAddress, toAddress, amount, toChainId)
-        .estimateGas({ from: eth.defaultAccount });
+        .estimateGas({ from: fromAddress });
       estimatedGas = gas.toString();
     }
     return estimatedGas;
@@ -114,6 +114,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
    * @param options
    */
   async doTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,

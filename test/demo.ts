@@ -29,6 +29,7 @@ import Web3 from 'web3';
 import { JsonRpcProvider } from 'near-api-js/lib/providers';
 import { BarterJsonRpcProvider } from '../src/types/paramTypes';
 import { BaseCurrency } from '../src/entities';
+import { WebsocketProvider } from 'web3-core';
 
 require('dotenv/config');
 const web3 = new Web3('http://18.138.248.113:8545');
@@ -102,20 +103,22 @@ async function demo() {
     }
   );
   console.log('token candidates', tokenCandidates);
+
   //
   // // 2.a approve spend token if necessary
   //
-  await approveToken(
-    bscSigner,
-    BSC_TEST_NEAR,
-    '1',
-    MCS_CONTRACT_ADDRESS_SET[ChainId.BSC_TEST],
-    true
-  );
+  // await approveToken(
+  //   bscSigner,
+  //   BSC_TEST_NEAR,
+  //   '1',
+  //   MCS_CONTRACT_ADDRESS_SET[ChainId.BSC_TEST],
+  //   true
+  // );
   // //
   // // // 3. Bridge(先estimate gas)
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
+    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
     fromToken: ETH_PRIV_NEAR,
     fromChainId: ChainId.ETH_PRIV,
     toChainId: ChainId.NEAR_TESTNET,
@@ -131,6 +134,7 @@ async function demo() {
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
+    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
     fromToken: ETH_PRIV_NEAR,
     fromChainId: ChainId.ETH_PRIV,
     toChainId: ChainId.NEAR_TESTNET,

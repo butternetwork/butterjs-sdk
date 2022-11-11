@@ -49,6 +49,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
    * @param options
    */
   async doTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -111,6 +112,8 @@ export class RelayCrossChainService implements IMapCrossChainService {
    * @param options
    */
   async doTransferOutNative(
+    fromAddress: string,
+
     toAddress: string,
     toChainId: string,
     amount: string,
