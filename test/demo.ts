@@ -78,7 +78,7 @@ async function demo() {
   const fee: BarterFee = await getBridgeFee(
     BSC_TEST_NEAR,
     ChainId.NEAR_TESTNET,
-    ethers.utils.parseEther('1').toString(),
+    ethers.utils.parseEther('2').toString(),
     provider
   );
   console.log('bridge fee', fee);
