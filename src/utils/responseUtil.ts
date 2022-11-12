@@ -1,10 +1,16 @@
-import { BarterContractCallReceipt } from '../types/responseTypes';
+import {
+  BarterTransactionReceipt,
+  BarterTransactionResponse,
+} from '../types/responseTypes';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
-import { BarterReceiptType } from '../types/paramTypes';
+import { BarterProviderType, BarterReceiptType } from '../types/paramTypes';
+import { NearNetworkConfig } from '../types';
+import { Signer } from 'ethers';
+import { Provider } from '@ethersproject/abstract-provider';
 
 export function adaptEthReceipt(
   transactionReceipt: BarterReceiptType
-): BarterContractCallReceipt {
+): BarterTransactionReceipt {
   return {
     to: transactionReceipt.to,
     from: transactionReceipt.from,
@@ -17,7 +23,7 @@ export function adaptEthReceipt(
 
 export function adaptNearReceipt(
   finalExecutionOutcome: FinalExecutionOutcome
-): BarterContractCallReceipt {
+): BarterTransactionReceipt {
   return {
     to: finalExecutionOutcome.transaction.receiver_id,
     from: finalExecutionOutcome.transaction.signer_id,
@@ -26,4 +32,46 @@ export function adaptNearReceipt(
 
     transactionHash: finalExecutionOutcome.transaction.hash,
   };
+}
+
+export function assembleTransactionResponse(
+  transactionHash: string,
+  provider?: BarterProviderType,
+  nearConfig?: NearNetworkConfig
+): BarterTransactionResponse {
+  if (provider) {
+    return <BarterTransactionResponse>{
+      hash: transactionHash!,
+      wait: async (): Promise<BarterTransactionReceipt> => {
+        if (provider instanceof Signer) {
+          const receipt = await provider.provider?.waitForTransaction(
+            transactionHash
+          );
+          return Promise.resolve(adaptEthReceipt(receipt!));
+        } else if (provider instanceof Provider) {
+          const receipt = await provider.waitForTransaction(transactionHash);
+          return Promise.resolve(adaptEthReceipt(receipt));
+        } else {
+          const receipt = await provider.getTransactionReceipt(transactionHash);
+          return Promise.resolve(adaptEthReceipt(receipt!));
+        }
+      },
+    };
+  } else if (nearConfig) {
+    return <BarterTransactionResponse>{
+      hash: transactionHash!,
+      wait: async (): Promise<BarterTransactionReceipt> => {
+        return Promise.resolve(<BarterTransactionReceipt>{
+          to: 'a',
+          from: 'a',
+          gasUsed: 'a',
+          transactionHash: 'a',
+        });
+      },
+    };
+  } else {
+    throw new Error(
+      'provider not founder when assembling transaction response'
+    );
+  }
 }

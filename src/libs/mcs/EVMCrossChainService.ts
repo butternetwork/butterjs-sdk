@@ -7,10 +7,16 @@ import {
 } from 'ethers';
 import { Eth } from 'web3-eth';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
-import { BarterContractCallReceipt } from '../../types/responseTypes';
-import { adaptEthReceipt } from '../../utils/responseUtil';
+import {
+  BarterTransactionReceipt,
+  BarterTransactionResponse,
+} from '../../types/responseTypes';
+import {
+  adaptEthReceipt,
+  assembleTransactionResponse,
+} from '../../utils/responseUtil';
 
-import { Provider } from '@ethersproject/abstract-provider';
+import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
 import { TransferOutOptions } from '../../types';
 import { BarterContractType, BarterProviderType } from '../../types/paramTypes';
 
@@ -54,29 +60,31 @@ export class EVMCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
-    let receipt;
+  ): Promise<BarterTransactionResponse> {
+    let txHash: string;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
         await this.contract.transferOutToken(
           tokenAddress,
           toAddress,
           amount,
-          toChainId,
-          { gas: options.gas }
+          toChainId
+          // { gasLimit: options.gas }
         );
-
-      receipt = await transferOutTx.wait();
+      txHash = transferOutTx.hash;
+      // receipt = await transferOutTx.wait();
     } else {
-      receipt = await this.contract.methods
+      await this.contract.methods
         .transferOutToken(tokenAddress, toAddress, amount, toChainId)
         .send({
           from: fromAddress,
           gas: Number.parseInt(options.gas!.toString()),
+        })
+        .on('transactionHash', function (hash: string) {
+          txHash = hash;
         });
     }
-
-    return adaptEthReceipt(receipt);
+    return assembleTransactionResponse(txHash!, this.provider);
   }
 
   async gasEstimateTransferOutToken(
@@ -118,25 +126,46 @@ export class EVMCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
-    let receipt;
+  ): Promise<BarterTransactionResponse> {
+    let txHash: string;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
         await this.contract.transferOutNative(toAddress, toChainId, {
+          // gasLimit: options.gas,
           value: amount,
         });
 
-      receipt = await transferOutTx.wait();
+      txHash = transferOutTx.hash;
     } else {
-      receipt = await this.contract.methods
+      await this.contract.methods
         .transferOutNative(toAddress, toChainId)
         .send({
           value: amount,
           from: fromAddress,
           gas: Number.parseInt(options.gas!.toString()),
+        })
+        .on('transactionHash', function (hash: string) {
+          txHash = hash;
         });
     }
-    return adaptEthReceipt(receipt);
+    return <BarterTransactionResponse>{
+      hash: txHash!,
+      wait: async (): Promise<BarterTransactionReceipt> => {
+        if (this.provider instanceof Signer) {
+          const receipt = await this.provider.provider?.waitForTransaction(
+            txHash
+          );
+          return Promise.resolve(adaptEthReceipt(receipt!));
+        } else if (this.provider instanceof Eth) {
+        }
+        return Promise.resolve(<BarterTransactionReceipt>{
+          to: 'a',
+          from: 'a',
+          gasUsed: 'a',
+          transactionHash: 'a',
+        });
+      },
+    };
   }
 
   async gasEstimateTransferOutNative(

@@ -3,7 +3,10 @@ import { getHexAddress, validateAndParseAddressByChainId } from '../../utils';
 import { BridgeRequestParam } from '../../types/requestTypes';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
-import { BarterContractCallReceipt } from '../../types/responseTypes';
+import {
+  BarterTransactionReceipt,
+  BarterTransactionResponse,
+} from '../../types/responseTypes';
 import BN from 'bn.js';
 import { hexlify } from 'ethers/lib/utils';
 
@@ -26,7 +29,7 @@ export class BarterBridge {
     toAddress,
     amount,
     options,
-  }: BridgeRequestParam): Promise<BarterContractCallReceipt> {
+  }: BridgeRequestParam): Promise<BarterTransactionResponse> {
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided

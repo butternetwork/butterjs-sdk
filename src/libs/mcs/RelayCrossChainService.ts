@@ -9,7 +9,10 @@ import {
 import { Contract as Web3Contract } from 'web3-eth-contract';
 
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
-import { BarterContractCallReceipt } from '../../types/responseTypes';
+import {
+  BarterTransactionReceipt,
+  BarterTransactionResponse,
+} from '../../types/responseTypes';
 import { adaptEthReceipt } from '../../utils/responseUtil';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
@@ -55,8 +58,8 @@ export class RelayCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
-    let receipt;
+  ): Promise<BarterTransactionResponse> {
+    let txHash;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
         await this.contract.transferOutToken(
@@ -66,17 +69,23 @@ export class RelayCrossChainService implements IMapCrossChainService {
           toChainId
         );
 
-      receipt = await transferOutTx.wait();
+      txHash = transferOutTx.hash;
     } else {
-      receipt = await this.contract.methods
+      await this.contract.methods
         .transferOutToken(tokenAddress, toAddress, amount, toChainId)
         .send({
           from: (this.provider as Eth).defaultAccount,
           gas: options.gas,
+        })
+        .on('transactionHash', function (hash: string) {
+          txHash = hash;
         });
     }
 
-    return adaptEthReceipt(receipt);
+    return <BarterTransactionResponse>{
+      hash: txHash,
+      wait: () => {},
+    };
   }
 
   async gasEstimateTransferOutToken(
@@ -106,6 +115,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out native coin from source chain to designated token on target chain
+   * @param fromAddress
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
@@ -113,30 +123,35 @@ export class RelayCrossChainService implements IMapCrossChainService {
    */
   async doTransferOutNative(
     fromAddress: string,
-
     toAddress: string,
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
-    let receipt;
+  ): Promise<BarterTransactionResponse> {
+    let txHash;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
         await this.contract.transferOutNative(toAddress, toChainId, {
           value: amount,
         });
 
-      receipt = await transferOutTx.wait();
+      txHash = transferOutTx.hash;
     } else {
-      receipt = await this.contract.methods
+      await this.contract.methods
         .transferOutToken(toAddress, toChainId)
         .send({
           value: amount,
-          from: (this.provider as Eth).defaultAccount,
+          from: fromAddress,
           gas: options.gas,
+        })
+        .on('transactionHash', function (hash: string) {
+          txHash = hash;
         });
     }
-    return adaptEthReceipt(receipt);
+    return <BarterTransactionResponse>{
+      hash: txHash,
+      wait: () => {},
+    };
   }
 
   async gasEstimateTransferOutNative(

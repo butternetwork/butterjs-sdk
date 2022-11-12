@@ -183,8 +183,8 @@ type BridgeOptions = {
     gas?: string; // maunally input gas
 };
 
-// BarterContractCallReceipt
-interface BarterContractCallReceipt {
+// BarterTransactionReceipt
+interface BarterTransactionReceipt {
     to: string;
     from: string;
     gasUsed: string;
@@ -202,7 +202,7 @@ async function bridgeToken({
     toAddress, // recipient address
     amount, // amount of 'fromToken' to bridge
     options,
-}: BridgeRequestParam): Promise<BarterContractCallReceipt>;
+}: BridgeRequestParam): Promise<BarterTransactionReceipt>;
  ```
 for more detail on `BridgeRequestParam` and `BarterContractCallRecept`, please see [parameters](#bridgeparam).
 
@@ -225,7 +225,7 @@ const bridgeRequest: BridgeRequestParam = {
     },
 };
 
-const receipt: BarterContractCallReceipt = await bridge.bridgeToken(
+const receipt: BarterTransactionReceipt = await bridge.bridgeToken(
     bridgeRequest
 );
 

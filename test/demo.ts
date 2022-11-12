@@ -20,7 +20,8 @@ import {
 } from '../src/core/tools/dataFetch';
 import {
   BarterFee,
-  BarterContractCallReceipt,
+  BarterTransactionReceipt,
+  BarterTransactionResponse,
   VaultBalance,
 } from '../src/types/responseTypes';
 import { BarterBridge } from '../src';
@@ -76,33 +77,33 @@ async function demo() {
   };
 
   // 1. 获取费用信息
-  const fee: BarterFee = await getBridgeFee(
-    BSC_TEST_NEAR,
-    ChainId.NEAR_TESTNET,
-    ethers.utils.parseEther('2').toString(),
-    provider
-  );
-  console.log('bridge fee', fee);
-
-  // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
-  const balance: VaultBalance = await getVaultBalance(
-    ChainId.NEAR_TESTNET,
-    NEAR_TEST_NATIVE,
-    ChainId.BSC_TEST,
-    provider
-  );
-  console.log('vault balance', balance);
-
-  // 3. 获取targetToken
-  const tokenCandidates = await getTokenCandidates(
-    ChainId.BSC_TEST,
-    ChainId.NEAR_TESTNET,
-    {
-      url: 'http://18.142.54.137:7445',
-      chainId: 212,
-    }
-  );
-  console.log('token candidates', tokenCandidates);
+  // const fee: BarterFee = await getBridgeFee(
+  //   BSC_TEST_NEAR,
+  //   ChainId.NEAR_TESTNET,
+  //   ethers.utils.parseEther('2').toString(),
+  //   provider
+  // );
+  // console.log('bridge fee', fee);
+  //
+  // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
+  // const balance: VaultBalance = await getVaultBalance(
+  //   ChainId.NEAR_TESTNET,
+  //   NEAR_TEST_NATIVE,
+  //   ChainId.BSC_TEST,
+  //   provider
+  // );
+  // console.log('vault balance', balance);
+  //
+  // // 3. 获取targetToken
+  // const tokenCandidates = await getTokenCandidates(
+  //   ChainId.BSC_TEST,
+  //   ChainId.NEAR_TESTNET,
+  //   {
+  //     url: 'http://18.142.54.137:7445',
+  //     chainId: 212,
+  //   }
+  // );
+  // console.log('token candidates', tokenCandidates);
 
   //
   // // 2.a approve spend token if necessary
@@ -141,13 +142,14 @@ async function demo() {
     toAddress: 'xyli.testnet',
     amount: ethers.utils.parseEther('1').toString(),
     options: {
-      signerOrProvider: web3.eth,
+      signerOrProvider: bscSigner,
       gas: adjustedGas,
     },
   };
-  const receipt: Promise<BarterContractCallReceipt> =
-    bridge.bridgeToken(bridgeRequest);
-  console.log('tx receipt', await receipt);
+  const receipt: BarterTransactionResponse = await bridge.bridgeToken(
+    bridgeRequest
+  );
+  console.log('tx receipt', await receipt.wait());
 }
 
 demo()

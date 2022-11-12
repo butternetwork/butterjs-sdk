@@ -15,7 +15,10 @@ import BN from 'bn.js';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import { hexToDecimalArray } from '../../utils';
-import { BarterContractCallReceipt } from '../../types/responseTypes';
+import {
+  BarterTransactionReceipt,
+  BarterTransactionResponse,
+} from '../../types/responseTypes';
 import { adaptNearReceipt } from '../../utils/responseUtil';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 export class NearCrossChainService implements IMapCrossChainService {
@@ -45,7 +48,7 @@ export class NearCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
+  ): Promise<BarterTransactionResponse> {
     try {
       // get mcs contract address
       const mcsAccountId: string =
@@ -81,9 +84,13 @@ export class NearCrossChainService implements IMapCrossChainService {
         nearCallOptions.gas = new BN(options.gas, 10);
       }
 
-      return adaptNearReceipt(
-        await this._doNearFunctionCall(account, nearCallOptions)
-      );
+      // return adaptNearReceipt(
+      //   await this._doNearFunctionCall(account, nearCallOptions)
+      // );
+      return <BarterTransactionResponse>{
+        hash: 'hash',
+        wait: () => {},
+      };
     } catch (error) {
       throw error;
     }
@@ -103,7 +110,7 @@ export class NearCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
+  ): Promise<BarterTransactionResponse> {
     try {
       const mcsAccountId: string =
         this.config.networkId === 'testnet'
@@ -131,9 +138,13 @@ export class NearCrossChainService implements IMapCrossChainService {
         nearCallOptions.gas = new BN(options.gas, 10);
       }
 
-      return adaptNearReceipt(
-        await this._doNearFunctionCall(account, nearCallOptions)
-      );
+      // return adaptNearReceipt(
+      //   await this._doNearFunctionCall(account, nearCallOptions)
+      // );
+      return <BarterTransactionResponse>{
+        hash: 'hash',
+        wait: () => {},
+      };
     } catch (error) {
       throw error;
     }
