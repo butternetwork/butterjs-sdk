@@ -5,7 +5,6 @@ import {
   ethers,
   Signer,
 } from 'ethers';
-import { Contract as Web3Contract } from 'web3-eth-contract';
 import { Eth } from 'web3-eth';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import { BarterContractCallReceipt } from '../../types/responseTypes';
@@ -129,12 +128,11 @@ export class EVMCrossChainService implements IMapCrossChainService {
 
       receipt = await transferOutTx.wait();
     } else {
-      const eth = this.provider as Eth;
       receipt = await this.contract.methods
         .transferOutNative(toAddress, toChainId)
         .send({
           value: amount,
-          from: eth.defaultAccount,
+          from: fromAddress,
           gas: Number.parseInt(options.gas!.toString()),
         });
     }
@@ -142,6 +140,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
   }
 
   async gasEstimateTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string

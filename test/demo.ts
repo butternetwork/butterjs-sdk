@@ -119,8 +119,8 @@ async function demo() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: ETH_PRIV_NEAR,
-    fromChainId: ChainId.ETH_PRIV,
+    fromToken: BSC_TEST_NEAR,
+    fromChainId: ChainId.BSC_TEST,
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: 'abc.testnet',
     amount: ethers.utils.parseEther('1').toString(),
@@ -135,8 +135,8 @@ async function demo() {
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
     fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: ETH_PRIV_NEAR,
-    fromChainId: ChainId.ETH_PRIV,
+    fromToken: BSC_TEST_NEAR,
+    fromChainId: ChainId.BSC_TEST,
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: 'xyli.testnet',
     amount: ethers.utils.parseEther('1').toString(),
@@ -145,10 +145,9 @@ async function demo() {
       gas: adjustedGas,
     },
   };
-  const receipt: BarterContractCallReceipt = await bridge.bridgeToken(
-    bridgeRequest
-  );
-  console.log('tx receipt', receipt);
+  const receipt: Promise<BarterContractCallReceipt> =
+    bridge.bridgeToken(bridgeRequest);
+  console.log('tx receipt', await receipt);
 }
 
 demo()
