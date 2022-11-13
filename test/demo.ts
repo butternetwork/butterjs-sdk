@@ -165,18 +165,17 @@ async function demo() {
       gas: adjustedGas,
     },
   };
-  const receipt: BarterTransactionResponse = await bridge.bridgeToken(
+  const response: BarterTransactionResponse = await bridge.bridgeToken(
     bridgeRequest
   );
-  const promiReceipt: PromiEvent<TransactionReceipt> = receipt.promiReceipt!;
+  const promiReceipt: PromiEvent<TransactionReceipt> = response.promiReceipt!;
   await promiReceipt
     .on('transactionHash', function (hash: string) {
       console.log('hash', hash);
     })
     .on('receipt', function (receipt: any) {
-      console.log('receipt!!!!', receipt);
+      console.log('receipt', receipt);
     });
-  console.log('tx receipt');
 }
 
 demo()
