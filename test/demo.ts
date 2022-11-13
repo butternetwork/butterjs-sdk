@@ -2,6 +2,7 @@ import { BigNumber, ethers } from 'ethers';
 import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
 import { KeyPair, keyStores } from 'near-api-js';
 import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   BSC_TEST_CHAIN,
   BSC_TEST_NEAR,
@@ -31,6 +32,7 @@ import { JsonRpcProvider } from 'near-api-js/lib/providers';
 import { BarterJsonRpcProvider } from '../src/types/paramTypes';
 import { BaseCurrency } from '../src/entities';
 import { WebsocketProvider } from 'web3-core';
+import { Contract } from 'web3-eth-contract';
 
 require('dotenv/config');
 const web3 = new Web3('http://18.138.248.113:8545');
@@ -69,7 +71,24 @@ console.log('supported token', ID_TO_SUPPORTED_TOKEN(ChainId.ETH_PRIV));
  *    2. getVaultBalance
  *    3. bridgeToken
  *  */
+function test(): PromiEvent<TransactionReceipt> {
+  return web3.eth.sendTransaction({
+    from: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    to: '0xCBdb1Da4f99276b0c427776BDE93838Bc19386Cc',
+    value: '10000000',
+    gas: '5000000',
+    gasPrice: '100',
+  });
+}
 async function demo() {
+  // const promiReceipt: PromiEvent<TransactionReceipt> = test();
+  // promiReceipt
+  //   .on('transactionHash', function (hash: string) {
+  //     console.log('success!', hash);
+  //   })
+  //   .on('receipt', function (receipt: any) {
+  //     console.log('receipt', receipt);
+  //   });
   console.log('start demo');
   const provider: BarterJsonRpcProvider = {
     url: 'http://18.142.54.137:7445',
@@ -116,7 +135,7 @@ async function demo() {
   //   true
   // );
   // //
-  // // // 3. Bridge(先estimate gas)
+  // // 3. Bridge(先estimate gas)
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
@@ -142,14 +161,22 @@ async function demo() {
     toAddress: 'xyli.testnet',
     amount: ethers.utils.parseEther('1').toString(),
     options: {
-      signerOrProvider: bscSigner,
+      signerOrProvider: web3.eth,
       gas: adjustedGas,
     },
   };
   const receipt: BarterTransactionResponse = await bridge.bridgeToken(
     bridgeRequest
   );
-  console.log('tx receipt', await receipt.wait());
+  const promiReceipt: PromiEvent<TransactionReceipt> = receipt.promiReceipt!;
+  await promiReceipt
+    .on('transactionHash', function (hash: string) {
+      console.log('hash', hash);
+    })
+    .on('receipt', function (receipt: any) {
+      console.log('receipt!!!!', receipt);
+    });
+  console.log('tx receipt');
 }
 
 demo()

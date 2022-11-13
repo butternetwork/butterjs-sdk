@@ -1,6 +1,7 @@
 import { TransferOutOptions } from '../../types/requestTypes';
 import { BarterTransactionResponse } from '../../types/responseTypes';
 import BN from 'bn.js';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
 
 /**
  * MAP cross-chain service interface.

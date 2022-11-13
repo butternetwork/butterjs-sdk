@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import BN from 'bn.js';
 import { BaseCurrency } from '../entities';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
 
 export interface BarterTransactionReceipt {
   to: string;
@@ -13,8 +14,9 @@ export interface BarterTransactionReceipt {
 }
 
 export interface BarterTransactionResponse {
-  hash: string;
-  wait: () => Promise<BarterTransactionReceipt>;
+  hash?: string;
+  wait?: () => Promise<BarterTransactionReceipt>;
+  promiReceipt?: PromiEvent<TransactionReceipt>;
 }
 
 export interface BarterFee {

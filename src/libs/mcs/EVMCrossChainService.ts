@@ -17,8 +17,10 @@ import {
 } from '../../utils/responseUtil';
 
 import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
+import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
 import { TransferOutOptions } from '../../types';
 import { BarterContractType, BarterProviderType } from '../../types/paramTypes';
+import { PromiEvent } from 'web3-core';
 
 export class EVMCrossChainService implements IMapCrossChainService {
   contract: BarterContractType;
@@ -72,19 +74,20 @@ export class EVMCrossChainService implements IMapCrossChainService {
           // { gasLimit: options.gas }
         );
       txHash = transferOutTx.hash;
+      return assembleTransactionResponse(txHash!, this.provider);
       // receipt = await transferOutTx.wait();
     } else {
-      await this.contract.methods
-        .transferOutToken(tokenAddress, toAddress, amount, toChainId)
-        .send({
-          from: fromAddress,
-          gas: Number.parseInt(options.gas!.toString()),
-        })
-        .on('transactionHash', function (hash: string) {
-          txHash = hash;
-        });
+      const promiReceipt: PromiEvent<Web3TransactionReceipt> =
+        this.contract.methods
+          .transferOutToken(tokenAddress, toAddress, amount, toChainId)
+          .send({
+            from: fromAddress,
+            gas: Number.parseInt(options.gas!.toString()),
+          });
+      return <BarterTransactionResponse>{
+        promiReceipt: promiReceipt,
+      };
     }
-    return assembleTransactionResponse(txHash!, this.provider);
   }
 
   async gasEstimateTransferOutToken(
