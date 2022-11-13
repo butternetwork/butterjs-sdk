@@ -1,14 +1,22 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import BN from 'bn.js';
 import { BaseCurrency } from '../entities';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
 
-export interface BarterContractCallReceipt {
+export interface BarterTransactionReceipt {
   to: string;
   from: string;
   gasUsed: string;
   transactionHash: string;
   blockHash?: string;
   blockNumber?: number;
+  success?: boolean; // 1 success, 0 failed
+}
+
+export interface BarterTransactionResponse {
+  hash?: string;
+  wait?: () => Promise<BarterTransactionReceipt>;
+  promiReceipt?: PromiEvent<TransactionReceipt>;
 }
 
 export interface BarterFee {

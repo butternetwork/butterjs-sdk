@@ -15,8 +15,14 @@ import BN from 'bn.js';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import { hexToDecimalArray } from '../../utils';
-import { BarterContractCallReceipt } from '../../types/responseTypes';
-import { adaptNearReceipt } from '../../utils/responseUtil';
+import {
+  BarterTransactionReceipt,
+  BarterTransactionResponse,
+} from '../../types/responseTypes';
+import {
+  adaptNearReceipt,
+  assembleNearTransactionResponse,
+} from '../../utils/responseUtil';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 export class NearCrossChainService implements IMapCrossChainService {
   config: NearNetworkConfig;
@@ -31,20 +37,21 @@ export class NearCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param fromAddress
    * @param tokenAddress input token address
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
-   * @param gasEstimation
    * @param options see {@link TransferOutOptions} for more detail
    */
   async doTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
+  ): Promise<BarterTransactionResponse> {
     try {
       // get mcs contract address
       const mcsAccountId: string =
@@ -79,10 +86,9 @@ export class NearCrossChainService implements IMapCrossChainService {
       if (options.gas != undefined) {
         nearCallOptions.gas = new BN(options.gas, 10);
       }
-
-      return adaptNearReceipt(
-        await this._doNearFunctionCall(account, nearCallOptions)
-      );
+      const executionOutcome: FinalExecutionOutcome =
+        await this._doNearFunctionCall(account, nearCallOptions);
+      return assembleNearTransactionResponse(executionOutcome);
     } catch (error) {
       throw error;
     }
@@ -90,18 +96,19 @@ export class NearCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out native coin from source chain to designated token on target chain
+   * @param fromAddress
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
-   * @param gasEstimation
    * @param options see {@link TransferOutOptions} for more detail
    */
   async doTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
+  ): Promise<BarterTransactionResponse> {
     try {
       const mcsAccountId: string =
         this.config.networkId === 'testnet'
@@ -129,9 +136,9 @@ export class NearCrossChainService implements IMapCrossChainService {
         nearCallOptions.gas = new BN(options.gas, 10);
       }
 
-      return adaptNearReceipt(
-        await this._doNearFunctionCall(account, nearCallOptions)
-      );
+      const executionOutcome: FinalExecutionOutcome =
+        await this._doNearFunctionCall(account, nearCallOptions);
+      return assembleNearTransactionResponse(executionOutcome);
     } catch (error) {
       throw error;
     }
@@ -206,6 +213,7 @@ export class NearCrossChainService implements IMapCrossChainService {
   }
 
   gasEstimateTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
@@ -215,6 +223,7 @@ export class NearCrossChainService implements IMapCrossChainService {
   }
 
   gasEstimateTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,

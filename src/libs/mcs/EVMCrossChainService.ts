@@ -5,15 +5,22 @@ import {
   ethers,
   Signer,
 } from 'ethers';
-import { Contract as Web3Contract } from 'web3-eth-contract';
 import { Eth } from 'web3-eth';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
-import { BarterContractCallReceipt } from '../../types/responseTypes';
-import { adaptEthReceipt } from '../../utils/responseUtil';
+import {
+  BarterTransactionReceipt,
+  BarterTransactionResponse,
+} from '../../types/responseTypes';
+import {
+  adaptEthReceipt,
+  assembleEVMTransactionResponse,
+} from '../../utils/responseUtil';
 
-import { Provider } from '@ethersproject/abstract-provider';
+import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
+import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
 import { TransferOutOptions } from '../../types';
 import { BarterContractType, BarterProviderType } from '../../types/paramTypes';
+import { PromiEvent } from 'web3-core';
 
 export class EVMCrossChainService implements IMapCrossChainService {
   contract: BarterContractType;
@@ -41,6 +48,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param fromAddress
    * @param tokenAddress input token address
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
@@ -48,38 +56,42 @@ export class EVMCrossChainService implements IMapCrossChainService {
    * @param options
    */
   async doTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
-    let receipt;
+  ): Promise<BarterTransactionResponse> {
+    let txHash: string;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
         await this.contract.transferOutToken(
           tokenAddress,
           toAddress,
           amount,
-          toChainId,
-          { gas: options.gas }
+          toChainId
+          // { gasLimit: options.gas }
         );
-
-      receipt = await transferOutTx.wait();
+      txHash = transferOutTx.hash;
+      return assembleEVMTransactionResponse(txHash!, this.provider);
+      // receipt = await transferOutTx.wait();
     } else {
-      const eth = this.provider as Eth;
-      receipt = await this.contract.methods
-        .transferOutToken(tokenAddress, toAddress, amount, toChainId)
-        .send({
-          from: eth.defaultAccount,
-          gas: Number.parseInt(options.gas!.toString()),
-        });
+      const promiReceipt: PromiEvent<Web3TransactionReceipt> =
+        this.contract.methods
+          .transferOutToken(tokenAddress, toAddress, amount, toChainId)
+          .send({
+            from: fromAddress,
+            gas: Number.parseInt(options.gas!.toString()),
+          });
+      return <BarterTransactionResponse>{
+        promiReceipt: promiReceipt,
+      };
     }
-
-    return adaptEthReceipt(receipt);
   }
 
   async gasEstimateTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -96,11 +108,9 @@ export class EVMCrossChainService implements IMapCrossChainService {
       );
       estimatedGas = gas.toString();
     } else {
-      const eth = this.provider as Eth;
-
       const gas = await this.contract.methods
         .transferOutToken(tokenAddress, toAddress, amount, toChainId)
-        .estimateGas({ from: eth.defaultAccount });
+        .estimateGas({ from: fromAddress });
       estimatedGas = gas.toString();
     }
     return estimatedGas;
@@ -108,39 +118,44 @@ export class EVMCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out native coin from source chain to designated token on target chain
+   * @param fromAddress
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
    * @param options
    */
   async doTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<BarterContractCallReceipt> {
-    let receipt;
+  ): Promise<BarterTransactionResponse> {
+    let txHash: string;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
         await this.contract.transferOutNative(toAddress, toChainId, {
+          // gasLimit: options.gas,
           value: amount,
         });
 
-      receipt = await transferOutTx.wait();
+      txHash = transferOutTx.hash;
+      return assembleEVMTransactionResponse(txHash!, this.provider);
     } else {
-      const eth = this.provider as Eth;
-      receipt = await this.contract.methods
-        .transferOutNative(toAddress, toChainId)
-        .send({
+      const promiReceipt: PromiEvent<Web3TransactionReceipt> =
+        this.contract.methods.transferOutNative(toAddress, toChainId).send({
           value: amount,
-          from: eth.defaultAccount,
+          from: fromAddress,
           gas: Number.parseInt(options.gas!.toString()),
         });
+      return <BarterTransactionResponse>{
+        promiReceipt: promiReceipt,
+      };
     }
-    return adaptEthReceipt(receipt);
   }
 
   async gasEstimateTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string

@@ -18,6 +18,7 @@ import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
 import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import { getTokenByAddressAndChainId } from '../../utils/tokenUtil';
 import { BarterJsonRpcProvider } from '../../types/paramTypes';
+import { ID_TO_SUPPORTED_TOKEN } from '../../constants/supported_tokens';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -125,4 +126,58 @@ export async function getVaultBalance(
     token: getTokenByAddressAndChainId(toChainTokenAddress, toChainId),
     balance: tokenBalance,
   });
+}
+
+export async function getTargetToken(
+  srcToken: BaseCurrency,
+  targetChainId: number,
+  rpcProvider: BarterJsonRpcProvider
+): Promise<BaseCurrency> {
+  const tokenAddress = await getTargetTokenAddress(
+    srcToken,
+    targetChainId,
+    rpcProvider
+  );
+  if (tokenAddress === '0x') {
+    throw new Error('token does not exist');
+  }
+  return getTokenByAddressAndChainId(tokenAddress, targetChainId);
+}
+
+export async function getTargetTokenAddress(
+  srcToken: BaseCurrency,
+  targetChainId: number,
+  rpcProvider: BarterJsonRpcProvider
+): Promise<string> {
+  const mapChainId: number = rpcProvider.chainId;
+  const provider = new ethers.providers.JsonRpcProvider(
+    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_PROVIDER(mapChainId)
+  );
+  const tokenRegister = new TokenRegister(
+    TOKEN_REGISTER_ADDRESS_SET[mapChainId]!,
+    provider
+  );
+
+  const targetTokenAddress = await tokenRegister.getTargetToken(
+    srcToken.chainId,
+    srcToken.address,
+    targetChainId
+  );
+  return targetTokenAddress;
+}
+
+export async function getTokenCandidates(
+  fromChainId: number,
+  toChainId: number,
+  provider: BarterJsonRpcProvider
+): Promise<BaseCurrency[]> {
+  let ret = [];
+  const fromChainTokenList = ID_TO_SUPPORTED_TOKEN(fromChainId);
+  for (let i = 0; i < fromChainTokenList.length; i++) {
+    const token: BaseCurrency = fromChainTokenList[i]!;
+    if ((await getTargetTokenAddress(token, toChainId, provider)) != '0x') {
+      ret.push(token);
+    }
+  }
+  return ret;
 }

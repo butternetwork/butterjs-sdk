@@ -2,7 +2,7 @@ import { BigNumber, ethers, Signer } from 'ethers';
 import FeeCenterMetadata from '../abis/FeeCenter.json';
 import { Provider } from '@ethersproject/abstract-provider';
 import { BarterContractType, BarterProviderType } from '../types/paramTypes';
-import { BarterContractCallReceipt } from '../types/responseTypes';
+import { BarterTransactionReceipt } from '../types/responseTypes';
 import { adaptEthReceipt } from '../utils/responseUtil';
 
 export class FeeCenter {
@@ -33,7 +33,7 @@ export class FeeCenter {
     lowest: BigNumber,
     highest: BigNumber,
     proportion: number
-  ): Promise<BarterContractCallReceipt> {
+  ): Promise<BarterTransactionReceipt> {
     let setCFTx;
     if (this.provider instanceof Signer || this.provider instanceof Provider) {
       setCFTx = await (this.contract as ethers.Contract).setChainTokenGasFee(

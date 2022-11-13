@@ -3,7 +3,7 @@ import TokenRegisterMetadata from '../abis/TokenRegister.json';
 import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
 import { BarterContractType, BarterProviderType } from '../types/paramTypes';
 import { Eth } from 'web3-eth';
-import { BarterContractCallReceipt } from '../types/responseTypes';
+import { BarterTransactionReceipt } from '../types/responseTypes';
 import { adaptEthReceipt } from '../utils/responseUtil';
 
 export class TokenRegister {
@@ -32,7 +32,7 @@ export class TokenRegister {
     sourceChain: number,
     sourceMapToken: string,
     mapToken: string
-  ): Promise<BarterContractCallReceipt> {
+  ): Promise<BarterTransactionReceipt> {
     let regTokenTx;
     if (this.contract instanceof ethers.Contract) {
       regTokenTx = await this.contract.regToken(

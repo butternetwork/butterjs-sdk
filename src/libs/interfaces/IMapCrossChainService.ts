@@ -1,6 +1,7 @@
 import { TransferOutOptions } from '../../types/requestTypes';
-import { BarterContractCallReceipt } from '../../types/responseTypes';
+import { BarterTransactionResponse } from '../../types/responseTypes';
 import BN from 'bn.js';
+import { PromiEvent, TransactionReceipt } from 'web3-core';
 
 /**
  * MAP cross-chain service interface.
@@ -8,6 +9,7 @@ import BN from 'bn.js';
 export interface IMapCrossChainService {
   /**
    * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param fromAddress
    * @param tokenAddress input token address
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
@@ -15,14 +17,16 @@ export interface IMapCrossChainService {
    * @param options see {@link TransferOutOptions} for more detail
    */
   doTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
     toChainId: string,
     options?: TransferOutOptions
-  ): Promise<BarterContractCallReceipt>;
+  ): Promise<BarterTransactionResponse>;
 
   gasEstimateTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -32,19 +36,22 @@ export interface IMapCrossChainService {
 
   /**
    * transfer out native coin from source chain to designated token on target chain
+   * @param fromAddress
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
    * @param options see {@link TransferOutOptions} for more detail
    */
   doTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
     options?: TransferOutOptions
-  ): Promise<BarterContractCallReceipt>;
+  ): Promise<BarterTransactionResponse>;
 
   gasEstimateTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,

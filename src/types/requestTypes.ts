@@ -7,6 +7,7 @@ import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
 
 export type BridgeRequestParam = {
+  fromAddress: string;
   fromToken: BaseCurrency;
   fromChainId: ChainId;
   toChainId: ChainId;

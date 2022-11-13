@@ -3,7 +3,10 @@ import { getHexAddress, validateAndParseAddressByChainId } from '../../utils';
 import { BridgeRequestParam } from '../../types/requestTypes';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
-import { BarterContractCallReceipt } from '../../types/responseTypes';
+import {
+  BarterTransactionReceipt,
+  BarterTransactionResponse,
+} from '../../types/responseTypes';
 import BN from 'bn.js';
 import { hexlify } from 'ethers/lib/utils';
 
@@ -20,12 +23,13 @@ export class BarterBridge {
    * @return BN for gas estimation, ContractCallReceipt for actual contract invocation
    */
   async bridgeToken({
+    fromAddress,
     fromToken,
     toChainId,
     toAddress,
     amount,
     options,
-  }: BridgeRequestParam): Promise<BarterContractCallReceipt> {
+  }: BridgeRequestParam): Promise<BarterTransactionResponse> {
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
@@ -54,6 +58,7 @@ export class BarterBridge {
     if (fromToken.isNative) {
       // if input token is Native coin, call transferOutNative method
       result = await mcs.doTransferOutNative(
+        fromAddress,
         toAddress,
         toChainId.toString(),
         amount,
@@ -63,6 +68,7 @@ export class BarterBridge {
       );
     } else {
       result = await mcs.doTransferOutToken(
+        fromAddress,
         fromToken.address,
         amount,
         toAddress,
@@ -77,6 +83,7 @@ export class BarterBridge {
   }
 
   async gasEstimateBridgeToken({
+    fromAddress,
     fromToken,
     toChainId,
     toAddress,
@@ -107,12 +114,14 @@ export class BarterBridge {
     // if input token is Native coin, call transferOutNative method
     if (fromToken.isNative) {
       gas = await mcs.gasEstimateTransferOutNative(
+        fromAddress,
         toAddress,
         toChainId.toString(),
         amount
       );
     } else {
       gas = await mcs.gasEstimateTransferOutToken(
+        fromAddress,
         fromToken.address,
         amount,
         toAddress,

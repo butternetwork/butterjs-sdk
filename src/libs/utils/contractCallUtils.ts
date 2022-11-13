@@ -1,5 +1,3 @@
-import { BarterContractCallReceipt } from '../../types/responseTypes';
-
 export function callContract(
   contractAddress: string,
   args: {},

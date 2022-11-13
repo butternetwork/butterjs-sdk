@@ -25,6 +25,7 @@ export function createMCSInstance(
         options.signerOrProvider
       );
     case ChainId.ETH_PRIV:
+    case ChainId.BSC_TEST:
       if (options.signerOrProvider == undefined) {
         throw new Error(`signer is not provided for chain: ${chainId}`);
       }
