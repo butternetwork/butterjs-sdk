@@ -7,17 +7,21 @@ import {
   Signer,
 } from 'ethers';
 import { Contract as Web3Contract } from 'web3-eth-contract';
-
+import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import {
   BarterTransactionReceipt,
   BarterTransactionResponse,
 } from '../../types/responseTypes';
-import { adaptEthReceipt } from '../../utils/responseUtil';
+import {
+  adaptEthReceipt,
+  assembleTransactionResponse,
+} from '../../utils/responseUtil';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
 import { TransferOutOptions } from '../../types';
 import { BarterProviderType } from '../../types/paramTypes';
+import { PromiEvent } from 'web3-core';
 
 export class RelayCrossChainService implements IMapCrossChainService {
   contract: EthersContract | Web3Contract;
@@ -45,6 +49,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param fromAddress
    * @param tokenAddress input token address
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
@@ -68,24 +73,20 @@ export class RelayCrossChainService implements IMapCrossChainService {
           amount,
           toChainId
         );
-
       txHash = transferOutTx.hash;
+      return assembleTransactionResponse(txHash!, this.provider);
     } else {
-      await this.contract.methods
-        .transferOutToken(tokenAddress, toAddress, amount, toChainId)
-        .send({
-          from: (this.provider as Eth).defaultAccount,
-          gas: options.gas,
-        })
-        .on('transactionHash', function (hash: string) {
-          txHash = hash;
-        });
+      const promiReceipt: PromiEvent<Web3TransactionReceipt> =
+        this.contract.methods
+          .transferOutToken(tokenAddress, toAddress, amount, toChainId)
+          .send({
+            from: fromAddress,
+            gas: options.gas,
+          });
+      return <BarterTransactionResponse>{
+        promiReceipt: promiReceipt,
+      };
     }
-
-    return <BarterTransactionResponse>{
-      hash: txHash,
-      wait: () => {},
-    };
   }
 
   async gasEstimateTransferOutToken(
@@ -136,22 +137,18 @@ export class RelayCrossChainService implements IMapCrossChainService {
         });
 
       txHash = transferOutTx.hash;
+      return assembleTransactionResponse(txHash!, this.provider);
     } else {
-      await this.contract.methods
-        .transferOutToken(toAddress, toChainId)
-        .send({
+      const promiReceipt: PromiEvent<Web3TransactionReceipt> =
+        this.contract.methods.transferOutToken(toAddress, toChainId).send({
           value: amount,
           from: fromAddress,
           gas: options.gas,
-        })
-        .on('transactionHash', function (hash: string) {
-          txHash = hash;
         });
+      return <BarterTransactionResponse>{
+        promiReceipt: promiReceipt,
+      };
     }
-    return <BarterTransactionResponse>{
-      hash: txHash,
-      wait: () => {},
-    };
   }
 
   async gasEstimateTransferOutNative(

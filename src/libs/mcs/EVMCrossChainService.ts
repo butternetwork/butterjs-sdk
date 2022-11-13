@@ -118,6 +118,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out native coin from source chain to designated token on target chain
+   * @param fromAddress
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
@@ -139,36 +140,18 @@ export class EVMCrossChainService implements IMapCrossChainService {
         });
 
       txHash = transferOutTx.hash;
+      return assembleTransactionResponse(txHash!, this.provider);
     } else {
-      await this.contract.methods
-        .transferOutNative(toAddress, toChainId)
-        .send({
+      const promiReceipt: PromiEvent<Web3TransactionReceipt> =
+        this.contract.methods.transferOutNative(toAddress, toChainId).send({
           value: amount,
           from: fromAddress,
           gas: Number.parseInt(options.gas!.toString()),
-        })
-        .on('transactionHash', function (hash: string) {
-          txHash = hash;
         });
+      return <BarterTransactionResponse>{
+        promiReceipt: promiReceipt,
+      };
     }
-    return <BarterTransactionResponse>{
-      hash: txHash!,
-      wait: async (): Promise<BarterTransactionReceipt> => {
-        if (this.provider instanceof Signer) {
-          const receipt = await this.provider.provider?.waitForTransaction(
-            txHash
-          );
-          return Promise.resolve(adaptEthReceipt(receipt!));
-        } else if (this.provider instanceof Eth) {
-        }
-        return Promise.resolve(<BarterTransactionReceipt>{
-          to: 'a',
-          from: 'a',
-          gasUsed: 'a',
-          transactionHash: 'a',
-        });
-      },
-    };
   }
 
   async gasEstimateTransferOutNative(
