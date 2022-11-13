@@ -15,7 +15,7 @@ import {
 } from '../../types/responseTypes';
 import {
   adaptEthReceipt,
-  assembleTransactionResponse,
+  assembleEVMTransactionResponse,
 } from '../../utils/responseUtil';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
@@ -74,7 +74,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
           toChainId
         );
       txHash = transferOutTx.hash;
-      return assembleTransactionResponse(txHash!, this.provider);
+      return assembleEVMTransactionResponse(txHash!, this.provider);
     } else {
       const promiReceipt: PromiEvent<Web3TransactionReceipt> =
         this.contract.methods
@@ -137,7 +137,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
         });
 
       txHash = transferOutTx.hash;
-      return assembleTransactionResponse(txHash!, this.provider);
+      return assembleEVMTransactionResponse(txHash!, this.provider);
     } else {
       const promiReceipt: PromiEvent<Web3TransactionReceipt> =
         this.contract.methods.transferOutToken(toAddress, toChainId).send({

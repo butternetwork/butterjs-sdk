@@ -19,7 +19,10 @@ import {
   BarterTransactionReceipt,
   BarterTransactionResponse,
 } from '../../types/responseTypes';
-import { adaptNearReceipt } from '../../utils/responseUtil';
+import {
+  adaptNearReceipt,
+  assembleNearTransactionResponse,
+} from '../../utils/responseUtil';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 export class NearCrossChainService implements IMapCrossChainService {
   config: NearNetworkConfig;
@@ -34,11 +37,11 @@ export class NearCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param fromAddress
    * @param tokenAddress input token address
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
-   * @param gasEstimation
    * @param options see {@link TransferOutOptions} for more detail
    */
   async doTransferOutToken(
@@ -83,11 +86,9 @@ export class NearCrossChainService implements IMapCrossChainService {
       if (options.gas != undefined) {
         nearCallOptions.gas = new BN(options.gas, 10);
       }
-
-      // return adaptNearReceipt(
-      //   await this._doNearFunctionCall(account, nearCallOptions)
-      // );
-      return <BarterTransactionResponse>{};
+      const executionOutcome: FinalExecutionOutcome =
+        await this._doNearFunctionCall(account, nearCallOptions);
+      return assembleNearTransactionResponse(executionOutcome);
     } catch (error) {
       throw error;
     }
@@ -135,10 +136,9 @@ export class NearCrossChainService implements IMapCrossChainService {
         nearCallOptions.gas = new BN(options.gas, 10);
       }
 
-      // return adaptNearReceipt(
-      //   await this._doNearFunctionCall(account, nearCallOptions)
-      // );
-      return <BarterTransactionResponse>{};
+      const executionOutcome: FinalExecutionOutcome =
+        await this._doNearFunctionCall(account, nearCallOptions);
+      return assembleNearTransactionResponse(executionOutcome);
     } catch (error) {
       throw error;
     }

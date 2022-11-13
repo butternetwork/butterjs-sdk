@@ -34,44 +34,36 @@ export function adaptNearReceipt(
   };
 }
 
-export function assembleTransactionResponse(
-  transactionHash: string,
-  provider?: BarterProviderType,
-  nearConfig?: NearNetworkConfig
+export function assembleNearTransactionResponse(
+  executionOutcome: FinalExecutionOutcome
 ): BarterTransactionResponse {
-  if (provider) {
-    return <BarterTransactionResponse>{
-      hash: transactionHash!,
-      wait: async (): Promise<BarterTransactionReceipt> => {
-        if (provider instanceof Signer) {
-          const receipt = await provider.provider?.waitForTransaction(
-            transactionHash
-          );
-          return Promise.resolve(adaptEthReceipt(receipt!));
-        } else if (provider instanceof Provider) {
-          const receipt = await provider.waitForTransaction(transactionHash);
-          return Promise.resolve(adaptEthReceipt(receipt));
-        } else {
-          const receipt = await provider.getTransactionReceipt(transactionHash);
-          return Promise.resolve(adaptEthReceipt(receipt!));
-        }
-      },
-    };
-  } else if (nearConfig) {
-    return <BarterTransactionResponse>{
-      hash: transactionHash!,
-      wait: async (): Promise<BarterTransactionReceipt> => {
-        return Promise.resolve(<BarterTransactionReceipt>{
-          to: 'a',
-          from: 'a',
-          gasUsed: 'a',
-          transactionHash: 'a',
-        });
-      },
-    };
-  } else {
-    throw new Error(
-      'provider not founder when assembling transaction response'
-    );
-  }
+  return <BarterTransactionResponse>{
+    hash: executionOutcome.transaction.hash,
+    wait: async (): Promise<BarterTransactionReceipt> => {
+      return Promise.resolve(adaptNearReceipt(executionOutcome));
+    },
+  };
+}
+
+export function assembleEVMTransactionResponse(
+  transactionHash: string,
+  provider: BarterProviderType
+): BarterTransactionResponse {
+  return <BarterTransactionResponse>{
+    hash: transactionHash!,
+    wait: async (): Promise<BarterTransactionReceipt> => {
+      if (provider instanceof Signer) {
+        const receipt = await provider.provider?.waitForTransaction(
+          transactionHash
+        );
+        return Promise.resolve(adaptEthReceipt(receipt!));
+      } else if (provider instanceof Provider) {
+        const receipt = await provider.waitForTransaction(transactionHash);
+        return Promise.resolve(adaptEthReceipt(receipt));
+      } else {
+        const receipt = await provider.getTransactionReceipt(transactionHash);
+        return Promise.resolve(adaptEthReceipt(receipt!));
+      }
+    },
+  };
 }
