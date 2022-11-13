@@ -87,10 +87,7 @@ export class NearCrossChainService implements IMapCrossChainService {
       // return adaptNearReceipt(
       //   await this._doNearFunctionCall(account, nearCallOptions)
       // );
-      return <BarterTransactionResponse>{
-        hash: 'hash',
-        wait: () => {},
-      };
+      return <BarterTransactionResponse>{};
     } catch (error) {
       throw error;
     }
@@ -98,10 +95,10 @@ export class NearCrossChainService implements IMapCrossChainService {
 
   /**
    * transfer out native coin from source chain to designated token on target chain
+   * @param fromAddress
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
-   * @param gasEstimation
    * @param options see {@link TransferOutOptions} for more detail
    */
   async doTransferOutNative(
@@ -141,10 +138,7 @@ export class NearCrossChainService implements IMapCrossChainService {
       // return adaptNearReceipt(
       //   await this._doNearFunctionCall(account, nearCallOptions)
       // );
-      return <BarterTransactionResponse>{
-        hash: 'hash',
-        wait: () => {},
-      };
+      return <BarterTransactionResponse>{};
     } catch (error) {
       throw error;
     }
