@@ -137,45 +137,37 @@ async function demo() {
   // //
   // // 3. Bridge(先estimate gas)
   const bridge: BarterBridge = new BarterBridge();
-  const request: BridgeRequestParam = {
-    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: BSC_TEST_NEAR,
-    fromChainId: ChainId.BSC_TEST,
-    toChainId: ChainId.NEAR_TESTNET,
-    toAddress: 'abc.testnet',
-    amount: ethers.utils.parseEther('1').toString(),
-    options: { signerOrProvider: web3.eth },
-  };
-  const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
-
-  const adjustedGas = Math.floor(
-    Number.parseFloat(estimatedGas) * 1.2
-  ).toString();
+  // const request: BridgeRequestParam = {
+  //   fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+  //   fromToken: BSC_TEST_NEAR,
+  //   fromChainId: ChainId.BSC_TEST,
+  //   toChainId: ChainId.NEAR_TESTNET,
+  //   toAddress: 'abc.testnet',
+  //   amount: ethers.utils.parseEther('1').toString(),
+  //   options: { signerOrProvider: web3.eth },
+  // };
+  // const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
+  //
+  // const adjustedGas = Math.floor(
+  //   Number.parseFloat(estimatedGas) * 1.2
+  // ).toString();
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
-    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: BSC_TEST_NEAR,
-    fromChainId: ChainId.BSC_TEST,
-    toChainId: ChainId.NEAR_TESTNET,
-    toAddress: 'xyli.testnet',
+    fromAddress: 'xyli.testnet',
+    fromToken: NEAR_TEST_NATIVE,
+    fromChainId: ChainId.NEAR_TESTNET,
+    toChainId: ChainId.BSC_TEST,
+    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
     amount: ethers.utils.parseEther('1').toString(),
     options: {
-      signerOrProvider: web3.eth,
-      gas: adjustedGas,
+      nearConfig: nearConfig,
     },
   };
   const response: BarterTransactionResponse = await bridge.bridgeToken(
     bridgeRequest
   );
-  const promiReceipt: PromiEvent<TransactionReceipt> = response.promiReceipt!;
-  await promiReceipt
-    .on('transactionHash', function (hash: string) {
-      console.log('hash', hash);
-    })
-    .on('receipt', function (receipt: any) {
-      console.log('receipt', receipt);
-    });
+  const receipt: BarterTransactionReceipt = await response.wait!();
 }
 
 demo()

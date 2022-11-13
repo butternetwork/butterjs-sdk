@@ -198,8 +198,13 @@ export class NearCrossChainService implements IMapCrossChainService {
     account: Account,
     options: ChangeFunctionCallOptions
   ): Promise<FinalExecutionOutcome> {
-    const outcome = await account.functionCall(options);
-    return outcome;
+    let outcome: FinalExecutionOutcome;
+    try {
+      outcome = await account.functionCall(options);
+    } catch (e) {
+      console.log(e);
+    }
+    return outcome!;
   }
 
   doDepositOutToken(

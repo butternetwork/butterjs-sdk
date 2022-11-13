@@ -26,7 +26,7 @@ export const MAP_TEST_CHAIN = new Chain(
   'MAP'
 );
 export const BSC_TEST_CHAIN = new Chain(
-  97,
+  ChainId.BSC_TEST,
   'BSC Testnet',
   'https://data-seed-prebsc-1-s3.binance.org:8545',
   'https://testnet.bscscan.com/',

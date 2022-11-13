@@ -90,7 +90,7 @@ export const MAP_TEST_NEAR = new Token(
 );
 
 export const BSC_TEST_MAP = new Token(
-  97,
+  ChainId.BSC_TEST,
   '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273',
   18,
   'MAP',
@@ -99,10 +99,19 @@ export const BSC_TEST_MAP = new Token(
 );
 
 export const BSC_TEST_NEAR = new Token(
-  97,
+  ChainId.BSC_TEST,
   '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c',
   18,
   'Near',
   'Near',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);
+
+export const NEAR_TEST_WRAP = new Token(
+  ChainId.NEAR_TESTNET,
+  'wrap.testnet',
+  24,
+  'wNear',
+  'Wrapped Near',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
