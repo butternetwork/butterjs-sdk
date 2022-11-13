@@ -68,7 +68,6 @@ export class NearCrossChainService implements IMapCrossChainService {
         toAddress,
         toChainId
       );
-
       // contract call option
       const nearCallOptions: ChangeFunctionCallOptions = {
         contractId: mcsAccountId,
@@ -122,13 +121,14 @@ export class NearCrossChainService implements IMapCrossChainService {
         toAddress,
         toChainId
       );
+      console.log('decimal', decimalArrayAddress);
 
       const nearCallOptions: ChangeFunctionCallOptions = {
         contractId: mcsAccountId,
         methodName: TRANSFER_OUT_NATIVE,
         args: {
           to: decimalArrayAddress,
-          to_chain: toChainId,
+          to_chain: Number.parseInt(toChainId),
         },
         attachedDeposit: new BN(amount, 10),
       };

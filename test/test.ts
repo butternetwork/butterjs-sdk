@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from 'ethers';
 import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
-import { KeyPair, keyStores, utils } from 'near-api-js';
+import { connect, KeyPair, keyStores, Near, utils } from 'near-api-js';
 import {
   AddTokenPairParam,
   BridgeRequestParam,
@@ -19,11 +19,16 @@ import {
   MAP_TEST_METH,
   MAP_TEST_NATIVE,
   MAP_TEST_NEAR,
+  MCS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_NATIVE,
 } from '../src/constants';
 import BN from 'bn.js';
 import { getBridgeFee, getVaultBalance } from '../src/core/tools/dataFetch';
 import { addTokenPair } from '../src/core/tools/manage';
+import { hexToDecimalArray } from '../src/utils';
+import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
+import { TRANSFER_OUT_TOKEN } from '../src/constants/near_method_names';
+import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 
 const mapProvider = new ethers.providers.JsonRpcProvider(
   'http://18.142.54.137:7445',
@@ -67,6 +72,8 @@ const oneNear = utils.format.parseNearAmount('1')!;
 const to = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
 async function main() {
+  // await addChainTypeToNear(97, 'EvmChain');
+
   const addTokenParam: AddTokenPairParam = {
     feeRate: {
       lowest: BigNumber.from(1),
@@ -75,11 +82,11 @@ async function main() {
     },
     mapNetwork: 'map-testnet',
     mapSigner: mapSigner,
-    srcToken: BSC_TEST_NEAR,
-    targetToken: MAP_TEST_NEAR,
-    // mapToken: MAP_TEST_NEAR,
+    srcToken: NEAR_TEST_NATIVE,
+    targetToken: BSC_TEST_NEAR,
+    mapToken: MAP_TEST_NEAR,
     nearConfig,
-    srcSigner: bscSigner,
+    // srcSigner: bscSigner,
   };
   await addTokenPair(addTokenParam);
   // await mapToEthNative();
@@ -90,6 +97,7 @@ async function main() {
 async function ethToMapNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
+    fromAddress: '',
     fromToken: ETH_PRIV_NATIVE,
     fromChainId: ETH_PRIV_NATIVE.chainId,
     toChainId: ChainId.MAP_TEST,
@@ -103,6 +111,7 @@ async function ethToMapNative() {
 async function ethToMapToken() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
+    fromAddress: '',
     fromToken: ETH_PRIV_LMAP,
     fromChainId: ETH_PRIV_WETH.chainId,
     toChainId: ChainId.MAP_TEST,
@@ -116,6 +125,7 @@ async function ethToMapToken() {
 async function mapToEthNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
+    fromAddress: '',
     fromToken: MAP_TEST_NATIVE,
     fromChainId: MAP_TEST_NATIVE.chainId,
     toChainId: ChainId.ETH_PRIV,
@@ -129,6 +139,7 @@ async function mapToEthNative() {
 async function mapToEthToken() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
+    fromAddress: '',
     fromToken: MAP_TEST_METH,
     fromChainId: MAP_TEST_METH.chainId,
     toChainId: ChainId.ETH_PRIV,
@@ -142,6 +153,7 @@ async function mapToEthToken() {
 async function mapToNearNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
+    fromAddress: '',
     fromToken: MAP_TEST_NATIVE,
     fromChainId: MAP_TEST_NATIVE.chainId,
     toChainId: ChainId.NEAR_TESTNET,
@@ -155,6 +167,7 @@ async function mapToNearNative() {
 async function mapToNearToken() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
+    fromAddress: '',
     fromToken: MAP_TEST_NEAR,
     fromChainId: MAP_TEST_NEAR.chainId,
     toChainId: ChainId.NEAR_TESTNET,
@@ -168,6 +181,7 @@ async function mapToNearToken() {
 async function nearToMapNative() {
   const bridge: BarterBridge = new BarterBridge();
   const request: BridgeRequestParam = {
+    fromAddress: '',
     fromToken: NEAR_TEST_NATIVE,
     fromChainId: ChainId.NEAR_TESTNET,
     toChainId: ChainId.MAP_TEST,
@@ -183,6 +197,33 @@ async function nearToMapToken() {}
 
 async function nearToEth() {}
 
+async function addChainTypeToNear(chainId: number, chainType: string) {
+  const mcsAccountId: string =
+    nearConfig.networkId === 'testnet'
+      ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+      : '';
+
+  // prep near connection
+  const near: Near = await connect(nearConfig);
+  const account = await near.account(nearConfig.fromAccount);
+
+  // contract call option
+  const nearCallOptions: ChangeFunctionCallOptions = {
+    contractId: mcsAccountId,
+    methodName: 'set_chain_type',
+    args: {
+      chain_id: chainId,
+      chain_type: chainType,
+    },
+  };
+  let outcome: FinalExecutionOutcome;
+  try {
+    outcome = await account.functionCall(nearCallOptions);
+  } catch (e) {
+    console.log(e);
+  }
+  console.log(outcome!);
+}
 async function ethToNear() {}
 main()
   .then(() => process.exit(0))

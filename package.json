@@ -1,6 +1,6 @@
 {
   "name": "barterjs-sdk",
-  "version": "1.0.0-beta.29",
+  "version": "1.0.0-beta.30",
   "description": "Barter Network SDK",
   "author": "xyli <moorelee@barternetwork.io>",
   "main": "dist/index.js",

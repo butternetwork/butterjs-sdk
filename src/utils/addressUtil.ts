@@ -6,6 +6,7 @@ import {
   IS_NEAR,
 } from '../constants/chains';
 import { Token } from '../entities/Token';
+import { ZERO_ADDRESS } from '../constants';
 
 /**
  * Validates an address and returns the parsed (checksummed) version of that address
@@ -86,7 +87,7 @@ export function getHexAddress(address: string, chainId: number): string {
   if (IS_EVM(chainId)) {
     return address;
   } else if (IS_NEAR(chainId)) {
-    return asciiToHex(address);
+    return address === ZERO_ADDRESS ? address : asciiToHex(address);
   } else {
     throw new Error(`chain id: ${chainId} not supported`);
   }

@@ -163,6 +163,14 @@ export async function getTargetTokenAddress(
     srcToken.address,
     targetChainId
   );
+  console.log(
+    'get target token address',
+    srcToken.chainId,
+    srcToken.address,
+    targetChainId,
+    targetTokenAddress
+  );
+
   return targetTokenAddress;
 }
 

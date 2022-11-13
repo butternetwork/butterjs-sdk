@@ -63,7 +63,7 @@ const bscSigner = new ethers.Wallet(
 /** 支持的链 {@link ChainId} 调试中仅支持MAP测试网，ETH私链，和Near测试网**/
 console.log('supported chain', SUPPORTED_CHAIN_LIST);
 /** 支持的token {@link supported_token.ts} **/
-console.log('supported token', ID_TO_SUPPORTED_TOKEN(ChainId.ETH_PRIV));
+console.log('supported token', ID_TO_SUPPORTED_TOKEN(ChainId.NEAR_TESTNET));
 
 /** 下面假设我们要从讲Near代币从ETH链Bridge到NEAR链从而获得NEAR上的原生Near代币
  *  整个过程需要3个接口
@@ -114,15 +114,16 @@ async function demo() {
   // console.log('vault balance', balance);
   //
   // // 3. 获取targetToken
-  // const tokenCandidates = await getTokenCandidates(
-  //   ChainId.BSC_TEST,
-  //   ChainId.NEAR_TESTNET,
-  //   {
-  //     url: 'http://18.142.54.137:7445',
-  //     chainId: 212,
-  //   }
-  // );
-  // console.log('token candidates', tokenCandidates);
+  console.log('');
+  const tokenCandidates = await getTokenCandidates(
+    ChainId.NEAR_TESTNET,
+    ChainId.BSC_TEST,
+    {
+      url: 'http://18.142.54.137:7445',
+      chainId: 212,
+    }
+  );
+  console.log('token candidates', tokenCandidates);
 
   //
   // // 2.a approve spend token if necessary
@@ -159,15 +160,17 @@ async function demo() {
     fromChainId: ChainId.NEAR_TESTNET,
     toChainId: ChainId.BSC_TEST,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('1').toString(),
+    amount: ethers.utils.parseEther('1').mul(1000000).toString(),
     options: {
       nearConfig: nearConfig,
+      gas: '100000000000000',
     },
   };
   const response: BarterTransactionResponse = await bridge.bridgeToken(
     bridgeRequest
   );
   const receipt: BarterTransactionReceipt = await response.wait!();
+  console.log('receipt', receipt);
 }
 
 demo()
