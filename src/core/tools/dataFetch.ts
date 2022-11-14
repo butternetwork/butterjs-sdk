@@ -19,6 +19,7 @@ import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import { getTokenByAddressAndChainId } from '../../utils/tokenUtil';
 import { BarterJsonRpcProvider } from '../../types/paramTypes';
 import { ID_TO_SUPPORTED_TOKEN } from '../../constants/supported_tokens';
+import { getHexAddress } from '../../utils';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -48,15 +49,18 @@ export async function getBridgeFee(
     TOKEN_REGISTER_ADDRESS_SET[chainId]!,
     mapProvider
   );
+  console.log('src token', srcToken);
   const targetTokenAddress = await tokenRegister.getTargetToken(
     srcToken.chainId,
     srcToken.address,
     targetChain
   );
 
+  console.log('target token addr', targetTokenAddress);
+
   const tokenFee = await feeCenter.getTokenFee(
     targetChain,
-    targetTokenAddress,
+    getHexAddress(targetTokenAddress, targetChain),
     BigNumber.from(amount)
   );
 
@@ -100,7 +104,6 @@ export async function getVaultBalance(
         fromToken.address,
         mapChainId
       );
-
   const mcsContractAddress: string =
     MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(mapChainId)];
   const mapMCS = new RelayCrossChainService(

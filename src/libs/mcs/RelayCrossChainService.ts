@@ -231,7 +231,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
     if (this.contract instanceof EthersContract) {
       const tx: ContractTransaction =
         await this.contract.setTokenOtherChainDecimals(
-          ethers.constants.AddressZero,
+          selfTokenAddress,
           chainId,
           decimals
         );

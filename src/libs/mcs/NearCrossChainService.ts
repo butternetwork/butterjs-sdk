@@ -237,4 +237,30 @@ export class NearCrossChainService implements IMapCrossChainService {
   ): Promise<string> {
     return Promise.resolve('');
   }
+
+  async addFungibleTokenToChain(
+    tokenAddress: string,
+    toChainId: number
+  ): Promise<void> {
+    const mcsAccountId: string =
+      this.config.networkId === 'testnet'
+        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+        : '';
+
+    const near: Near = await connect(this.config);
+    const account = await near.account(this.config.fromAccount);
+
+    const nearCallOptions: ChangeFunctionCallOptions = {
+      contractId: mcsAccountId,
+      methodName: 'add_fungible_token_to_chain',
+      args: {
+        token: tokenAddress,
+        to_chain: toChainId,
+      },
+      gas: new BN('300000000000000', 10),
+    };
+
+    const executionOutcome: FinalExecutionOutcome =
+      await this._doNearFunctionCall(account, nearCallOptions);
+  }
 }

@@ -33,15 +33,16 @@ import { BarterJsonRpcProvider } from '../src/types/paramTypes';
 import { BaseCurrency } from '../src/entities';
 import { WebsocketProvider } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
-
+import { parseNearAmount } from 'near-api-js/lib/utils/format';
+import { asciiToHex } from '../src/utils';
 require('dotenv/config');
 const web3 = new Web3('http://18.138.248.113:8545');
 const account = web3.eth.accounts.privateKeyToAccount(
   '0x' + 'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b'
 );
+
 web3.eth.accounts.wallet.add(account);
 web3.eth.defaultAccount = account.address;
-
 // NEAR Network 配置 等同于ethers.js的signer, 如果src chain是Near需要配置
 const keyStore: InMemoryKeyStore = new keyStores.InMemoryKeyStore();
 const keyPair: KeyPair = KeyPair.fromString(process.env.NEAR_PRIVATE_KEY!);
@@ -80,6 +81,7 @@ function test(): PromiEvent<TransactionReceipt> {
     gasPrice: '100',
   });
 }
+
 async function demo() {
   // const promiReceipt: PromiEvent<TransactionReceipt> = test();
   // promiReceipt
@@ -97,8 +99,8 @@ async function demo() {
 
   // 1. 获取费用信息
   const fee: BarterFee = await getBridgeFee(
-    BSC_TEST_NEAR,
-    ChainId.NEAR_TESTNET,
+    NEAR_TEST_NATIVE,
+    ChainId.BSC_TEST,
     ethers.utils.parseEther('2').toString(),
     provider
   );
@@ -160,7 +162,7 @@ async function demo() {
     fromChainId: ChainId.NEAR_TESTNET,
     toChainId: ChainId.BSC_TEST,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('1').mul(1000000).toString(),
+    amount: parseNearAmount('1')!.toString(),
     options: {
       nearConfig: nearConfig,
       gas: '100000000000000',

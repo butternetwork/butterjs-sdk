@@ -87,9 +87,7 @@ export function getHexAddress(address: string, chainId: number): string {
   if (IS_EVM(chainId)) {
     return address;
   } else if (IS_NEAR(chainId)) {
-    return address === '0x0000000000000000000000000000000000000000'
-      ? address
-      : asciiToHex(address);
+    return address.startsWith('0x') ? address : asciiToHex(address);
   } else {
     throw new Error(`chain id: ${chainId} not supported`);
   }
@@ -99,11 +97,20 @@ export function getHexAddress(address: string, chainId: number): string {
  * @param input
  * @param hexLength
  */
-function asciiToHex(input: string): string {
-  let ret = [];
+export function asciiToHex(input: string): string {
+  let hexArr = [];
   for (let i = 0; i < input.length; i++) {
     let hex = Number(input.charCodeAt(i)).toString(16);
-    ret.push(hex);
+    hexArr.push(hex);
   }
-  return '0x' + ret.join('');
+  let res = hexArr.join('');
+  if (res.length > 40) {
+    res = res.substring(0, 40);
+  } else if (res.length < 40) {
+    let diff = 40 - res.length;
+    for (let i = 0; i < diff; i++) {
+      res = '0' + res;
+    }
+  }
+  return '0x' + res;
 }

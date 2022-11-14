@@ -21,6 +21,7 @@ import {
   MAP_TEST_NEAR,
   MCS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_NATIVE,
+  NEAR_TEST_WRAP,
 } from '../src/constants';
 import BN from 'bn.js';
 import { getBridgeFee, getVaultBalance } from '../src/core/tools/dataFetch';
@@ -82,11 +83,11 @@ async function main() {
     },
     mapNetwork: 'map-testnet',
     mapSigner: mapSigner,
-    srcToken: NEAR_TEST_NATIVE,
+    srcToken: NEAR_TEST_WRAP,
     targetToken: BSC_TEST_NEAR,
     mapToken: MAP_TEST_NEAR,
     nearConfig,
-    // srcSigner: bscSigner,
+    srcSigner: bscSigner,
   };
   await addTokenPair(addTokenParam);
   // await mapToEthNative();

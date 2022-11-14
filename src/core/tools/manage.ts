@@ -87,7 +87,11 @@ export async function addTokenPair({
     if (srcToken.isNative) {
       await nearMCS.addNativeToChain(targetToken.chainId);
     } else {
-      await nearMCS.addTokenToChain(srcToken.address, srcToken.chainId);
+      console.log('not near native,', targetToken.chainId);
+      await nearMCS.addFungibleTokenToChain(
+        srcToken.address,
+        targetToken.chainId
+      );
     }
     console.log(`add token ${srcToken.name} to ${targetToken.chainId}`);
   } else if (!IS_MAP(srcToken.chainId)) {
@@ -128,13 +132,13 @@ export async function addTokenPair({
 
     // set token decimals for conversion.
     await mapMCS.doSetTokenOtherChainDecimals(
-      srcToken.address,
+      getHexAddress(srcToken.address, srcToken.chainId),
       srcToken.chainId,
       srcToken.decimals
     );
 
     await mapMCS.doSetTokenOtherChainDecimals(
-      srcToken.address,
+      getHexAddress(srcToken.address, srcToken.chainId),
       targetToken.chainId,
       targetToken.decimals
     );
