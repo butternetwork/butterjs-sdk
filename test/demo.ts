@@ -96,22 +96,22 @@ async function demo() {
   };
 
   // 1. 获取费用信息
-  // const fee: BarterFee = await getBridgeFee(
-  //   BSC_TEST_NEAR,
-  //   ChainId.NEAR_TESTNET,
-  //   ethers.utils.parseEther('2').toString(),
-  //   provider
-  // );
-  // console.log('bridge fee', fee);
+  const fee: BarterFee = await getBridgeFee(
+    BSC_TEST_NEAR,
+    ChainId.NEAR_TESTNET,
+    ethers.utils.parseEther('2').toString(),
+    provider
+  );
+  console.log('bridge fee', fee);
   //
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
-  // const balance: VaultBalance = await getVaultBalance(
-  //   ChainId.NEAR_TESTNET,
-  //   NEAR_TEST_NATIVE,
-  //   ChainId.BSC_TEST,
-  //   provider
-  // );
-  // console.log('vault balance', balance);
+  const balance: VaultBalance = await getVaultBalance(
+    ChainId.NEAR_TESTNET,
+    NEAR_TEST_NATIVE,
+    ChainId.BSC_TEST,
+    provider
+  );
+  console.log('vault balance', balance);
   //
   // // 3. 获取targetToken
   console.log('');

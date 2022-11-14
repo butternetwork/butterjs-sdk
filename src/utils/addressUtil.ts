@@ -87,7 +87,9 @@ export function getHexAddress(address: string, chainId: number): string {
   if (IS_EVM(chainId)) {
     return address;
   } else if (IS_NEAR(chainId)) {
-    return address === ZERO_ADDRESS ? address : asciiToHex(address);
+    return address === '0x0000000000000000000000000000000000000000'
+      ? address
+      : asciiToHex(address);
   } else {
     throw new Error(`chain id: ${chainId} not supported`);
   }
