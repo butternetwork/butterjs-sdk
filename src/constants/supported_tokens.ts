@@ -13,6 +13,7 @@ import {
   MAP_TEST_NEAR,
   MAP_TEST_WMAP,
   NEAR_TEST_NATIVE,
+  NEAR_TEST_WRAP,
 } from './tokens';
 import { BSC_TEST_CHAIN } from './chains';
 
@@ -23,7 +24,7 @@ export const ID_TO_SUPPORTED_TOKEN = (id: number): BaseCurrency[] => {
     case 34434:
       return [ETH_PRIV_NEAR, ETH_PRIV_WETH, ETH_PRIV_NATIVE, ETH_PRIV_LMAP];
     case 1313161555:
-      return [NEAR_TEST_NATIVE];
+      return [NEAR_TEST_NATIVE, NEAR_TEST_WRAP];
     case 97:
       return [BSC_TEST_NATIVE, BSC_TEST_MAP, BSC_TEST_NEAR];
     default:

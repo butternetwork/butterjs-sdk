@@ -106,3 +106,12 @@ export const BSC_TEST_NEAR = new Token(
   'Near',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
+
+export const NEAR_TEST_WRAP = new Token(
+  ChainId.NEAR_TESTNET,
+  'wrap.testnet',
+  24,
+  'wNear',
+  'Wrapped Near',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);

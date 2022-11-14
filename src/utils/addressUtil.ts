@@ -10,6 +10,7 @@ import { Token } from '../entities/Token';
 /**
  * Validates an address and returns the parsed (checksummed) version of that address
  * @param address the unchecksummed hex address
+ * @param chainId
  */
 export function validateAndParseAddressByChainId(
   address: string,

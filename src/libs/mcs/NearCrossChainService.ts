@@ -14,7 +14,7 @@ import {
 import BN from 'bn.js';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
-import { hexToDecimalArray } from '../../utils';
+import { hexToDecimalArray } from '../../utils/addressUtil';
 import {
   BarterTransactionReceipt,
   BarterTransactionResponse,
@@ -68,7 +68,6 @@ export class NearCrossChainService implements IMapCrossChainService {
         toAddress,
         toChainId
       );
-
       // contract call option
       const nearCallOptions: ChangeFunctionCallOptions = {
         contractId: mcsAccountId,
@@ -128,7 +127,7 @@ export class NearCrossChainService implements IMapCrossChainService {
         methodName: TRANSFER_OUT_NATIVE,
         args: {
           to: decimalArrayAddress,
-          to_chain: toChainId,
+          to_chain: Number.parseInt(toChainId),
         },
         attachedDeposit: new BN(amount, 10),
       };
@@ -198,8 +197,13 @@ export class NearCrossChainService implements IMapCrossChainService {
     account: Account,
     options: ChangeFunctionCallOptions
   ): Promise<FinalExecutionOutcome> {
-    const outcome = await account.functionCall(options);
-    return outcome;
+    let outcome: FinalExecutionOutcome;
+    try {
+      outcome = await account.functionCall(options);
+    } catch (e) {
+      console.log(e);
+    }
+    return outcome!;
   }
 
   doDepositOutToken(

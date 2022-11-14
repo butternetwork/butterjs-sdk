@@ -5,6 +5,7 @@ import { BarterContractType, BarterProviderType } from '../types/paramTypes';
 import { Eth } from 'web3-eth';
 import { BarterTransactionReceipt } from '../types/responseTypes';
 import { adaptEthReceipt } from '../utils/responseUtil';
+import { getHexAddress } from '../utils';
 
 export class TokenRegister {
   private readonly contract: BarterContractType;
@@ -57,7 +58,7 @@ export class TokenRegister {
     if (this.contract instanceof ethers.Contract) {
       return await this.contract.getTargetToken(
         sourceChain,
-        sourceToken,
+        getHexAddress(sourceToken, sourceChain),
         targetChain
       );
     } else return '';

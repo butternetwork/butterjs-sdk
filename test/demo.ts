@@ -96,33 +96,33 @@ async function demo() {
   };
 
   // 1. 获取费用信息
-  // const fee: BarterFee = await getBridgeFee(
-  //   BSC_TEST_NEAR,
-  //   ChainId.NEAR_TESTNET,
-  //   ethers.utils.parseEther('2').toString(),
-  //   provider
-  // );
-  // console.log('bridge fee', fee);
-  //
-  // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
-  // const balance: VaultBalance = await getVaultBalance(
-  //   ChainId.NEAR_TESTNET,
-  //   NEAR_TEST_NATIVE,
-  //   ChainId.BSC_TEST,
-  //   provider
-  // );
-  // console.log('vault balance', balance);
-  //
-  // // 3. 获取targetToken
-  // const tokenCandidates = await getTokenCandidates(
-  //   ChainId.BSC_TEST,
-  //   ChainId.NEAR_TESTNET,
-  //   {
-  //     url: 'http://18.142.54.137:7445',
-  //     chainId: 212,
-  //   }
-  // );
-  // console.log('token candidates', tokenCandidates);
+  const fee: BarterFee = await getBridgeFee(
+    NEAR_TEST_NATIVE,
+    ChainId.BSC_TEST,
+    ethers.utils.parseEther('2').toString(),
+    provider
+  );
+  console.log('bridge fee', fee);
+
+  // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
+  const balance: VaultBalance = await getVaultBalance(
+    ChainId.NEAR_TESTNET,
+    NEAR_TEST_NATIVE,
+    ChainId.BSC_TEST,
+    provider
+  );
+  console.log('vault balance', balance);
+
+  // 3. 获取targetToken
+  const tokenCandidates = await getTokenCandidates(
+    ChainId.NEAR_TESTNET,
+    ChainId.BSC_TEST,
+    {
+      url: 'http://18.142.54.137:7445',
+      chainId: 212,
+    }
+  );
+  console.log('token candidates', tokenCandidates);
 
   //
   // // 2.a approve spend token if necessary
@@ -154,28 +154,22 @@ async function demo() {
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
-    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: BSC_TEST_NEAR,
-    fromChainId: ChainId.BSC_TEST,
-    toChainId: ChainId.NEAR_TESTNET,
-    toAddress: 'xyli.testnet',
-    amount: ethers.utils.parseEther('1').toString(),
+    fromAddress: 'xyli.testnet',
+    fromToken: NEAR_TEST_NATIVE,
+    fromChainId: ChainId.NEAR_TESTNET,
+    toChainId: ChainId.BSC_TEST,
+    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    amount: ethers.utils.parseEther('1').mul(1000000).toString(),
     options: {
-      signerOrProvider: web3.eth,
-      gas: adjustedGas,
+      nearConfig: nearConfig,
+      gas: '100000000000000',
     },
   };
   const response: BarterTransactionResponse = await bridge.bridgeToken(
     bridgeRequest
   );
-  const promiReceipt: PromiEvent<TransactionReceipt> = response.promiReceipt!;
-  await promiReceipt
-    .on('transactionHash', function (hash: string) {
-      console.log('hash', hash);
-    })
-    .on('receipt', function (receipt: any) {
-      console.log('receipt', receipt);
-    });
+  const receipt: BarterTransactionReceipt = await response.wait!();
+  console.log('receipt', receipt);
 }
 
 demo()

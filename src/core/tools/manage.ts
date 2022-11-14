@@ -16,6 +16,7 @@ import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
 import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import { FeeCenter } from '../../libs/FeeCenter';
 import { TokenRegister } from '../../libs/TokenRegister';
+import { getHexAddress } from '../../utils';
 
 /**
  * TODO: need improvement!
@@ -121,13 +122,13 @@ export async function addTokenPair({
   if (targetToken.chainId == NETWORK_NAME_TO_ID(mapNetwork)) {
     await tokenRegister.registerToken(
       srcToken.chainId,
-      srcToken.address,
+      getHexAddress(srcToken.address, srcToken.chainId),
       targetToken.address
     );
 
     // set token decimals for conversion.
     await mapMCS.doSetTokenOtherChainDecimals(
-      srcToken.address,
+      getHexAddress(srcToken.address, srcToken.chainId),
       srcToken.chainId,
       srcToken.decimals
     );
@@ -178,14 +179,14 @@ export async function addTokenPair({
     /** case 3: neither src chain and target chain is map, then map will act as a relay */
     await tokenRegister.registerToken(
       srcToken.chainId,
-      srcToken.address,
+      getHexAddress(srcToken.address, srcToken.chainId),
       mapToken!.address
     );
     console.log(`register ${srcToken.name} done`);
 
     await tokenRegister.registerToken(
       targetToken.chainId,
-      targetToken.address,
+      getHexAddress(targetToken.address, targetToken.chainId),
       mapToken!.address
     );
     console.log(`register ${targetToken.name} done`);
@@ -206,7 +207,7 @@ export async function addTokenPair({
     // set fee
     await feeCenter.setChainTokenGasFee(
       targetToken.chainId,
-      targetToken.address,
+      getHexAddress(targetToken.address, targetToken.chainId),
       feeRate.lowest,
       feeRate.highest,
       feeRate.bps
