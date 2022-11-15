@@ -10,6 +10,7 @@ import {
   ETH_PRIV_NEAR,
   MCS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_NATIVE,
+  NEAR_TEST_WRAP,
   SUPPORTED_CHAIN_LIST,
 } from '../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
@@ -102,9 +103,9 @@ async function demo() {
   //
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
-    ChainId.NEAR_TESTNET,
-    NEAR_TEST_NATIVE,
     ChainId.BSC_TEST,
+    BSC_TEST_NEAR,
+    ChainId.NEAR_TESTNET,
     provider
   );
   console.log('vault balance', balance);
