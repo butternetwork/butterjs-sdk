@@ -5,6 +5,7 @@ import { KeyStore } from 'near-api-js/lib/key_stores';
 import { BaseCurrency } from '../entities/BaseCurrency';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
+import { NearProviderType } from './paramTypes';
 
 export type BridgeRequestParam = {
   fromAddress: string;
@@ -34,7 +35,7 @@ export type SwapOptions = {
 
 export type BridgeOptions = {
   signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider infor or Web3.js Eth info
-  nearConfig?: NearNetworkConfig; // mandatory when src chain is near
+  nearProvider?: NearProviderType; // mandatory when src chain is near
   gas?: string;
 };
 
@@ -49,12 +50,23 @@ export type AddTokenPairParam = {
   srcSigner?: Signer; // only mandatory when src chain is EVM compatible
 };
 
-export type NearNetworkConfig = {
+export class NearNetworkConfig {
   fromAccount: string;
   keyStore: KeyStore;
   nodeUrl: string;
   networkId: 'testnet' | 'mainnet';
-};
+  constructor(
+    fromAccount: string,
+    keyStore: KeyStore,
+    nodeUrl: string,
+    networkId: 'testnet' | 'mainnet'
+  ) {
+    this.fromAccount = fromAccount;
+    this.keyStore = keyStore;
+    this.nodeUrl = nodeUrl;
+    this.networkId = networkId;
+  }
+}
 
 export type TransferOutOptions = {
   gas?: string;

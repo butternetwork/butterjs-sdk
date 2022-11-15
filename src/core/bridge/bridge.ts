@@ -40,7 +40,7 @@ export class BarterBridge {
     // if src chain is near chain, near network config must be provided
     if (
       ChainId.NEAR_TESTNET == fromToken.chainId &&
-      options.nearConfig == undefined
+      options.nearProvider == undefined
     ) {
       throw new Error(`Network config must be provided for NEAR blockchain`);
     }

@@ -115,3 +115,12 @@ export const NEAR_TEST_WRAP = new Token(
   'Wrapped Near',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
+
+export const NEAR_TEST_USDC = new Token(
+  ChainId.NEAR_TESTNET,
+  'dev-1668420264923-33906828202995',
+  6,
+  'USDC',
+  'USD Circle',
+  'https://files.maplabs.io/bridge/usdc.png'
+);

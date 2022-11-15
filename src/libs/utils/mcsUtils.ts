@@ -35,10 +35,10 @@ export function createMCSInstance(
         options.signerOrProvider
       );
     case ChainId.NEAR_TESTNET:
-      if (options.nearConfig == undefined) {
+      if (options.nearProvider == undefined) {
         throw new Error('near config is not provided');
       }
-      return new NearCrossChainService(options.nearConfig);
+      return new NearCrossChainService(options.nearProvider);
     default:
       throw new Error(`chainId: ${chainId} is not supported yet`);
   }

@@ -188,7 +188,7 @@ async function nearToMapNative() {
     toChainId: ChainId.MAP_TEST,
     toAddress: to,
     amount: oneNear,
-    options: { nearConfig: nearConfig },
+    options: { nearProvider: nearConfig },
   };
 
   await bridge.bridgeToken(request);
