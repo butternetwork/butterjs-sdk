@@ -1,6 +1,6 @@
 import { BigNumber, ethers } from 'ethers';
 import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
-import { KeyPair, keyStores } from 'near-api-js';
+import { connect, KeyPair, keyStores, WalletConnection } from 'near-api-js';
 import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
@@ -35,6 +35,7 @@ import { WebsocketProvider } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import { asciiToHex } from '../src/utils';
+import BN from 'bn.js';
 require('dotenv/config');
 const web3 = new Web3('http://18.138.248.113:8545');
 const account = web3.eth.accounts.privateKeyToAccount(
@@ -47,12 +48,13 @@ web3.eth.defaultAccount = account.address;
 const keyStore: InMemoryKeyStore = new keyStores.InMemoryKeyStore();
 const keyPair: KeyPair = KeyPair.fromString(process.env.NEAR_PRIVATE_KEY!);
 keyStore.setKey('testnet', 'xyli.testnet', keyPair);
-const nearConfig: NearNetworkConfig = {
-  fromAccount: 'xyli.testnet',
-  keyStore: keyStore,
-  nodeUrl: 'https://rpc.testnet.near.org',
-  networkId: 'testnet',
-};
+const nearConfig = new NearNetworkConfig(
+  'xyli.testnet',
+  keyStore,
+  'https://rpc.testnet.near.org',
+  'testnet'
+);
+
 const bscProvider = new ethers.providers.JsonRpcProvider(
   BSC_TEST_CHAIN.rpc,
   BSC_TEST_CHAIN.chainId
@@ -81,16 +83,8 @@ function test(): PromiEvent<TransactionReceipt> {
     gasPrice: '100',
   });
 }
-
+console.log(typeof nearConfig);
 async function demo() {
-  // const promiReceipt: PromiEvent<TransactionReceipt> = test();
-  // promiReceipt
-  //   .on('transactionHash', function (hash: string) {
-  //     console.log('success!', hash);
-  //   })
-  //   .on('receipt', function (receipt: any) {
-  //     console.log('receipt', receipt);
-  //   });
   console.log('start demo');
   const provider: BarterJsonRpcProvider = {
     url: 'http://18.142.54.137:7445',
@@ -164,7 +158,7 @@ async function demo() {
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
     amount: parseNearAmount('1')!.toString(),
     options: {
-      nearConfig: nearConfig,
+      nearProvider: nearConfig,
       gas: '100000000000000',
     },
   };

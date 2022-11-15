@@ -1,4 +1,10 @@
-import { Account, connect, KeyPair, Near } from 'near-api-js';
+import {
+  Account,
+  connect,
+  ConnectedWalletAccount,
+  KeyPair,
+  Near,
+} from 'near-api-js';
 import {
   NearNetworkConfig,
   TransferOutOptions,
@@ -24,15 +30,16 @@ import {
   assembleNearTransactionResponse,
 } from '../../utils/responseUtil';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
+import { NearProviderType } from '../../types/paramTypes';
 export class NearCrossChainService implements IMapCrossChainService {
-  config: NearNetworkConfig;
+  provider: NearProviderType;
 
   /**
    * we treat account as class member cuz to initialize a near account, async is required
-   * @param config
+   * @param provider
    */
-  constructor(config: NearNetworkConfig) {
-    this.config = config;
+  constructor(provider: NearProviderType) {
+    this.provider = provider;
   }
 
   /**
@@ -52,17 +59,25 @@ export class NearCrossChainService implements IMapCrossChainService {
     toChainId: string,
     options: TransferOutOptions
   ): Promise<BarterTransactionResponse> {
-    try {
+    let mcsAccountId: string;
+    let account: Account | ConnectedWalletAccount;
+    if (this.provider instanceof NearNetworkConfig) {
       // get mcs contract address
-      const mcsAccountId: string =
-        this.config.networkId === 'testnet'
+      mcsAccountId =
+        this.provider.networkId === 'testnet'
           ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
 
       // prep near connection
-      const near: Near = await connect(this.config);
-      const account = await near.account(this.config.fromAccount);
-
+      const near: Near = await connect(this.provider);
+      account = await near.account(this.provider.fromAccount);
+    } else {
+      mcsAccountId = this.provider.getAccountId().endsWith('testnet')
+        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+        : '';
+      account = this.provider.account();
+    }
+    try {
       // the receiving address on Near need be in the format of number array as input
       const decimalArrayAddress: number[] = hexToDecimalArray(
         toAddress,
@@ -108,21 +123,27 @@ export class NearCrossChainService implements IMapCrossChainService {
     amount: string,
     options: TransferOutOptions
   ): Promise<BarterTransactionResponse> {
-    try {
-      const mcsAccountId: string =
-        this.config.networkId === 'testnet'
+    let mcsAccountId: string;
+    let account: Account | ConnectedWalletAccount;
+    if (this.provider instanceof NearNetworkConfig) {
+      mcsAccountId =
+        this.provider.networkId === 'testnet'
           ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
 
-      const near: Near = await connect(this.config);
-      const account = await near.account(this.config.fromAccount);
-
+      const near: Near = await connect(this.provider);
+      account = await near.account(this.provider.fromAccount);
+    } else {
+      mcsAccountId = this.provider.getAccountId().endsWith('testnet')
+        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+        : '';
+      account = this.provider.account();
+    }
+    try {
       const decimalArrayAddress: number[] = hexToDecimalArray(
         toAddress,
         toChainId
       );
-      console.log('decimal', decimalArrayAddress);
-
       const nearCallOptions: ChangeFunctionCallOptions = {
         contractId: mcsAccountId,
         methodName: TRANSFER_OUT_NATIVE,
@@ -149,43 +170,47 @@ export class NearCrossChainService implements IMapCrossChainService {
    * @param toChainId
    */
   public async addNativeToChain(toChainId: number) {
-    const mcsAccountId: string =
-      this.config.networkId === 'testnet'
-        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-        : '';
+    if (this.provider instanceof NearNetworkConfig) {
+      const mcsAccountId: string =
+        this.provider.networkId === 'testnet'
+          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          : '';
 
-    const near: Near = await connect(this.config);
-    const account = await near.account(this.config.fromAccount);
-    const nearCallOptions: ChangeFunctionCallOptions = {
-      contractId: mcsAccountId,
-      methodName: ADD_NATIVE_TO_CHAIN,
-      args: {
-        to_chain: toChainId,
-      },
-    };
+      const near: Near = await connect(this.provider);
+      const account = await near.account(this.provider.fromAccount);
+      const nearCallOptions: ChangeFunctionCallOptions = {
+        contractId: mcsAccountId,
+        methodName: ADD_NATIVE_TO_CHAIN,
+        args: {
+          to_chain: toChainId,
+        },
+      };
 
-    return await this._doNearFunctionCall(account, nearCallOptions);
+      return await this._doNearFunctionCall(account, nearCallOptions);
+    }
   }
 
   public async addTokenToChain(tokenAddress: string, toChainId: number) {
-    const mcsAccountId: string =
-      this.config.networkId === 'testnet'
-        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-        : '';
+    if (this.provider instanceof NearNetworkConfig) {
+      const mcsAccountId: string =
+        this.provider.networkId === 'testnet'
+          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          : '';
 
-    const near: Near = await connect(this.config);
-    const account = await near.account(this.config.fromAccount);
+      const near: Near = await connect(this.provider);
+      const account = await near.account(this.provider.fromAccount);
 
-    const nearCallOptions: ChangeFunctionCallOptions = {
-      contractId: mcsAccountId,
-      methodName: ADD_MCS_TOKEN_TO_CHAIN,
-      args: {
-        token: tokenAddress,
-        to_chain: toChainId,
-      },
-    };
+      const nearCallOptions: ChangeFunctionCallOptions = {
+        contractId: mcsAccountId,
+        methodName: ADD_MCS_TOKEN_TO_CHAIN,
+        args: {
+          token: tokenAddress,
+          to_chain: toChainId,
+        },
+      };
 
-    return await this._doNearFunctionCall(account, nearCallOptions);
+      return await this._doNearFunctionCall(account, nearCallOptions);
+    }
   }
 
   /**
@@ -195,7 +220,7 @@ export class NearCrossChainService implements IMapCrossChainService {
    * @private
    */
   private async _doNearFunctionCall(
-    account: Account,
+    account: Account | ConnectedWalletAccount,
     options: ChangeFunctionCallOptions
   ): Promise<FinalExecutionOutcome> {
     let outcome: FinalExecutionOutcome;
@@ -242,25 +267,27 @@ export class NearCrossChainService implements IMapCrossChainService {
     tokenAddress: string,
     toChainId: number
   ): Promise<void> {
-    const mcsAccountId: string =
-      this.config.networkId === 'testnet'
-        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-        : '';
+    if (this.provider instanceof NearNetworkConfig) {
+      const mcsAccountId: string =
+        this.provider.networkId === 'testnet'
+          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          : '';
 
-    const near: Near = await connect(this.config);
-    const account = await near.account(this.config.fromAccount);
+      const near: Near = await connect(this.provider);
+      const account = await near.account(this.provider.fromAccount);
 
-    const nearCallOptions: ChangeFunctionCallOptions = {
-      contractId: mcsAccountId,
-      methodName: 'add_fungible_token_to_chain',
-      args: {
-        token: tokenAddress,
-        to_chain: toChainId,
-      },
-      gas: new BN('300000000000000', 10),
-    };
+      const nearCallOptions: ChangeFunctionCallOptions = {
+        contractId: mcsAccountId,
+        methodName: 'add_fungible_token_to_chain',
+        args: {
+          token: tokenAddress,
+          to_chain: toChainId,
+        },
+        gas: new BN('300000000000000', 10),
+      };
 
-    const executionOutcome: FinalExecutionOutcome =
-      await this._doNearFunctionCall(account, nearCallOptions);
+      const executionOutcome: FinalExecutionOutcome =
+        await this._doNearFunctionCall(account, nearCallOptions);
+    }
   }
 }
