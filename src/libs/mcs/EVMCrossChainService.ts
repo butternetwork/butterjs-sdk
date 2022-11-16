@@ -8,8 +8,8 @@ import {
 import { Eth } from 'web3-eth';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import {
-  BarterTransactionReceipt,
-  BarterTransactionResponse,
+  ButterTransactionReceipt,
+  ButterTransactionResponse,
 } from '../../types/responseTypes';
 import {
   adaptEthReceipt,
@@ -19,17 +19,17 @@ import {
 import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
 import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
 import { TransferOutOptions } from '../../types';
-import { BarterContractType, BarterProviderType } from '../../types/paramTypes';
+import { ButterContractType, ButterProviderType } from '../../types/paramTypes';
 import { PromiEvent } from 'web3-core';
 
 export class EVMCrossChainService implements IMapCrossChainService {
-  contract: BarterContractType;
-  provider: BarterProviderType;
+  contract: ButterContractType;
+  provider: ButterProviderType;
 
   constructor(
     contractAddress: string,
     abi: any,
-    signerOrProvider: BarterProviderType
+    signerOrProvider: ButterProviderType
   ) {
     if (
       signerOrProvider instanceof Signer ||
@@ -62,7 +62,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<BarterTransactionResponse> {
+  ): Promise<ButterTransactionResponse> {
     let txHash: string;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
@@ -84,7 +84,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
             from: fromAddress,
             gas: Number.parseInt(options.gas!.toString()),
           });
-      return <BarterTransactionResponse>{
+      return <ButterTransactionResponse>{
         promiReceipt: promiReceipt,
       };
     }
@@ -130,7 +130,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<BarterTransactionResponse> {
+  ): Promise<ButterTransactionResponse> {
     let txHash: string;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
@@ -148,7 +148,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
           from: fromAddress,
           gas: Number.parseInt(options.gas!.toString()),
         });
-      return <BarterTransactionResponse>{
+      return <ButterTransactionResponse>{
         promiReceipt: promiReceipt,
       };
     }
@@ -207,7 +207,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
 
   async doSetCanBridgeToken(
     tokenAddress: string,
-    toChainId: number,
+    toChainId: string,
     canBridge: boolean
   ) {
     if (this.contract instanceof EthersContract) {

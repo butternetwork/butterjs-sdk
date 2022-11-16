@@ -7,11 +7,11 @@ import { TransactionReceipt as EthersTransactionReceipt } from '@ethersproject/a
 import { NearNetworkConfig } from './requestTypes';
 import { WalletConnection } from 'near-api-js';
 
-export type BarterProviderType = Signer | Provider | Eth;
-export type BarterContractType = ethers.Contract | Contract;
-export type BarterReceiptType = TransactionReceipt | EthersTransactionReceipt;
+export type ButterProviderType = Signer | Provider | Eth;
+export type ButterContractType = ethers.Contract | Contract;
+export type ButterReceiptType = TransactionReceipt | EthersTransactionReceipt;
 export type NearProviderType = NearNetworkConfig | WalletConnection;
-export type BarterJsonRpcProvider = {
+export type ButterJsonRpcProvider = {
   url?: string; // use default if not present
   chainId: number;
 };

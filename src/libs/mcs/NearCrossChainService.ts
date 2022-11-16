@@ -22,8 +22,8 @@ import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import { hexToDecimalArray } from '../../utils';
 import {
-  BarterTransactionReceipt,
-  BarterTransactionResponse,
+  ButterTransactionReceipt,
+  ButterTransactionResponse,
 } from '../../types/responseTypes';
 import {
   adaptNearReceipt,
@@ -58,7 +58,7 @@ export class NearCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<BarterTransactionResponse> {
+  ): Promise<ButterTransactionResponse> {
     let mcsAccountId: string;
     let account: Account | ConnectedWalletAccount;
     if (this.provider instanceof NearNetworkConfig) {
@@ -122,7 +122,7 @@ export class NearCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<BarterTransactionResponse> {
+  ): Promise<ButterTransactionResponse> {
     let mcsAccountId: string;
     let account: Account | ConnectedWalletAccount;
     if (this.provider instanceof NearNetworkConfig) {
@@ -169,7 +169,7 @@ export class NearCrossChainService implements IMapCrossChainService {
    * add tochain to allowed transfer out chains.
    * @param toChainId
    */
-  public async addNativeToChain(toChainId: number) {
+  public async addNativeToChain(toChainId: string) {
     if (this.provider instanceof NearNetworkConfig) {
       const mcsAccountId: string =
         this.provider.networkId === 'testnet'
@@ -265,7 +265,7 @@ export class NearCrossChainService implements IMapCrossChainService {
 
   async addFungibleTokenToChain(
     tokenAddress: string,
-    toChainId: number
+    toChainId: string
   ): Promise<void> {
     if (this.provider instanceof NearNetworkConfig) {
       const mcsAccountId: string =

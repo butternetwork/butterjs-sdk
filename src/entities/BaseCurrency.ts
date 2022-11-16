@@ -11,14 +11,14 @@ export abstract class BaseCurrency {
    */
   public abstract readonly isNative: boolean;
   /**
-   * Returns whether the currency is a token that is usable in Barter without wrapping
+   * Returns whether the currency is a token that is usable in Butter without wrapping
    */
   public abstract readonly isToken: boolean;
 
   /**
    * The chain ID on which this currency resides
    */
-  public readonly chainId: number;
+  public readonly chainId: string;
   /**
    * The decimals used in representing currency amounts
    */
@@ -51,14 +51,13 @@ export abstract class BaseCurrency {
    * @param logo of the currency
    */
   protected constructor(
-    chainId: number,
+    chainId: string,
     decimals: number,
     address: string,
     symbol?: string,
     name?: string,
     logo?: string
   ) {
-    invariant(Number.isSafeInteger(chainId), 'CHAIN_ID');
     invariant(
       decimals >= 0 && decimals < 255 && Number.isInteger(decimals),
       'DECIMALS'
@@ -78,8 +77,8 @@ export abstract class BaseCurrency {
   public abstract equals(other: Currency): boolean;
 
   /**
-   * Return the wrapped version of this currency that can be used with the barter contracts. Currencies must
-   * implement this to be used in barter
+   * Return the wrapped version of this currency that can be used with the butter contracts. Currencies must
+   * implement this to be used in butter
    */
   public abstract get wrapped(): Token;
 }

@@ -27,7 +27,7 @@ export const MAP_TEST_NATIVE = new EVMNativeCoin(
 export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
 
 export const ETH_PRIV_LMAP = new Token(
-  34434,
+  '34434',
   '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847',
   18,
   'lMAP',
@@ -36,7 +36,7 @@ export const ETH_PRIV_LMAP = new Token(
 );
 
 export const ETH_PRIV_NEAR = new Token(
-  34434,
+  '34434',
   '0x152fB50d334a66F7fD8559F6Dad057Ac13b3eD44',
   18,
   'bNear',
@@ -45,7 +45,7 @@ export const ETH_PRIV_NEAR = new Token(
 );
 
 export const ETH_PRIV_WETH = new Token(
-  34434,
+  '34434',
   '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B',
   18,
   'WETH',
@@ -54,7 +54,7 @@ export const ETH_PRIV_WETH = new Token(
 );
 
 export const MAP_TEST_WMAP = new Token(
-  212,
+  '212',
   '0x13CB04d4a5Dfb6398Fc5AB005a6c84337256eE23',
   18,
   'WMAP',
@@ -63,7 +63,7 @@ export const MAP_TEST_WMAP = new Token(
 );
 
 export const MAP_TEST_METH = new Token(
-  212,
+  '212',
   '0x41358EFc7d49d19F76E1E3bdD694f3bff9af3b36',
   18,
   'METH',
@@ -72,7 +72,7 @@ export const MAP_TEST_METH = new Token(
 );
 
 export const MAP_TEST_BNB = new Token(
-  212,
+  '212',
   '0xF84AB41c8623D91382a030299cE270FFc09360c3',
   18,
   'BNB',
@@ -81,7 +81,7 @@ export const MAP_TEST_BNB = new Token(
 );
 
 export const MAP_TEST_NEAR = new Token(
-  212,
+  '212',
   '0x080513434dE30757bc490ad52573CF669FD19EC0',
   18,
   'MNear',
@@ -107,6 +107,14 @@ export const BSC_TEST_NEAR = new Token(
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
 
+export const BSC_TEST_USDC = new Token(
+  ChainId.BSC_TEST,
+  '0x223476eCEA662bFcc1258638c917D8860253Ccb0',
+  18,
+  'USDC',
+  'USD Circle',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
 export const NEAR_TEST_WRAP = new Token(
   ChainId.NEAR_TESTNET,
   'wrap.testnet',
@@ -122,5 +130,32 @@ export const NEAR_TEST_USDC = new Token(
   6,
   'USDC',
   'USD Circle',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const NEAR_TEST_MOST = new Token(
+  ChainId.NEAR_TESTNET,
+  'most.mos2.mfac.maplabs.testnet',
+  24,
+  'MOST',
+  'MOST Token',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const BSC_TEST_MOST = new Token(
+  ChainId.BSC_TEST,
+  '0x688f3Ef5f728995a9DcB299DAEC849CA2E49ddE1',
+  18,
+  'MOST',
+  'MOST Token',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const MAP_TEST_MOST = new Token(
+  ChainId.MAP_TEST,
+  '0xc74bc33a95a62D90672aEFAf4bA784285903cf09',
+  18,
+  'MOST',
+  'MOST Token',
   'https://files.maplabs.io/bridge/usdc.png'
 );

@@ -2,7 +2,7 @@ import { Token } from './Token';
 import { BaseCurrency } from './BaseCurrency';
 
 export class Chain {
-  public readonly chainId: number;
+  public readonly chainId: string;
   public readonly chainName: string;
   public readonly rpc?: string;
   public readonly scanUrl?: string;
@@ -10,7 +10,7 @@ export class Chain {
   public readonly symbol?: string;
 
   constructor(
-    chainId: number,
+    chainId: string,
     chainName: string,
     rpc?: string,
     scanUrl?: string,

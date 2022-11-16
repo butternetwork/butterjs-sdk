@@ -10,7 +10,7 @@ import { ZERO_ADDRESS } from '../../constants';
  */
 export class EVMNativeCoin extends NativeCurrency {
   public constructor(
-    chainId: number,
+    chainId: string,
     decimal: number,
     symbol?: string,
     name?: string,

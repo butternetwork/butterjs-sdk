@@ -3,7 +3,7 @@ import BN from 'bn.js';
 import { BaseCurrency } from '../entities';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 
-export interface BarterTransactionReceipt {
+export interface ButterTransactionReceipt {
   to: string;
   from: string;
   gasUsed: string;
@@ -13,19 +13,19 @@ export interface BarterTransactionReceipt {
   success?: boolean; // 1 success, 0 failed
 }
 
-export interface BarterTransactionResponse {
+export interface ButterTransactionResponse {
   hash?: string;
-  wait?: () => Promise<BarterTransactionReceipt>;
+  wait?: () => Promise<ButterTransactionReceipt>;
   promiReceipt?: PromiEvent<TransactionReceipt>;
 }
 
-export interface BarterFee {
+export interface ButterFee {
   feeToken: BaseCurrency;
   amount: string;
-  feeDistribution?: BarterFeeDistribution;
+  feeDistribution?: ButterFeeDistribution;
 }
 
-export type BarterFeeDistribution = {
+export type ButterFeeDistribution = {
   protocol: number;
   compensation: number;
   lp?: number;

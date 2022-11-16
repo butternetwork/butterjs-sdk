@@ -10,8 +10,8 @@ import { NearProviderType } from './paramTypes';
 export type BridgeRequestParam = {
   fromAddress: string;
   fromToken: BaseCurrency;
-  fromChainId: ChainId;
-  toChainId: ChainId;
+  fromChainId: string;
+  toChainId: string;
   toAddress: string;
   amount: string;
   options: BridgeOptions;
@@ -29,7 +29,7 @@ export type SwapRequestParam = {
 export type SwapOptions = {
   signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider infor or Web3.js Eth info
   nearConfig?: NearNetworkConfig; // mandatory when src chain is near
-  useAggregator?: boolean; // whether Barter's Smart Router Aggregator or not
+  useAggregator?: boolean; // whether Butter's Smart Router Aggregator or not
   gas?: string;
 };
 

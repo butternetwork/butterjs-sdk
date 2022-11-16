@@ -10,7 +10,7 @@ import { EVMCrossChainService } from '../mcs/EVMCrossChainService';
 import { NearCrossChainService } from '../mcs/NearCrossChainService';
 
 export function createMCSInstance(
-  chainId: number,
+  chainId: string,
   options: BridgeOptions
 ): IMapCrossChainService {
   switch (chainId) {

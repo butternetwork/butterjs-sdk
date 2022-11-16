@@ -4,13 +4,13 @@ import { BridgeRequestParam } from '../../types/requestTypes';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
 import {
-  BarterTransactionReceipt,
-  BarterTransactionResponse,
+  ButterTransactionReceipt,
+  ButterTransactionResponse,
 } from '../../types/responseTypes';
 import BN from 'bn.js';
 import { hexlify } from 'ethers/lib/utils';
 
-export class BarterBridge {
+export class ButterBridge {
   /**
    * The BridgeToken method is used to bridge token from one chain to another.
    * see {@link BridgeRequestParam} for detail
@@ -29,7 +29,7 @@ export class BarterBridge {
     toAddress,
     amount,
     options,
-  }: BridgeRequestParam): Promise<BarterTransactionResponse> {
+  }: BridgeRequestParam): Promise<ButterTransactionResponse> {
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
@@ -53,7 +53,7 @@ export class BarterBridge {
 
     let result;
     if (IS_NEAR(toChainId)) {
-      toAddress = getHexAddress(toAddress, toChainId);
+      toAddress = getHexAddress(toAddress, toChainId, false);
     }
     if (fromToken.isNative) {
       // if input token is Native coin, call transferOutNative method
@@ -107,7 +107,7 @@ export class BarterBridge {
     );
 
     if (IS_NEAR(toChainId)) {
-      toAddress = getHexAddress(toAddress, toChainId);
+      toAddress = getHexAddress(toAddress, toChainId, false);
     }
 
     let gas;

@@ -16,7 +16,7 @@ export class Token extends BaseCurrency {
   public override readonly address: string;
 
   public constructor(
-    chainId: number,
+    chainId: string,
     address: string,
     decimals: number,
     symbol?: string,

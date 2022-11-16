@@ -1,5 +1,5 @@
-# BarterJS SDK
-BarterJS SDK aims to facilitate the development of cross-chain functionality by letting developers integrate asset cross-chain feature in their application with minimal effort possible.
+# ButterJS SDK
+ButterJS SDK aims to facilitate the development of cross-chain functionality by letting developers integrate asset cross-chain feature in their application with minimal effort possible.
 
 ## Table of Contents
 1. [Installation](#installation)
@@ -17,14 +17,14 @@ BarterJS SDK aims to facilitate the development of cross-chain functionality by 
 ## Installation
 ```shell
 # npm
-npm i --save-dev barterjs-sdk
+npm i --save-dev butterjs-sdk
 
 # yarn
-yarn add barterjs-sdk
+yarn add butterjs-sdk
 ```
 <a name="tokenandchain"></a>
 ## Tokens and Chains 
-Currently Barter only support limited chains and tokens and Barter will provide lists of supported chains and tokens in the format of constants.
+Currently Butter only support limited chains and tokens and Butter will provide lists of supported chains and tokens in the format of constants.
 
 ```typescript
 // To get supported blockchain id
@@ -36,7 +36,7 @@ const supportedTokenList = ID_TO_SUPPORTED_TOKEN(ChainId.Mainnet)
 
 <a name="fees"></a>
 ## Fees
-Barter charges a small fees for bridging or exchanging cross-chain assets. It is subject to what kind of token you want to bridge or swap.
+Butter charges a small fees for bridging or exchanging cross-chain assets. It is subject to what kind of token you want to bridge or swap.
 <br>
 ### Bridging Fee
 To get the bridging fee, use the following method:
@@ -45,23 +45,23 @@ async function getBridgeFee(
     srcToken: BaseCurrency, // source token, can be the format of native coin or token
     targetChain: number, // target blockchain id
     amount: string, // amount to bridge, in minimal unit
-    mapRpcProvider: BarterJsonRpcProvider // map relay chain rpc provider information
-): Promise<BarterFee>
+    mapRpcProvider: ButterJsonRpcProvider // map relay chain rpc provider information
+): Promise<ButterFee>
 
 // Provider format
-type BarterJsonRpcProvider = {
+type ButterJsonRpcProvider = {
     chainId: number;
     url?: string; // use default if not presented
 };
 
 // return type
-interface BarterFee {
+interface ButterFee {
     feeToken: BaseCurrency; // fee currency to charge, usally in the format of source token
     amount: string; // amount to charge
-    feeDistribution?: BarterFeeDistribution; // fee distribution
+    feeDistribution?: ButterFeeDistribution; // fee distribution
 }
 
-type BarterFeeDistribution = {
+type ButterFeeDistribution = {
     protocol: number; // base protocol fees in bps
     compensation: number; // gas compensation on target chain
     lp?: number;
@@ -76,7 +76,7 @@ const mapRpcProvider = {
 }
 
 // get the fees for bridging one ether from Ethereum Mainnet to Binance Smart Chain
-const fee: BarterFee = await getBridgeFee(
+const fee: ButterFee = await getBridgeFee(
     Ether,
     ChainId.BSC_MAINNET,
     '1000000000000000000',
@@ -107,13 +107,13 @@ bridge fee {
 ```
 <a name="vaultbalance"></a>
 ## Vault Balance 
-In Barter, we deploy one `Vault` smart contract for each blockchain we connected in order to hold asset on that chain. To get the balance of certain token in the vault
+In Butter, we deploy one `Vault` smart contract for each blockchain we connected in order to hold asset on that chain. To get the balance of certain token in the vault
 ```typescript
 async function getVaultBalance(
   fromChainId: number, // from chain id
   fromToken: BaseCurrency, // from token
   toChainId: number, // to chain id
-  rpcProvider: BarterJsonRpcProvider // map relay chain rpc provider
+  rpcProvider: ButterJsonRpcProvider // map relay chain rpc provider
 ): Promise<VaultBalance>;
 
 // return type
@@ -152,7 +152,7 @@ vault balance {
 ```
 <a name="assetbridge"></a>
 ## Asset Bridging
-Barter Bridge allows bridging supported tokens from one blockchain to another.<br>
+Butter Bridge allows bridging supported tokens from one blockchain to another.<br>
 
 ### Gas estimation
 ```typescript
@@ -183,8 +183,8 @@ type BridgeOptions = {
     gas?: string; // maunally input gas
 };
 
-// BarterTransactionReceipt
-interface BarterTransactionReceipt {
+// ButterTransactionReceipt
+interface ButterTransactionReceipt {
     to: string;
     from: string;
     gasUsed: string;
@@ -202,15 +202,15 @@ async function bridgeToken({
     toAddress, // recipient address
     amount, // amount of 'fromToken' to bridge
     options,
-}: BridgeRequestParam): Promise<BarterTransactionReceipt>;
+}: BridgeRequestParam): Promise<ButterTransactionReceipt>;
  ```
-for more detail on `BridgeRequestParam` and `BarterContractCallRecept`, please see [parameters](#bridgeparam).
+for more detail on `BridgeRequestParam` and `ButterContractCallRecept`, please see [parameters](#bridgeparam).
 
 ##### Example: Bridge 1 ethNear from Ethereum Mainnet to Near Network so the `toAddress` will receive 1 native Near coin.
 
 ```typescript
-// initiate BarterBridge Class
-const bridge: BarterBridge = new BarterBridge();
+// initiate ButterBridge Class
+const bridge: ButterBridge = new ButterBridge();
 
 // assemble bridge request parameters
 const bridgeRequest: BridgeRequestParam = {
@@ -225,7 +225,7 @@ const bridgeRequest: BridgeRequestParam = {
     },
 };
 
-const receipt: BarterTransactionReceipt = await bridge.bridgeToken(
+const receipt: ButterTransactionReceipt = await bridge.bridgeToken(
     bridgeRequest
 );
 
@@ -248,7 +248,7 @@ tx receipt {
 ## Cross-chain Swap(Still Under Development)
 <a name="getroute"></a>
 ### getSwapRoute 
-get the best swap route calculated by Barter Smart Router
+get the best swap route calculated by Butter Smart Router
 
 ```typescript
 // get best route method
@@ -273,20 +273,20 @@ export enum TradeType {
 type SwapOptions = {
     signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider infor or Web3.js Eth info
     nearConfig?: NearNetworkConfig; // mandatory when src chain is near
-    useAggregator?: boolean; // whether Barter's Smart Router Aggregator or not
+    useAggregator?: boolean; // whether Butter's Smart Router Aggregator or not
     gas?: string;
 };
 
 // return type: CrossChainSwapRoute
 type CrossChainSwapRoute = {
     // source chain swap route. e.g. if source chain is Ethereum, this will be the swap route on Ethereum
-    srcRoute: BarterSwapRoute;
+    srcRoute: ButterSwapRoute;
     // swap route on MAP relay Chain
-    relayRoute: BarterSwapRoute;
+    relayRoute: ButterSwapRoute;
     // swap route on target chain. e.g. if target chain is Binance Smart Chain, this will be the route of BSC.
-    targetRoute: BarterSwapRoute;
+    targetRoute: ButterSwapRoute;
 }
-type BarterSwapRoute = {
+type ButterSwapRoute = {
     /**
      * The quote for the swap.
      * For EXACT_IN swaps this will be an amount of token out.
@@ -594,4 +594,4 @@ const paymentInfo: PaymentInfo = await getPaymentInfo(paymentInfoRequest);
 const result = await omniPay(paymentInfo);
 ```
 
-***_Note: BarterJS SDK is still under development, all contents are subject to change. Stay tuned for our first relase!_***
+***_Note: ButterJS SDK is still under development, all contents are subject to change. Stay tuned for our first relase!_***

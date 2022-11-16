@@ -3,28 +3,21 @@ import { ChainId } from './chains';
 /**
  * MCS contract address by chainId
  * smart contract source code:
- * {@link https://github.com/barternetwork/barter-mcs-contracts/blob/master/evm/contracts/MAPCrossChainServiceRelay.sol}
- * {@link https://github.com/barternetwork/barter-mcs-contracts/blob/master/evm/contracts/MAPCrossChainService.sol} */
+ * {@link https://github.com/butternetwork/butter-mcs-contracts/blob/master/evm/contracts/MAPCrossChainServiceRelay.sol}
+ * {@link https://github.com/butternetwork/butter-mcs-contracts/blob/master/evm/contracts/MAPCrossChainService.sol} */
 export const MCS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.ETH_PRIV]: '0x43130059C655314d7ba7eDfb8299d26FbDE726F1',
   [ChainId.MAP]: '',
-  [ChainId.BSC_TEST]: '0x86CBE739888bFbC0bcA6e2D6106cfC5B3B1F69A5',
-  [ChainId.MAP_TEST]: '0x3c09AF7eb25904Ec62F37540044A48da1a24269A',
-  [ChainId.NEAR_TESTNET]: 'mcs1668056999328.xyli.testnet',
+  [ChainId.BSC_TEST]: '0x220bE51C717c4E257Cb8e96be8591740336623F8',
+  [ChainId.MAP_TEST]: '0xB6c1b689291532D11172Fb4C204bf13169EC0dCA',
+  [ChainId.NEAR_TESTNET]: 'mos2.mfac.maplabs.testnet',
 };
 
 /**
- * TokenRegister Address: https://github.com/barternetwork/barter-mcs-contracts/blob/master/evm/contracts/TokenRegister.sol
+ * TokenRegister Address: https://github.com/butternetwork/butter-mcs-contracts/blob/master/evm/contracts/TokenRegister.sol
  */
-export const TOKEN_REGISTER_ADDRESS_SET: { [chainId: number]: string } = {
-  212: '0xa3b46aC7100E78Cd3a68acF2C878d3dc2714103e',
-};
-
-/**
- * Fee center address: https://github.com/barternetwork/barter-mcs-contracts/blob/master/evm/contracts/FeeCenter.sol
- */
-export const FEE_CENTER_ADDRESS_SET: { [chainId: number]: string } = {
-  212: '0xfe20e986561d3d1C8a8d900e84e72C1c869deA26',
+export const TOKEN_REGISTER_ADDRESS_SET: { [chainId: string]: string } = {
+  '212': '0xc81Fe3f111d44b5469B9179D3b40B99A2527cF7A',
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

@@ -1,5 +1,5 @@
 import { TransferOutOptions } from '../../types/requestTypes';
-import { BarterTransactionResponse } from '../../types/responseTypes';
+import { ButterTransactionResponse } from '../../types/responseTypes';
 import BN from 'bn.js';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 
@@ -23,7 +23,7 @@ export interface IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options?: TransferOutOptions
-  ): Promise<BarterTransactionResponse>;
+  ): Promise<ButterTransactionResponse>;
 
   gasEstimateTransferOutToken(
     fromAddress: string,
@@ -48,7 +48,7 @@ export interface IMapCrossChainService {
     toChainId: string,
     amount: string,
     options?: TransferOutOptions
-  ): Promise<BarterTransactionResponse>;
+  ): Promise<ButterTransactionResponse>;
 
   gasEstimateTransferOutNative(
     fromAddress: string,
