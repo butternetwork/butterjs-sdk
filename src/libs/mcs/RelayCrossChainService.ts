@@ -90,6 +90,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
   }
 
   async gasEstimateTransferOutToken(
+    fromAddress: string,
     tokenAddress: string,
     amount: string,
     toAddress: string,
@@ -152,6 +153,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
   }
 
   async gasEstimateTransferOutNative(
+    fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string

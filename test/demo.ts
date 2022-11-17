@@ -41,7 +41,7 @@ import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import { asciiToHex } from '../src/utils';
 import BN from 'bn.js';
 require('dotenv/config');
-const web3 = new Web3('http://18.138.248.113:8545');
+const web3 = new Web3('http://18.142.54.137:7445');
 const account = web3.eth.accounts.privateKeyToAccount(
   '0x' + 'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b'
 );
@@ -124,10 +124,9 @@ async function demo() {
   console.log('vault balance', balance);
   //
   // // 3. 获取targetToken
-  console.log('');
   const tokenCandidates = await getTokenCandidates(
+    ChainId.MAP_TEST,
     ChainId.NEAR_TESTNET,
-    ChainId.BSC_TEST,
     {
       url: 'http://18.142.54.137:7445',
       chainId: 212,
@@ -148,22 +147,23 @@ async function demo() {
   // console.log('approved');
   // //
   // // 3. Bridge(先estimate gas)
-
+  console.log('gas estimate');
   const bridge: ButterBridge = new ButterBridge();
-  // const request: BridgeRequestParam = {
-  //   fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-  //   fromToken: BSC_TEST_NEAR,
-  //   fromChainId: ChainId.BSC_TEST,
-  //   toChainId: ChainId.NEAR_TESTNET,
-  //   toAddress: 'abc.testnet',
-  //   amount: ethers.utils.parseEther('1').toString(),
-  //   options: { signerOrProvider: web3.eth },
-  // };
-  // const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
-  //
-  // const adjustedGas = Math.floor(
-  //   Number.parseFloat(estimatedGas) * 1.2
-  // ).toString();
+  const request: BridgeRequestParam = {
+    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    fromToken: MAP_TEST_MOST,
+    fromChainId: ChainId.MAP_TEST,
+    toChainId: ChainId.BSC_TEST,
+    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    amount: ethers.utils.parseEther('1').toString(),
+    options: { signerOrProvider: web3.eth },
+  };
+  const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
+
+  console.log('gas', estimatedGas);
+  const adjustedGas = Math.floor(
+    Number.parseFloat(estimatedGas) * 1.2
+  ).toString();
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
