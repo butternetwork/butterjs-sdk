@@ -1,7 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import BN from 'bn.js';
 import { BaseCurrency } from '../entities';
-import { PromiEvent, TransactionReceipt } from 'web3-core';
+import {
+  PromiEvent,
+  TransactionReceipt as Web3TransactionReceipt,
+} from 'web3-core';
 
 export interface ButterTransactionReceipt {
   to: string;
@@ -16,7 +19,7 @@ export interface ButterTransactionReceipt {
 export interface ButterTransactionResponse {
   hash?: string;
   wait?: () => Promise<ButterTransactionReceipt>;
-  promiReceipt?: PromiEvent<TransactionReceipt>;
+  promiReceipt?: PromiEvent<Web3TransactionReceipt>;
 }
 
 export interface ButterFee {

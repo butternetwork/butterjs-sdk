@@ -28,10 +28,12 @@ Currently Butter only support limited chains and tokens and Butter will provide 
 
 ```typescript
 // To get supported blockchain id
-const supportedChainIdList = SUPPORTED_CHAIN_IDS_LIST
+const supportedChainIdList = SUPPORTED_CHAIN_LIST
 
 // To get supported token list by chain id
-const supportedTokenList = ID_TO_SUPPORTED_TOKEN(ChainId.Mainnet)
+const supportedTokenList = ID_TO_SUPPORTED_TOKEN('1')
+// the above will list all the supported token with chainId = 1, 
+// note here we use string as parameter type.
 ```
 
 <a name="fees"></a>
@@ -43,7 +45,7 @@ To get the bridging fee, use the following method:
 ```typescript
 async function getBridgeFee(
     srcToken: BaseCurrency, // source token, can be the format of native coin or token
-    targetChain: number, // target blockchain id
+    targetChain: string, // target blockchain id
     amount: string, // amount to bridge, in minimal unit
     mapRpcProvider: ButterJsonRpcProvider // map relay chain rpc provider information
 ): Promise<ButterFee>
@@ -51,14 +53,16 @@ async function getBridgeFee(
 // Provider format
 type ButterJsonRpcProvider = {
     chainId: number;
-    url?: string; // use default if not presented
+    // note here should provide the RPC URL for MAP Relay Chain,
+    // since all the fee info is stored on MAP Relay Chain
+    url?: string; // use default if not presented, 
 };
 
 // return type
 interface ButterFee {
     feeToken: BaseCurrency; // fee currency to charge, usally in the format of source token
     amount: string; // amount to charge
-    feeDistribution?: ButterFeeDistribution; // fee distribution
+    feeDistribution?: ButterFeeDistribution; // fee distribution, only swap has this field, bridge does not any distribution
 }
 
 type ButterFeeDistribution = {
@@ -70,22 +74,24 @@ type ButterFeeDistribution = {
 ##### Example: get the fee for bridging 1 Ether from Ehtereum Mainnet to BSC Mainnet.
 
 ```typescript
+// MAP Relay Chain Mainnet Provider
 const mapRpcProvider = {
-    url: 'http://18.142.54.137:7445',
-    chainId: 212,
+    url: 'https://poc2-rpc.maplabs.io', 
+    chainId: 22776,
 }
 
 // get the fees for bridging one ether from Ethereum Mainnet to Binance Smart Chain
 const fee: ButterFee = await getBridgeFee(
-    Ether,
-    ChainId.BSC_MAINNET,
-    '1000000000000000000',
+    Ether, // srcToken
+    ChainId.BSC_MAINNET, // targetChain
+    '1000000000000000000', // amount
     mapRpcProvider
 )
 
 console.log("brige fee", fee);
 ``` 
 ##### Output
+
 ```
 bridge fee {
     feeToken: Token {
@@ -97,22 +103,19 @@ bridge fee {
             isNative: true,
             isToken: false
     },
-    amount: '20000000000000',
-    feeDistribution: {
-        protocol: 1, // 0.01%
-        compensation: 1 // 0.01%,
-    }    
+    amount: '100000000000000',
 }
-
+// This represents bridging 1 ether, there is a 0.0001 ether deduct as bridging fee
+// User will get 0.9999 ether eventually. 
 ```
 <a name="vaultbalance"></a>
 ## Vault Balance 
 In Butter, we deploy one `Vault` smart contract for each blockchain we connected in order to hold asset on that chain. To get the balance of certain token in the vault
 ```typescript
 async function getVaultBalance(
-  fromChainId: number, // from chain id
+  fromChainId: string, // from chain id
   fromToken: BaseCurrency, // from token
-  toChainId: number, // to chain id
+  toChainId: string, // to chain id
   rpcProvider: ButterJsonRpcProvider // map relay chain rpc provider
 ): Promise<VaultBalance>;
 
@@ -123,12 +126,12 @@ interface VaultBalance {
 }
 ```
 
-##### Example: get the balance of Near native token in the vault of Near chain where source chain is Ethereum
+##### Example: get the balance of USDC in the vault of BSC where source chain is Ethereum
 ```typescript
   const balance: VaultBalance = await getVaultBalance(
     ChainId.ETH_MAINNET,
-    ETH_NEAR,
-    ChainId.NEAR_MAINNET,
+    ETH_USDC,
+    ChainId.BSC_MAINNET,
     provider
   );
   console.log('vault balance', balance);
@@ -137,17 +140,20 @@ interface VaultBalance {
 ##### Output:
 ```
 vault balance {
-  token: NearNativeCoin {
-    address: '0x0000000000000000000000000000000000000000',
-    chainId: 1313161556,
-    decimals: 24,
-    symbol: 'NEAR',
-    name: 'NEAR',
-    isNative: true,
-    isToken: false
+  token: Token {
+    // usdc address on BSC
+    address: '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+    // bsc chain Id
+    chainId: '56', 
+    decimals: 18,
+    symbol: 'USDC',
+    name: 'USD Circle',
+    isNative: false,
+    isToken: true
   },
   balance: '8000000000000000000000000'
 }
+// this represents map has 8000000 BSC-USDC available to transfer from ETH to BSC.
 
 ```
 <a name="assetbridge"></a>
@@ -157,6 +163,7 @@ Butter Bridge allows bridging supported tokens from one blockchain to another.<b
 ### Gas estimation
 ```typescript
 async function gasEstimateBridgeToken({
+    fromAddress,
     token,
     toChainId,
     toAddress,
@@ -164,85 +171,173 @@ async function gasEstimateBridgeToken({
     options,
 }: BridgeRequestParam): Promise<string>; // estimated gas in string
 ```
+<a name = "bridgeparam"></a>
 ### Parameters
 ```typescript
 // BridgeRequestParam
 type BridgeRequestParam = {
-    token: BaseCurrency;
-    fromChainId: ChainId;
-    toChainId: ChainId;
-    toAddress: string;
-    amount: string;
+    fromAddress: string; // from account address
+    token: BaseCurrency; // token to bridge
+    fromChainId: string; // from chain id 
+    toChainId: string; // to chain id
+    toAddress: string; // to address
+    amount: string; // amount to bridge
     options: BridgeOptions;
 };
 
 // BridgeOptions
 type BridgeOptions = {
-    signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider infor or Web3.js Eth info
-    nearConfig?: NearNetworkConfig; // when source chain is Near, provide nearConfig Object
+    // Provide Signer or Provider if you are using ethers.js
+    // Provide Eth if you are using web3.js
+    signerOrProvider?: Signer | Provider | Eth; // EVM chain signerOrProvider
+    
+    // Provide WalletConnection if you are connecting through frontend wallet
+    // Provide NearNetworkConfig if you are connecting through KeyStore
+    // Note Near does not support gas estimation yet.
+    nearConfig?: NearNetworkConfig | WalletConnection; // when source chain is Near, provide nearConfig Object
     gas?: string; // maunally input gas
 };
 
-// ButterTransactionReceipt
-interface ButterTransactionReceipt {
+```
+<a name = "txresult"></a>
+### Transaction Return Type
+```typescript
+// ButterTransactionResponse
+interface ButterTransactionResponse {
+    hash?: string; // transaction hash
+    wait?: () => Promise<ButterTransactionReceipt>; // wait function if using ethers.js or near
+    promiReceipt?: PromiEvent<Web3TransactionReceipt>; // promiEvent when if web3.js
+}
+
+export interface ButterTransactionReceipt {
     to: string;
     from: string;
     gasUsed: string;
     transactionHash: string;
     blockHash?: string;
     blockNumber?: number;
+    success?: boolean; // 1 success, 0 failed
 }
+
 ```
 
-### bridgeToken
+### Bridge Token
 ```typescript
 async function bridgeToken({
+    fromAddress,
     fromToken,
+    fromChainId,
     toChainId,
     toAddress, // recipient address
     amount, // amount of 'fromToken' to bridge
     options,
-}: BridgeRequestParam): Promise<ButterTransactionReceipt>;
+}: BridgeRequestParam): Promise<ButterTransactionResponse>;
  ```
-for more detail on `BridgeRequestParam` and `ButterContractCallRecept`, please see [parameters](#bridgeparam).
 
-##### Example: Bridge 1 ethNear from Ethereum Mainnet to Near Network so the `toAddress` will receive 1 native Near coin.
+for more detail on `BridgeRequestParam` and `ButterTransactionResponse`, please see [parameters](#bridgeparam) and [transaction return type](#txresult).
+
+##### Example1: Bridge 1 USDC from Ethereum Mainnet to BSC using web3.js
 
 ```typescript
 // initiate ButterBridge Class
+import {ButterTransactionResponse} from "./responseTypes";
+import {PromiEvent} from "web3-core";
+
 const bridge: ButterBridge = new ButterBridge();
 
 // assemble bridge request parameters
 const bridgeRequest: BridgeRequestParam = {
-    fromToken: ETH_NEAR,
+    fromToken: ETH_BSC,
     fromChainId: ChainId.ETH_MAINNET,
-    toChainId: ChainId.NEAR_MAINNET,
-    toAddress: 'toaddress.near',
+    toChainId: ChainId.BSC_MAINNET,
+    toAddress: '0x...',
     amount: '1000000000000000000',
     options: {
-      signerOrProvider: web3.eth, // here we use web3.js as example, but we are ethers.js compitable as well
-      gas: '61795',
+        signerOrProvider: web3.eth, // here we use web3.js as example
     },
 };
 
-const receipt: ButterTransactionReceipt = await bridge.bridgeToken(
+const response: ButterTransactionResponse = await bridge.bridgeToken(
     bridgeRequest
 );
 
-console.log('tx receipt', receipt);
+const promiReceipt: PromiEvent<TransactionReceipt> = response.promiReceipt!;
+
+await promiReceipt
+    .on('transactionHash', function (hash: string) {
+        console.log('hash', hash);
+    })
+    .on('receipt', function (receipt: any) {
+        console.log('receipt', receipt);
+    });
+
 ```
 ##### Output:
 ```
-tx receipt {
-  to: '0x...726f1',
-  from: '0x...386cc',
-  gasUsed: '61795',
-  blockHash: '0xeaf24e6311ed95390d0cc0d378214f2d4c4780fe052439d1ad6e9f811c6d2675',
-  transactionHash: '0x40e351687cc6eeb8a59ba4ddf395711e6b3c6c328c908cd41d126977a24b59ac',
-  blockNumber: 767820
+hash 0x..... // transaction hash
+receipt { // web3.js TransactionReceipt
+    status: boolean;
+    transactionHash: string;
+    transactionIndex: number;
+    blockHash: string;
+    blockNumber: number;
+    from: string;
+    to: string;
+    contractAddress?: string;
+    cumulativeGasUsed: number;
+    gasUsed: number;
+    effectiveGasPrice: number;
+    logs: Log[];
+    logsBloom: string;
+    events?: {
+        [eventName: string]: EventLog;
+    };
 }
 ```
 
+##### Example2: Bridge 1 USDC from Ethereum Mainnet to BSC using ethers.js
+
+```typescript
+// initiate ButterBridge Class
+import {ButterTransactionReceipt, ButterTransactionResponse} from "./responseTypes";
+import {PromiEvent} from "web3-core";
+
+const bridge: ButterBridge = new ButterBridge();
+
+// assemble bridge request parameters
+const bridgeRequest: BridgeRequestParam = {
+    fromToken: ETH_BSC,
+    fromChainId: ChainId.ETH_MAINNET,
+    toChainId: ChainId.BSC_MAINNET,
+    toAddress: '0x...',
+    amount: '1000000000000000000',
+    options: {
+        signerOrProvider: ethers.signer, // here we use ethers.js as example
+    },
+};
+
+const response: ButterTransactionResponse = await bridge.bridgeToken(
+    bridgeRequest
+);
+console.log("transaction hash", response.hash!)
+
+const receipt: ButterTransactionReceipt = await response.wait!();
+console.log('receipt', receipt)
+
+```
+##### Output:
+```
+transaction hash 0x..... 
+receipt {
+  to: string;
+  from: string;
+  gasUsed: string;
+  transactionHash: string;
+  blockHash?: string;
+  blockNumber?: number;
+  success?: boolean; // 1 success, 0 failed
+}
+```
 
 <a name="crosschainswap"></a>
 ## Cross-chain Swap(Still Under Development)
