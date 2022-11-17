@@ -109,7 +109,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
     } else {
       const gas = await this.contract.methods
         .transferOutToken(tokenAddress, toAddress, amount, toChainId)
-        .estimateGas();
+        .estimateGas({ from: fromAddress });
       estimatedGas = gas.toString();
     }
     return estimatedGas;
@@ -172,7 +172,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
     } else {
       const gas = await this.contract.methods
         .transferOutNative(toAddress, toChainId)
-        .estimateGas();
+        .estimateGas({ from: fromAddress });
       estimatedGas = gas.toString();
     }
     return estimatedGas;
