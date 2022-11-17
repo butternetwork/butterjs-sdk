@@ -1,6 +1,6 @@
 {
   "name": "butterjs-sdk",
-  "version": "1.0.0-beta.36",
+  "version": "1.0.0-beta.37",
   "description": "Butter Network SDK",
   "author": "xyli <moorelee@butternetwork.io>",
   "main": "dist/index.js",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/butternetwork/butterjs-sdk"
+    "url": "https://github.com/barternetwork/barterjs-sdk"
   },
   "keywords": [
     "cross-chain",
@@ -19,7 +19,6 @@
   ],
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "butterjs-sdk": "^1.0.0-beta.13",
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -27,9 +26,9 @@
     "jest": "^28.1.3",
     "prettier": "^2.7.1",
     "ts-jest": "^28.0.7",
-    "web3": "^1.8.0"
   },
   "dependencies": {
+    "web3": "^1.8.0",
     "@ethersproject/abstract-provider": "^5.7.0",
     "@types/bn.js": "^5.1.1",
     "bn.js": "^5.2.1",
