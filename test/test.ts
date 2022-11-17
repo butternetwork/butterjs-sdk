@@ -6,7 +6,7 @@ import {
   BridgeRequestParam,
   NearNetworkConfig,
 } from '../src/types';
-import { BarterBridge } from '../src';
+import { ButterBridge } from '../src';
 import {
   BSC_TEST_CHAIN,
   BSC_TEST_NATIVE,
@@ -96,7 +96,7 @@ async function main() {
 }
 
 async function ethToMapNative() {
-  const bridge: BarterBridge = new BarterBridge();
+  const bridge: ButterBridge = new ButterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '',
     fromToken: ETH_PRIV_NATIVE,
@@ -110,7 +110,7 @@ async function ethToMapNative() {
 }
 
 async function ethToMapToken() {
-  const bridge: BarterBridge = new BarterBridge();
+  const bridge: ButterBridge = new ButterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '',
     fromToken: ETH_PRIV_LMAP,
@@ -124,7 +124,7 @@ async function ethToMapToken() {
 }
 
 async function mapToEthNative() {
-  const bridge: BarterBridge = new BarterBridge();
+  const bridge: ButterBridge = new ButterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '',
     fromToken: MAP_TEST_NATIVE,
@@ -138,7 +138,7 @@ async function mapToEthNative() {
 }
 
 async function mapToEthToken() {
-  const bridge: BarterBridge = new BarterBridge();
+  const bridge: ButterBridge = new ButterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '',
     fromToken: MAP_TEST_METH,
@@ -152,7 +152,7 @@ async function mapToEthToken() {
 }
 
 async function mapToNearNative() {
-  const bridge: BarterBridge = new BarterBridge();
+  const bridge: ButterBridge = new ButterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '',
     fromToken: MAP_TEST_NATIVE,
@@ -166,7 +166,7 @@ async function mapToNearNative() {
 }
 
 async function mapToNearToken() {
-  const bridge: BarterBridge = new BarterBridge();
+  const bridge: ButterBridge = new ButterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '',
     fromToken: MAP_TEST_NEAR,
@@ -180,7 +180,7 @@ async function mapToNearToken() {
 }
 
 async function nearToMapNative() {
-  const bridge: BarterBridge = new BarterBridge();
+  const bridge: ButterBridge = new ButterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '',
     fromToken: NEAR_TEST_NATIVE,

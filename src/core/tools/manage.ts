@@ -1,6 +1,5 @@
 import { AddTokenPairParam } from '../../types';
 import {
-  FEE_CENTER_ADDRESS_SET,
   ID_TO_CHAIN_ID,
   IS_EVM,
   IS_MAP,
@@ -14,7 +13,6 @@ import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
 import { NearCrossChainService } from '../../libs/mcs/NearCrossChainService';
 import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
 import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
-import { FeeCenter } from '../../libs/FeeCenter';
 import { TokenRegister } from '../../libs/TokenRegister';
 import { getHexAddress } from '../../utils';
 
@@ -113,10 +111,7 @@ export async function addTokenPair({
     MCS_MAP_METADATA.abi,
     mapSigner
   );
-  const feeCenter = new FeeCenter(
-    FEE_CENTER_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)]!,
-    mapSigner
-  );
+
   const tokenRegister = new TokenRegister(
     TOKEN_REGISTER_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)]!,
     mapSigner
@@ -132,24 +127,15 @@ export async function addTokenPair({
 
     // set token decimals for conversion.
     await mapMCS.doSetTokenOtherChainDecimals(
-      getHexAddress(srcToken.address, srcToken.chainId),
+      getHexAddress(srcToken.address, srcToken.chainId, false),
       srcToken.chainId,
       srcToken.decimals
     );
 
     await mapMCS.doSetTokenOtherChainDecimals(
-      getHexAddress(srcToken.address, srcToken.chainId),
+      getHexAddress(srcToken.address, srcToken.chainId, false),
       targetToken.chainId,
       targetToken.decimals
-    );
-
-    // set fees
-    await feeCenter.setChainTokenGasFee(
-      targetToken.chainId,
-      targetToken.address,
-      feeRate.lowest,
-      feeRate.highest,
-      feeRate.bps
     );
   } else if (srcToken.chainId == NETWORK_NAME_TO_ID(mapNetwork)) {
     /** case 2: source chain is map */
@@ -170,27 +156,18 @@ export async function addTokenPair({
       targetToken.chainId,
       targetToken.decimals
     );
-
-    // set fee
-    await feeCenter.setChainTokenGasFee(
-      targetToken.chainId,
-      srcToken.address,
-      feeRate.lowest,
-      feeRate.highest,
-      feeRate.bps
-    );
   } else {
     /** case 3: neither src chain and target chain is map, then map will act as a relay */
     await tokenRegister.registerToken(
       srcToken.chainId,
-      getHexAddress(srcToken.address, srcToken.chainId),
+      getHexAddress(srcToken.address, srcToken.chainId, false),
       mapToken!.address
     );
     console.log(`register ${srcToken.name} done`);
 
     await tokenRegister.registerToken(
       targetToken.chainId,
-      getHexAddress(targetToken.address, targetToken.chainId),
+      getHexAddress(targetToken.address, targetToken.chainId, false),
       mapToken!.address
     );
     console.log(`register ${targetToken.name} done`);
@@ -208,14 +185,6 @@ export async function addTokenPair({
       targetToken.decimals
     );
 
-    // set fee
-    await feeCenter.setChainTokenGasFee(
-      targetToken.chainId,
-      getHexAddress(targetToken.address, targetToken.chainId),
-      feeRate.lowest,
-      feeRate.highest,
-      feeRate.bps
-    );
     console.log(`setfee done`);
   }
   console.log('token reg done');

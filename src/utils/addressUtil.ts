@@ -14,7 +14,7 @@ import { ZERO_ADDRESS } from '../constants';
  */
 export function validateAndParseAddressByChainId(
   address: string,
-  chainId: number
+  chainId: string
 ): string {
   switch (chainId) {
     case ChainId.MAP:
@@ -30,18 +30,18 @@ export function validateAndParseAddressByChainId(
       }
     }
     case ChainId.NEAR_TESTNET: {
-      address = address.toLowerCase();
-      const words: string[] = address.split('.');
-      if (words[words.length - 1] != 'testnet') {
-        throw new Error(
-          `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
-        );
-      }
-      if (!/^[a-zA-Z\\.]+$/.test(address)) {
-        throw new Error(
-          `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
-        );
-      }
+      // address = address.toLowerCase();
+      // const words: string[] = address.split('.');
+      // if (words[words.length - 1] != 'testnet') {
+      //   throw new Error(
+      //     `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
+      //   );
+      // }
+      // if (!/^[a-zA-Z\\.]+$/.test(address)) {
+      //   throw new Error(
+      //     `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
+      //   );
+      // }
       return address;
     }
     default: {
@@ -59,13 +59,7 @@ export function validateToken(token: Token): string {
  * @param address
  * @param chainId
  */
-export function hexToDecimalArray(
-  address: string,
-  chainId: number | string
-): number[] {
-  if (typeof chainId === 'string') {
-    chainId = parseInt(chainId);
-  }
+export function hexToDecimalArray(address: string, chainId: string): number[] {
   address = validateAndParseAddressByChainId(address, chainId);
   let ret: number[] = [];
   for (let i = 2; i < address.length; i = i + 2) {
@@ -83,11 +77,15 @@ export function decimalArrayToHex(decimals: number[]): string {
   return ret;
 }
 
-export function getHexAddress(address: string, chainId: number): string {
+export function getHexAddress(
+  address: string,
+  chainId: string,
+  isAddress: boolean
+): string {
   if (IS_EVM(chainId)) {
     return address;
   } else if (IS_NEAR(chainId)) {
-    return address.startsWith('0x') ? address : asciiToHex(address);
+    return address.startsWith('0x') ? address : asciiToHex(address, isAddress);
   } else {
     throw new Error(`chain id: ${chainId} not supported`);
   }
@@ -97,19 +95,21 @@ export function getHexAddress(address: string, chainId: number): string {
  * @param input
  * @param hexLength
  */
-export function asciiToHex(input: string): string {
+export function asciiToHex(input: string, isAddress: boolean): string {
   let hexArr = [];
   for (let i = 0; i < input.length; i++) {
     let hex = Number(input.charCodeAt(i)).toString(16);
     hexArr.push(hex);
   }
   let res = hexArr.join('');
-  if (res.length > 40) {
-    res = res.substring(0, 40);
-  } else if (res.length < 40) {
-    let diff = 40 - res.length;
-    for (let i = 0; i < diff; i++) {
-      res = '0' + res;
+  if (isAddress) {
+    if (res.length > 40) {
+      res = res.substring(0, 40);
+    } else if (res.length < 40) {
+      let diff = 40 - res.length;
+      for (let i = 0; i < diff; i++) {
+        res = '0' + res;
+      }
     }
   }
   return '0x' + res;

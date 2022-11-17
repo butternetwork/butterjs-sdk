@@ -10,8 +10,8 @@ import { Contract as Web3Contract } from 'web3-eth-contract';
 import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
 import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
 import {
-  BarterTransactionReceipt,
-  BarterTransactionResponse,
+  ButterTransactionReceipt,
+  ButterTransactionResponse,
 } from '../../types/responseTypes';
 import {
   adaptEthReceipt,
@@ -20,17 +20,17 @@ import {
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
 import { TransferOutOptions } from '../../types';
-import { BarterProviderType } from '../../types/paramTypes';
+import { ButterProviderType } from '../../types/paramTypes';
 import { PromiEvent } from 'web3-core';
 
 export class RelayCrossChainService implements IMapCrossChainService {
   contract: EthersContract | Web3Contract;
-  provider: BarterProviderType;
+  provider: ButterProviderType;
 
   constructor(
     contractAddress: string,
     abi: any,
-    signerOrProvider: BarterProviderType
+    signerOrProvider: ButterProviderType
   ) {
     if (
       signerOrProvider instanceof Signer ||
@@ -63,7 +63,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
     toAddress: string,
     toChainId: string,
     options: TransferOutOptions
-  ): Promise<BarterTransactionResponse> {
+  ): Promise<ButterTransactionResponse> {
     let txHash;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
@@ -83,7 +83,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
             from: fromAddress,
             gas: options.gas,
           });
-      return <BarterTransactionResponse>{
+      return <ButterTransactionResponse>{
         promiReceipt: promiReceipt,
       };
     }
@@ -128,7 +128,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
     toChainId: string,
     amount: string,
     options: TransferOutOptions
-  ): Promise<BarterTransactionResponse> {
+  ): Promise<ButterTransactionResponse> {
     let txHash;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
@@ -145,7 +145,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
           from: fromAddress,
           gas: options.gas,
         });
-      return <BarterTransactionResponse>{
+      return <ButterTransactionResponse>{
         promiReceipt: promiReceipt,
       };
     }
@@ -225,7 +225,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
    */
   async doSetTokenOtherChainDecimals(
     selfTokenAddress: string,
-    chainId: number,
+    chainId: string,
     decimals: number
   ): Promise<string> {
     if (this.contract instanceof EthersContract) {

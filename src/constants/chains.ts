@@ -2,11 +2,11 @@ import { Chain } from '../entities/Chain';
 import { MAP_TEST_NATIVE } from './tokens';
 
 export enum ChainId {
-  MAP = 22776,
-  MAP_TEST = 212,
-  ETH_PRIV = 34434,
-  BSC_TEST = 97,
-  NEAR_TESTNET = 1313161555,
+  MAP = '22776',
+  MAP_TEST = '212',
+  ETH_PRIV = '34434',
+  BSC_TEST = '97',
+  NEAR_TESTNET = '5566818579631833089',
 }
 
 export const MAP_MAINNET_CHAIN = new Chain(
@@ -18,7 +18,7 @@ export const MAP_MAINNET_CHAIN = new Chain(
   'MAP'
 );
 export const MAP_TEST_CHAIN = new Chain(
-  212,
+  ChainId.MAP_TEST,
   'MAP Testnet',
   'http://18.142.54.137:7445',
   'http://18.139.224.21:9001/',
@@ -35,7 +35,7 @@ export const BSC_TEST_CHAIN = new Chain(
 );
 
 export const ETH_PRIV_CHAIN = new Chain(
-  34434,
+  ChainId.ETH_PRIV,
   'Ethereum Private',
   'http://18.138.248.113:8545',
   '',
@@ -44,7 +44,7 @@ export const ETH_PRIV_CHAIN = new Chain(
 );
 
 export const NEAR_TEST_CHAIN = new Chain(
-  1313161555,
+  ChainId.NEAR_TESTNET,
   'Near Testnet',
   'https://rpc.testnet.near.org',
   'https://explorer.testnet.near.org/',
@@ -52,17 +52,17 @@ export const NEAR_TEST_CHAIN = new Chain(
   'NEAR'
 );
 // TODO: return chain info
-export const ID_TO_CHAIN_ID = (id: number): ChainId => {
+export const ID_TO_CHAIN_ID = (id: string): ChainId => {
   switch (id) {
-    case 22776:
+    case '22776':
       return ChainId.MAP;
-    case 212:
+    case '212':
       return ChainId.MAP_TEST;
-    case 97:
+    case '97':
       return ChainId.BSC_TEST;
-    case 34434:
+    case '34434':
       return ChainId.ETH_PRIV;
-    case 1313161555:
+    case '5566818579631833089':
       return ChainId.NEAR_TESTNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
@@ -103,17 +103,17 @@ export enum NativeCurrencyName {
 //   [ChainId.MAP_TEST]: NativeCurrencyName.MAP,
 // };
 
-export const ID_TO_NETWORK_NAME = (id: number): ChainName => {
+export const ID_TO_NETWORK_NAME = (id: string): ChainName => {
   switch (id) {
-    case 22776:
+    case '22776':
       return ChainName.MAP;
-    case 212:
+    case '212':
       return ChainName.MAP_TEST;
-    case 34434:
+    case '34434':
       return ChainName.ETH_PRIV;
-    case 97:
+    case '97':
       return ChainName.BSC_TEST;
-    case 1313161555:
+    case '5566818579631833089':
       return ChainName.NEAR_TESTNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
@@ -138,7 +138,7 @@ export const SUPPORTED_CHAIN_LIST = [
   BSC_TEST_CHAIN,
 ];
 
-export const ID_TO_DEFAULT_PROVIDER = (id: ChainId): string => {
+export const ID_TO_DEFAULT_PROVIDER = (id: string): string => {
   switch (id) {
     case ChainId.MAP:
       return process.env.JSON_RPC_PROVIDER_MAP!;
@@ -268,7 +268,7 @@ export const ID_TO_DEFAULT_PROVIDER = (id: ChainId): string => {
 //   ),
 // };
 
-export const IS_MAP = (id: number): boolean => {
+export const IS_MAP = (id: string): boolean => {
   switch (id) {
     case ChainId.MAP:
     case ChainId.MAP_TEST:
@@ -278,52 +278,52 @@ export const IS_MAP = (id: number): boolean => {
   }
 };
 
-export const IS_NEAR = (id: number): boolean => {
+export const IS_NEAR = (id: string): boolean => {
   switch (id) {
-    case 1:
-    case 3:
-    case 4:
-    case 5:
-    case 42:
-    case 10:
-    case 69:
-    case 97:
-    case 42161:
-    case 421611:
-    case 137:
-    case 80001:
-    case 56:
-    case 22776:
-    case 212:
-    case 34434:
+    case '1':
+    case '3':
+    case '4':
+    case '5':
+    case '42':
+    case '10':
+    case '69':
+    case '97':
+    case '42161':
+    case '421611':
+    case '137':
+    case '80001':
+    case '56':
+    case '22776':
+    case '212':
+    case '34434':
       return false;
-    case 1313161555:
+    case '5566818579631833089':
       return true;
     default:
       throw new Error(`Unsupported chain id: ${id}`);
   }
 };
 
-export const IS_EVM = (id: number): boolean => {
+export const IS_EVM = (id: string): boolean => {
   switch (id) {
-    case 1:
-    case 3:
-    case 4:
-    case 5:
-    case 42:
-    case 10:
-    case 69:
-    case 42161:
-    case 421611:
-    case 137:
-    case 97:
-    case 80001:
-    case 56:
-    case 22776:
-    case 212:
-    case 34434:
+    case '1':
+    case '3':
+    case '4':
+    case '5':
+    case '42':
+    case '10':
+    case '69':
+    case '42161':
+    case '421611':
+    case '137':
+    case '97':
+    case '80001':
+    case '56':
+    case '22776':
+    case '212':
+    case '34434':
       return true;
-    case 1313161555:
+    case '5566818579631833089':
       return false;
     default:
       throw new Error(`Unknown chain id: ${id}`);

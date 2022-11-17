@@ -1,16 +1,16 @@
 import {
-  BarterTransactionReceipt,
-  BarterTransactionResponse,
+  ButterTransactionReceipt,
+  ButterTransactionResponse,
 } from '../types/responseTypes';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
-import { BarterProviderType, BarterReceiptType } from '../types/paramTypes';
+import { ButterProviderType, ButterReceiptType } from '../types/paramTypes';
 import { NearNetworkConfig } from '../types';
 import { Signer } from 'ethers';
 import { Provider } from '@ethersproject/abstract-provider';
 
 export function adaptEthReceipt(
-  transactionReceipt: BarterReceiptType
-): BarterTransactionReceipt {
+  transactionReceipt: ButterReceiptType
+): ButterTransactionReceipt {
   return {
     to: transactionReceipt.to,
     from: transactionReceipt.from,
@@ -23,7 +23,7 @@ export function adaptEthReceipt(
 
 export function adaptNearReceipt(
   finalExecutionOutcome: FinalExecutionOutcome
-): BarterTransactionReceipt {
+): ButterTransactionReceipt {
   console.log('status', finalExecutionOutcome.status);
   return {
     to: finalExecutionOutcome.transaction.receiver_id,
@@ -37,10 +37,10 @@ export function adaptNearReceipt(
 
 export function assembleNearTransactionResponse(
   executionOutcome: FinalExecutionOutcome
-): BarterTransactionResponse {
-  return <BarterTransactionResponse>{
+): ButterTransactionResponse {
+  return <ButterTransactionResponse>{
     hash: executionOutcome.transaction.hash,
-    wait: async (): Promise<BarterTransactionReceipt> => {
+    wait: async (): Promise<ButterTransactionReceipt> => {
       return Promise.resolve(adaptNearReceipt(executionOutcome));
     },
   };
@@ -48,11 +48,11 @@ export function assembleNearTransactionResponse(
 
 export function assembleEVMTransactionResponse(
   transactionHash: string,
-  provider: BarterProviderType
-): BarterTransactionResponse {
-  return <BarterTransactionResponse>{
+  provider: ButterProviderType
+): ButterTransactionResponse {
+  return <ButterTransactionResponse>{
     hash: transactionHash!,
-    wait: async (): Promise<BarterTransactionReceipt> => {
+    wait: async (): Promise<ButterTransactionReceipt> => {
       if (provider instanceof Signer) {
         const receipt = await provider.provider?.waitForTransaction(
           transactionHash

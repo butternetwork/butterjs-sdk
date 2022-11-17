@@ -9,7 +9,7 @@ import { ZERO_ADDRESS } from '../../constants';
  * Near is the main usage of a 'native' currency, i.e. for Near mainnet and all testnets
  */
 export class NearNativeCoin extends NativeCurrency {
-  public constructor(chainId: number) {
+  public constructor(chainId: string) {
     super(
       chainId,
       24,
