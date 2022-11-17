@@ -179,10 +179,13 @@ export async function getTargetTokenAddress(
     TOKEN_REGISTER_ADDRESS_SET[mapChainId]!,
     provider
   );
-  const mapTokenAddress = await tokenRegister.getRelayChainToken(
-    srcToken.chainId.toString(),
-    srcToken
-  );
+  let mapTokenAddress = srcToken.address;
+  if (!IS_MAP(srcToken.chainId)) {
+    mapTokenAddress = await tokenRegister.getRelayChainToken(
+      srcToken.chainId.toString(),
+      srcToken
+    );
+  }
   let targetTokenAddress = mapTokenAddress;
   if (!IS_MAP(targetChainId)) {
     targetTokenAddress = await tokenRegister.getToChainToken(

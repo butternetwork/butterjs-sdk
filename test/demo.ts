@@ -126,8 +126,8 @@ async function demo() {
   // // 3. 获取targetToken
   console.log('');
   const tokenCandidates = await getTokenCandidates(
-    ChainId.BSC_TEST,
     ChainId.NEAR_TESTNET,
+    ChainId.BSC_TEST,
     {
       url: 'http://18.142.54.137:7445',
       chainId: 212,
