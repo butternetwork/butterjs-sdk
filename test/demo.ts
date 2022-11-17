@@ -118,7 +118,7 @@ async function demo() {
   const balance: VaultBalance = await getVaultBalance(
     ChainId.BSC_TEST,
     BSC_TEST_MOST,
-    ChainId.MAP_TEST,
+    ChainId.NEAR_TESTNET,
     provider
   );
   console.log('vault balance', balance);

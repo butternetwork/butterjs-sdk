@@ -8,7 +8,22 @@ export enum ChainId {
   BSC_TEST = '97',
   NEAR_TESTNET = '5566818579631833089',
 }
-
+export const ID_TO_RPC_URL = (id: string): string => {
+  switch (id) {
+    case '22776':
+      return '';
+    case '212':
+      return MAP_TEST_CHAIN.rpc!;
+    case '97':
+      return BSC_TEST_CHAIN.rpc!;
+    case '34434':
+      return ETH_PRIV_CHAIN.rpc!;
+    case '5566818579631833089':
+      return NEAR_TEST_CHAIN.rpc!;
+    default:
+      throw new Error(`Unknown chain id: ${id}`);
+  }
+};
 export const MAP_MAINNET_CHAIN = new Chain(
   ChainId.MAP,
   'MAP Mainnet',

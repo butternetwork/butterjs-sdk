@@ -120,4 +120,10 @@ export class TokenRegister {
       );
     } else return '';
   }
+
+  async checkMintable(tokenAddress: string): Promise<boolean> {
+    if (this.contract instanceof ethers.Contract) {
+      return await this.contract.checkMintable(tokenAddress);
+    } else throw new Error('check mintable error');
+  }
 }

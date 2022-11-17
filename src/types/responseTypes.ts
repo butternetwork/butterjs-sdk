@@ -37,4 +37,5 @@ export type ButterFeeDistribution = {
 export interface VaultBalance {
   token: BaseCurrency; // vault token
   balance: string; // amount in minimal uint
+  isMintable: boolean; // is token mintable, if it is, then there is no need to show balance
 }

@@ -9,11 +9,6 @@ export function getTokenByAddressAndChainId(
 ): BaseCurrency {
   const supportedToken: BaseCurrency[] = ID_TO_SUPPORTED_TOKEN(chainId);
   for (let i = 0; i < supportedToken.length; i++) {
-    console.log(
-      'check',
-      getHexAddress(supportedToken[i]!.address, chainId, false).toLowerCase(),
-      tokenAddress.toLowerCase()
-    );
     if (
       getHexAddress(
         supportedToken[i]!.address,

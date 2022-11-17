@@ -221,4 +221,12 @@ export class EVMCrossChainService implements IMapCrossChainService {
       throw new Error('provided not supported');
     }
   }
+
+  async isMintable(tokenAddress: string): Promise<boolean> {
+    if (this.contract instanceof EthersContract) {
+      return await this.contract.isMintable(tokenAddress);
+    } else {
+      throw new Error('provided not supported');
+    }
+  }
 }
