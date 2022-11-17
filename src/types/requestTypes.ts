@@ -34,7 +34,7 @@ export type SwapOptions = {
 };
 
 export type BridgeOptions = {
-  signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider infor or Web3.js Eth info
+  signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider or Web3.js Eth info
   nearProvider?: NearProviderType; // mandatory when src chain is near
   gas?: string;
 };

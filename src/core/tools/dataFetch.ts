@@ -131,7 +131,6 @@ export async function getVaultBalance(
       );
     }
   }
-  console.log('tochaintoken', toChainTokenAddress, 'id', toChainId);
   return Promise.resolve({
     token: getTokenByAddressAndChainId(toChainTokenAddress, toChainId),
     balance: tokenBalance.toString(),
@@ -139,6 +138,12 @@ export async function getVaultBalance(
   });
 }
 
+/**
+ * get srcToken mapping token on target chain
+ * @param srcToken
+ * @param targetChainId
+ * @param rpcProvider
+ */
 export async function getTargetToken(
   srcToken: BaseCurrency,
   targetChainId: string,
@@ -155,6 +160,12 @@ export async function getTargetToken(
   return getTokenByAddressAndChainId(tokenAddress, targetChainId);
 }
 
+/**
+ * get srcToken mapping token on target chain
+ * @param srcToken
+ * @param targetChainId
+ * @param rpcProvider
+ */
 export async function getTargetTokenAddress(
   srcToken: BaseCurrency,
   targetChainId: string,
@@ -182,6 +193,12 @@ export async function getTargetTokenAddress(
   return targetTokenAddress;
 }
 
+/**
+ * get what token can be bridge from src chain to target chain
+ * @param fromChainId
+ * @param toChainId
+ * @param provider
+ */
 export async function getTokenCandidates(
   fromChainId: string,
   toChainId: string,
@@ -198,6 +215,11 @@ export async function getTokenCandidates(
   return ret;
 }
 
+/**
+ * check if a token is mintable on mos
+ * @param tokenAddress
+ * @param chainId
+ */
 export async function isTokenMintable(
   tokenAddress: string,
   chainId: string

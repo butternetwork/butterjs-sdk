@@ -18,8 +18,7 @@ export class ButterBridge {
    * @param toChainId target chain id
    * @param toAddress target chain receiving address
    * @param amount amount to bridge, in minimal uint. For example wei in Ethereum, yocto in Near
-   * @param signer ethers.js signer, must provide when src chain is EVM chain
-   * @param nearConfig Near config file, must provide when src chain is Near
+   * @param options of bridging, check {@link BridgeOptions} for more details
    * @return BN for gas estimation, ContractCallReceipt for actual contract invocation
    */
   async bridgeToken({
