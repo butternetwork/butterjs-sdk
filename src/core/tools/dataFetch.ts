@@ -252,9 +252,13 @@ export async function isTokenMintable(
       method_name: GET_MCS_TOKENS,
       args_base64: 'e30=',
     });
+    console.log('token address', tokenAddress);
     const mcsTokenSet = JSON.parse(asciiToString(response.result));
     for (let i = 0; i < mcsTokenSet.length; i++) {
-      if (mcsTokenSet[i][0].toLowerCase() === tokenAddress.toLowerCase()) {
+      if (
+        getHexAddress(mcsTokenSet[i][0].toLowerCase(), chainId, false) ===
+        tokenAddress.toLowerCase()
+      ) {
         return true;
       }
     }

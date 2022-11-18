@@ -123,8 +123,8 @@ async function demo() {
   //
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
-    ChainId.BSC_TEST,
-    BSC_TEST_MOST,
+    ChainId.MAP_TEST,
+    MAP_TEST_MOST,
     ChainId.NEAR_TESTNET,
     provider
   );
