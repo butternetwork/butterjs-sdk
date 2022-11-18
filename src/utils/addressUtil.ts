@@ -30,18 +30,13 @@ export function validateAndParseAddressByChainId(
       }
     }
     case ChainId.NEAR_TESTNET: {
-      // address = address.toLowerCase();
-      // const words: string[] = address.split('.');
-      // if (words[words.length - 1] != 'testnet') {
-      //   throw new Error(
-      //     `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
-      //   );
-      // }
-      // if (!/^[a-zA-Z\\.]+$/.test(address)) {
-      //   throw new Error(
-      //     `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
-      //   );
-      // }
+      address = address.toLowerCase();
+      const words: string[] = address.split('.');
+      if (words[words.length - 1] != 'testnet' && address.length != 32) {
+        throw new Error(
+          `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
+        );
+      }
       return address;
     }
     default: {
