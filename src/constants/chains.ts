@@ -43,7 +43,7 @@ export const MAP_TEST_CHAIN = new Chain(
 export const BSC_TEST_CHAIN = new Chain(
   ChainId.BSC_TEST,
   'BSC Testnet',
-  'https://bsc-testnet.public.blastapi.io',
+  'https://data-seed-prebsc-1-s1.binance.org:8545',
   'https://testnet.bscscan.com/',
   'https://files.maplabs.io/bridge/bsc.png',
   'BSC'
