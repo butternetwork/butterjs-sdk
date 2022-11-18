@@ -29,6 +29,9 @@ export function validateAndParseAddressByChainId(
         );
       }
     }
+    // near has two type of accounts
+    // Named accounts, with human readable names such as alice.near.
+    // Implicit accounts, referred by 64 chars (e.g. 98793cd91a3f870fb126f662858[...]).
     case ChainId.NEAR_TESTNET: {
       address = address.toLowerCase();
       const words: string[] = address.split('.');
