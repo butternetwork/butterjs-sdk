@@ -72,11 +72,11 @@ export class NearCrossChainService implements IMapCrossChainService {
       const near: Near = await connect(this.provider);
       account = await near.account(this.provider.fromAccount);
     } else {
-      // TODO: strictly check network id
       // this.provider._networkId;
-      mcsAccountId = this.provider.getAccountId().endsWith('testnet')
-        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-        : '';
+      mcsAccountId =
+        this.provider._networkId === 'testnet'
+          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          : '';
       account = this.provider.account();
     }
     try {
