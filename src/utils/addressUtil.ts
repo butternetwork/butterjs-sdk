@@ -114,3 +114,11 @@ export function asciiToHex(input: string, isAddress: boolean): string {
   }
   return '0x' + res;
 }
+
+export function asciiToString(input: number[]): string {
+  let ret = '';
+  for (let i = 0; i < input.length; i++) {
+    ret += String.fromCharCode(input[i]!);
+  }
+  return ret;
+}

@@ -36,7 +36,7 @@ export class ButterBridge {
       throw new Error(`Signer must be provided for EVM blockchains`);
     }
 
-    // if src chain is near chain, near network config must be provided
+    // if src chain is near chain, near network provider must be provided
     if (
       ChainId.NEAR_TESTNET == fromToken.chainId &&
       options.nearProvider == undefined

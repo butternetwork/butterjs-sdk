@@ -1,8 +1,8 @@
 import { BaseCurrency } from '../../entities';
 import {
-  ChainId,
   ID_TO_CHAIN_ID,
   ID_TO_DEFAULT_PROVIDER,
+  ID_TO_NEAR_NETWORK,
   ID_TO_RPC_URL,
   IS_MAP,
   IS_NEAR,
@@ -13,16 +13,19 @@ import {
 import { ButterFee, VaultBalance } from '../../types/responseTypes';
 import { TokenRegister } from '../../libs/TokenRegister';
 import { BigNumber, ethers } from 'ethers';
-import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
-import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import { getTokenByAddressAndChainId } from '../../utils/tokenUtil';
 import { ButterJsonRpcProvider } from '../../types/paramTypes';
 import { ID_TO_SUPPORTED_TOKEN } from '../../constants/supported_tokens';
-import { getHexAddress } from '../../utils';
+import { asciiToString, getHexAddress } from '../../utils';
 import { VaultToken } from '../../libs/VaultToken';
-import { createMCSInstance } from '../../libs/utils/mcsUtils';
 import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
 import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
+import { connect, Contract as NearContract } from 'near-api-js';
+import {
+  CodeResult,
+  QueryResponseKind,
+} from 'near-api-js/lib/providers/provider';
+import { GET_MCS_TOKENS } from '../../constants/near_method_names';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -236,7 +239,26 @@ export async function isTokenMintable(
     );
     return tokenRegister.checkMintable(tokenAddress);
   } else if (IS_NEAR(chainId)) {
-    return true;
+    const accountId = MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
+    const connectionConfig = {
+      networkId: ID_TO_NEAR_NETWORK(chainId),
+      nodeUrl: ID_TO_RPC_URL(chainId),
+    };
+    const near = await connect(connectionConfig);
+    const response: CodeResult = await near.connection.provider.query({
+      request_type: 'call_function',
+      finality: 'final',
+      account_id: accountId,
+      method_name: GET_MCS_TOKENS,
+      args_base64: 'e30=',
+    });
+    const mcsTokenSet = JSON.parse(asciiToString(response.result));
+    for (let i = 0; i < mcsTokenSet.length; i++) {
+      if (mcsTokenSet[i][0].toLowerCase() === tokenAddress.toLowerCase()) {
+        return true;
+      }
+    }
+    return false;
   } else {
     const mcs = new EVMCrossChainService(
       MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],

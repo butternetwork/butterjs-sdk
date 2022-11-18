@@ -12,6 +12,8 @@ import {
   MAP_TEST_CHAIN,
   MAP_TEST_MOST,
   MCS_CONTRACT_ADDRESS_SET,
+  NEAR_TEST_CHAIN,
+  NEAR_TEST_MOST,
   NEAR_TEST_NATIVE,
   NEAR_TEST_WRAP,
   SUPPORTED_CHAIN_LIST,
@@ -22,6 +24,7 @@ import {
   getTargetToken,
   getVaultBalance,
   getTokenCandidates,
+  isTokenMintable,
 } from '../src/core/tools/dataFetch';
 import {
   ButterFee,
@@ -99,6 +102,10 @@ function test(): PromiEvent<TransactionReceipt> {
 
 console.log(typeof nearConfig);
 async function demo() {
+  console.log(
+    'near response',
+    await isTokenMintable(NEAR_TEST_MOST.address, NEAR_TEST_CHAIN.chainId)
+  );
   console.log('start demo');
   const provider: ButterJsonRpcProvider = {
     url: 'http://18.142.54.137:7445',
@@ -149,21 +156,21 @@ async function demo() {
   // // 3. Bridge(先estimate gas)
   console.log('gas estimate');
   const bridge: ButterBridge = new ButterBridge();
-  const request: BridgeRequestParam = {
-    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: MAP_TEST_MOST,
-    fromChainId: ChainId.MAP_TEST,
-    toChainId: ChainId.BSC_TEST,
-    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('1').toString(),
-    options: { signerOrProvider: web3.eth },
-  };
-  const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
+  // const request: BridgeRequestParam = {
+  //   fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+  //   fromToken: MAP_TEST_MOST,
+  //   fromChainId: ChainId.MAP_TEST,
+  //   toChainId: ChainId.BSC_TEST,
+  //   toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+  //   amount: ethers.utils.parseEther('1').toString(),
+  //   options: { signerOrProvider: web3.eth },
+  // };
+  // const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
 
-  console.log('gas', estimatedGas);
-  const adjustedGas = Math.floor(
-    Number.parseFloat(estimatedGas) * 1.2
-  ).toString();
+  // console.log('gas', estimatedGas);
+  // const adjustedGas = Math.floor(
+  //   Number.parseFloat(estimatedGas) * 1.2
+  // ).toString();
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
@@ -172,7 +179,7 @@ async function demo() {
     fromChainId: ChainId.MAP_TEST,
     toChainId: ChainId.BSC_TEST,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('10')!.toString(),
+    amount: ethers.utils.parseEther('5')!.toString(),
     options: {
       nearProvider: nearConfig,
       signerOrProvider: mapSigner,

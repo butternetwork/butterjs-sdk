@@ -67,6 +67,14 @@ export const NEAR_TEST_CHAIN = new Chain(
   'NEAR'
 );
 // TODO: return chain info
+export const ID_TO_NEAR_NETWORK = (id: string): string => {
+  switch (id) {
+    case '5566818579631833089':
+      return 'testnet';
+    default:
+      throw new Error(`Unknown chain id when querying near network: ${id}`);
+  }
+};
 export const ID_TO_CHAIN_ID = (id: string): ChainId => {
   switch (id) {
     case '22776':
