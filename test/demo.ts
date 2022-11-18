@@ -174,12 +174,12 @@ async function demo() {
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
-    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: MAP_TEST_MOST,
-    fromChainId: ChainId.MAP_TEST,
+    fromAddress: 'xyli.testnet',
+    fromToken: NEAR_TEST_MOST,
+    fromChainId: ChainId.NEAR_TESTNET,
     toChainId: ChainId.BSC_TEST,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('5')!.toString(),
+    amount: parseNearAmount('5')!.toString(),
     options: {
       nearProvider: nearConfig,
       signerOrProvider: mapSigner,
