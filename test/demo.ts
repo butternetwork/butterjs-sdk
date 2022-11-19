@@ -5,6 +5,7 @@ import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   BSC_TEST_CHAIN,
+  BSC_TEST_MAP,
   BSC_TEST_MOST,
   BSC_TEST_NEAR,
   ChainId,
@@ -172,15 +173,15 @@ async function demo() {
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
     fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: MAP_TEST_NATIVE,
-    fromChainId: ChainId.MAP_TEST,
-    toChainId: ChainId.BSC_TEST,
+    fromToken: BSC_TEST_MAP,
+    fromChainId: ChainId.BSC_TEST,
+    toChainId: ChainId.MAP_TEST,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('1')!.toString(),
+    amount: ethers.utils.parseEther('0.8')!.toString(),
     // amount: parseNearAmount('5')!.toString(),
     options: {
       nearProvider: nearConfig,
-      signerOrProvider: mapSigner,
+      signerOrProvider: bscSigner,
       // gas: '100000000000000',
       // gas: adjustedGas,
     },

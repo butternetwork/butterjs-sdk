@@ -148,7 +148,7 @@ export class RelayCrossChainService implements IMapCrossChainService {
       return assembleEVMTransactionResponse(txHash!, this.provider);
     } else {
       const promiReceipt: PromiEvent<Web3TransactionReceipt> =
-        this.contract.methods.transferOutToken(toAddress, toChainId).send({
+        this.contract.methods.transferOutNative(toAddress, toChainId).send({
           value: amount,
           from: fromAddress,
           gas: options.gas,
