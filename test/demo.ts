@@ -7,6 +7,7 @@ import {
   BSC_TEST_CHAIN,
   BSC_TEST_MAP,
   BSC_TEST_MOST,
+  BSC_TEST_NATIVE,
   BSC_TEST_NEAR,
   ChainId,
   ETH_PRIV_NEAR,
@@ -130,8 +131,8 @@ async function demo() {
   //
   // // 3. 获取targetToken
   const tokenCandidates = await getTokenCandidates(
-    ChainId.MAP_TEST,
     ChainId.BSC_TEST,
+    ChainId.MAP_TEST,
     {
       url: 'http://18.142.54.137:7445',
       chainId: 212,

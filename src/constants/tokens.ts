@@ -157,7 +157,7 @@ export const BSC_TEST_WBNB = new Token(
   '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
   18,
   'BNB',
-  'MAP BNB',
+  'wBNB',
   'https://files.maplabs.io/bridge/bnb.png'
 );
 

@@ -115,13 +115,14 @@ export async function getVaultBalance(
     provider
   );
 
+  if (fromToken.isNative) {
+    fromToken = fromToken.wrapped;
+  }
   const mapTokenAddress = IS_MAP(fromChainId)
-    ? fromToken.isNative
-      ? fromToken.wrapped.address
-      : fromToken.address
+    ? fromToken.address
     : await tokenRegister.getRelayChainToken(fromChainId.toString(), fromToken);
-
   const vaultAddress = await tokenRegister.getVaultToken(mapTokenAddress);
+
   if (vaultAddress === ZERO_ADDRESS) {
     throw new Error('vault address not found for token: ' + mapTokenAddress);
   }
