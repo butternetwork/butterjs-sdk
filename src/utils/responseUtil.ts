@@ -24,7 +24,6 @@ export function adaptEthReceipt(
 export function adaptNearReceipt(
   finalExecutionOutcome: FinalExecutionOutcome
 ): ButterTransactionReceipt {
-  console.log('status', finalExecutionOutcome.status);
   return {
     to: finalExecutionOutcome.transaction.receiver_id,
     from: finalExecutionOutcome.transaction.signer_id,

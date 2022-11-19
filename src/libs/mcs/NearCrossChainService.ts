@@ -78,7 +78,6 @@ export class NearCrossChainService implements IMapCrossChainService {
           ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
       account = this.provider.account();
-      console.log('mcs is', mcsAccountId);
     }
     try {
       // the receiving address on Near need be in the format of number array as input

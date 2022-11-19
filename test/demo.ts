@@ -47,7 +47,10 @@ import { parseNearAmount } from 'near-api-js/lib/utils/format';
 import { asciiToHex } from '../src/utils';
 import BN from 'bn.js';
 require('dotenv/config');
-const web3 = new Web3('http://18.142.54.137:7445');
+const web3 = new Web3(
+  'http://18.142.54.137:7445'
+  // 'https://rpc.ankr.com/bsc_testnet_chapel/9a12629301614050e76136dcaf9627f5ef215f86fb1185d908f9d232b8530ef7'
+);
 const account = web3.eth.accounts.privateKeyToAccount(
   '0x' + 'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b'
 );
@@ -113,8 +116,8 @@ async function demo() {
 
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
-    MAP_TEST_NATIVE,
-    ChainId.BSC_TEST,
+    BSC_TEST_NATIVE,
+    ChainId.MAP_TEST,
     ethers.utils.parseEther('100').toString(),
     provider
   );
@@ -123,10 +126,11 @@ async function demo() {
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
     ChainId.MAP_TEST,
-    MAP_TEST_MOST,
+    MAP_TEST_NATIVE,
     ChainId.BSC_TEST,
     provider
   );
+  console.log('from token', MAP_TEST_NATIVE);
   console.log('vault balance', balance);
   //
   // // 3. 获取targetToken
@@ -172,26 +176,26 @@ async function demo() {
   ).toString();
 
   // 3. Bridge(真正的Bridge)
-  const bridgeRequest: BridgeRequestParam = {
-    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: BSC_TEST_MAP,
-    fromChainId: ChainId.BSC_TEST,
-    toChainId: ChainId.MAP_TEST,
-    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('0.8')!.toString(),
-    // amount: parseNearAmount('5')!.toString(),
-    options: {
-      nearProvider: nearConfig,
-      signerOrProvider: bscSigner,
-      // gas: '100000000000000',
-      // gas: adjustedGas,
-    },
-  };
-  const response: ButterTransactionResponse = await bridge.bridgeToken(
-    bridgeRequest
-  );
-  const receipt: ButterTransactionReceipt = await response.wait!();
-  console.log('receipt', receipt);
+  // const bridgeRequest: BridgeRequestParam = {
+  //   fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+  //   fromToken: BSC_TEST_MAP,
+  //   fromChainId: ChainId.BSC_TEST,
+  //   toChainId: ChainId.MAP_TEST,
+  //   toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+  //   amount: ethers.utils.parseEther('0.8')!.toString(),
+  //   // amount: parseNearAmount('5')!.toString(),
+  //   options: {
+  //     nearProvider: nearConfig,
+  //     signerOrProvider: bscSigner,
+  //     // gas: '100000000000000',
+  //     // gas: adjustedGas,
+  //   },
+  // };
+  // const response: ButterTransactionResponse = await bridge.bridgeToken(
+  //   bridgeRequest
+  // );
+  // const receipt: ButterTransactionReceipt = await response.wait!();
+  // console.log('receipt', receipt);
 }
 
 demo()
