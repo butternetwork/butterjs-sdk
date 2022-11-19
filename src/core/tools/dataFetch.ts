@@ -52,8 +52,11 @@ export async function getBridgeFee(
   );
   let feeAmount = '';
   if (IS_MAP(srcToken.chainId)) {
+    const tokenAddress = srcToken.isNative
+      ? srcToken.wrapped.address
+      : srcToken.address;
     feeAmount = await tokenRegister.getTokenFee(
-      srcToken.address,
+      tokenAddress,
       amount,
       targetChain
     );
@@ -112,7 +115,9 @@ export async function getVaultBalance(
   );
 
   const mapTokenAddress = IS_MAP(fromChainId)
-    ? fromToken.address
+    ? fromToken.isNative
+      ? fromToken.wrapped.address
+      : fromToken.address
     : await tokenRegister.getRelayChainToken(fromChainId.toString(), fromToken);
 
   const vaultAddress = await tokenRegister.getVaultToken(mapTokenAddress);

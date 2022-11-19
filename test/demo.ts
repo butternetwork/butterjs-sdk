@@ -9,8 +9,10 @@ import {
   BSC_TEST_NEAR,
   ChainId,
   ETH_PRIV_NEAR,
+  MAP_TEST_BNB,
   MAP_TEST_CHAIN,
   MAP_TEST_MOST,
+  MAP_TEST_NATIVE,
   MCS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_CHAIN,
   NEAR_TEST_MOST,
@@ -109,7 +111,7 @@ async function demo() {
 
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
-    MAP_TEST_MOST,
+    MAP_TEST_NATIVE,
     ChainId.BSC_TEST,
     ethers.utils.parseEther('100').toString(),
     provider
@@ -119,8 +121,8 @@ async function demo() {
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
     ChainId.MAP_TEST,
-    MAP_TEST_MOST,
-    ChainId.NEAR_TESTNET,
+    MAP_TEST_NATIVE,
+    ChainId.BSC_TEST,
     provider
   );
   console.log('vault balance', balance);
