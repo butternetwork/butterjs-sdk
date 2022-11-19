@@ -24,7 +24,6 @@ import {
 import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
 import {
   getBridgeFee,
-  getTargetToken,
   getVaultBalance,
   getTokenCandidates,
   isTokenMintable,

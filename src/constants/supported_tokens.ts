@@ -27,6 +27,27 @@ export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
     case '212':
       return [
         MAP_TEST_MOST,
+        // MAP_TEST_WMAP,
+        MAP_TEST_NEAR,
+        MAP_TEST_BNB,
+        MAP_TEST_NATIVE,
+      ];
+    case '34434':
+      return [];
+    case '5566818579631833089':
+      return [NEAR_TEST_MOST, NEAR_TEST_MAP, NEAR_TEST_NATIVE];
+    case '97':
+      return [BSC_TEST_MOST, BSC_TEST_MAP, BSC_TEST_NATIVE];
+    default:
+      throw new Error(`Unknown chain id: ${id}`);
+  }
+};
+
+export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
+  switch (id) {
+    case '212':
+      return [
+        MAP_TEST_MOST,
         MAP_TEST_WMAP,
         MAP_TEST_NEAR,
         MAP_TEST_BNB,
