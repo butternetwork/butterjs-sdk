@@ -9,6 +9,7 @@ import {
   MCS_CONTRACT_ADDRESS_SET,
   NETWORK_NAME_TO_ID,
   TOKEN_REGISTER_ADDRESS_SET,
+  ZERO_ADDRESS,
 } from '../../constants';
 import { ButterFee, VaultBalance } from '../../types/responseTypes';
 import { TokenRegister } from '../../libs/TokenRegister';
@@ -121,6 +122,9 @@ export async function getVaultBalance(
     : await tokenRegister.getRelayChainToken(fromChainId.toString(), fromToken);
 
   const vaultAddress = await tokenRegister.getVaultToken(mapTokenAddress);
+  if (vaultAddress === ZERO_ADDRESS) {
+    throw new Error('vault address not found for token: ' + mapTokenAddress);
+  }
   const vaultToken = new VaultToken(vaultAddress, provider);
 
   const tokenBalance = await vaultToken.getVaultBalance(toChainId.toString());

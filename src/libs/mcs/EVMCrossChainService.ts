@@ -70,8 +70,8 @@ export class EVMCrossChainService implements IMapCrossChainService {
           tokenAddress,
           toAddress,
           amount,
-          toChainId
-          // { gasLimit: options.gas }
+          toChainId,
+          { gasLimit: options.gas }
         );
       txHash = transferOutTx.hash;
       return assembleEVMTransactionResponse(txHash!, this.provider);

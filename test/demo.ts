@@ -153,36 +153,36 @@ async function demo() {
   // // 3. Bridge(先estimate gas)
   console.log('gas estimate');
   const bridge: ButterBridge = new ButterBridge();
-  // const request: BridgeRequestParam = {
-  //   fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-  //   fromToken: MAP_TEST_MOST,
-  //   fromChainId: ChainId.MAP_TEST,
-  //   toChainId: ChainId.BSC_TEST,
-  //   toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-  //   amount: ethers.utils.parseEther('1').toString(),
-  //   options: { signerOrProvider: web3.eth },
-  // };
-  // const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
+  const request: BridgeRequestParam = {
+    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    fromToken: MAP_TEST_NATIVE,
+    fromChainId: ChainId.MAP_TEST,
+    toChainId: ChainId.BSC_TEST,
+    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    amount: ethers.utils.parseEther('10')!.toString(),
+    options: { signerOrProvider: web3.eth },
+  };
+  const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
 
-  // console.log('gas', estimatedGas);
-  // const adjustedGas = Math.floor(
-  //   Number.parseFloat(estimatedGas) * 1.2
-  // ).toString();
+  console.log('gas', estimatedGas);
+  const adjustedGas = Math.floor(
+    Number.parseFloat(estimatedGas) * 1.2
+  ).toString();
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
     fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: BSC_TEST_MOST,
-    fromChainId: ChainId.BSC_TEST,
-    toChainId: ChainId.NEAR_TESTNET,
-    toAddress: 'xyli.testnet',
-    amount: ethers.utils.parseEther('5')!.toString(),
+    fromToken: MAP_TEST_NATIVE,
+    fromChainId: ChainId.MAP_TEST,
+    toChainId: ChainId.BSC_TEST,
+    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    amount: ethers.utils.parseEther('1')!.toString(),
     // amount: parseNearAmount('5')!.toString(),
     options: {
       nearProvider: nearConfig,
-      signerOrProvider: bscSigner,
+      signerOrProvider: mapSigner,
       // gas: '100000000000000',
-      gas: '300000',
+      // gas: adjustedGas,
     },
   };
   const response: ButterTransactionResponse = await bridge.bridgeToken(

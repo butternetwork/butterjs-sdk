@@ -132,6 +132,13 @@ export class RelayCrossChainService implements IMapCrossChainService {
   ): Promise<ButterTransactionResponse> {
     let txHash;
     if (this.contract instanceof EthersContract) {
+      console.log(
+        'relay transfer out',
+        toAddress,
+        fromAddress,
+        toChainId,
+        amount
+      );
       const transferOutTx: ContractTransaction =
         await this.contract.transferOutNative(toAddress, toChainId, {
           value: amount,
@@ -166,13 +173,14 @@ export class RelayCrossChainService implements IMapCrossChainService {
         toChainId,
         {
           value: amount,
+          from: fromAddress,
         }
       );
       estimatedGas = gas.toString();
     } else {
       const gas = await this.contract.methods
         .transferOutNative(toAddress, toChainId)
-        .estimateGas({ from: fromAddress });
+        .estimateGas({ from: fromAddress, value: amount });
       estimatedGas = gas.toString();
     }
     return estimatedGas;
