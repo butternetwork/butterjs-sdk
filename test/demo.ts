@@ -115,8 +115,8 @@ async function demo() {
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
     BSC_TEST_MOST,
-    ChainId.MAP_TEST,
-    ethers.utils.parseEther('2').toString(),
+    ChainId.NEAR_TESTNET,
+    ethers.utils.parseEther('1').toString(),
     provider
   );
   console.log('bridge fee', fee);
@@ -174,16 +174,18 @@ async function demo() {
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
-    fromAddress: 'xyli.testnet',
-    fromToken: NEAR_TEST_MOST,
-    fromChainId: ChainId.NEAR_TESTNET,
-    toChainId: ChainId.BSC_TEST,
-    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: parseNearAmount('5')!.toString(),
+    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    fromToken: BSC_TEST_MOST,
+    fromChainId: ChainId.BSC_TEST,
+    toChainId: ChainId.NEAR_TESTNET,
+    toAddress: 'xyli.testnet',
+    amount: ethers.utils.parseEther('5')!.toString(),
+    // amount: parseNearAmount('5')!.toString(),
     options: {
       nearProvider: nearConfig,
-      signerOrProvider: mapSigner,
-      gas: '100000000000000',
+      signerOrProvider: bscSigner,
+      // gas: '100000000000000',
+      gas: '300000',
     },
   };
   const response: ButterTransactionResponse = await bridge.bridgeToken(

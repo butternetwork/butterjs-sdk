@@ -51,6 +51,8 @@ export class ButterBridge {
     );
 
     let result;
+
+    // convert near address to hex
     if (IS_NEAR(toChainId)) {
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
