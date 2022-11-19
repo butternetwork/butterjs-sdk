@@ -2,8 +2,8 @@ import invariant from 'tiny-invariant';
 import { Currency } from '../Currency';
 import { NativeCurrency } from '../NativeCurrency';
 import { Token } from '../Token';
-import { WNEAR } from '../wnear';
-import { ZERO_ADDRESS } from '../../constants';
+import { ID_TO_CHAIN_ID, ZERO_ADDRESS } from '../../constants';
+import { WCOIN } from '../wcoin';
 
 /**
  * Near is the main usage of a 'native' currency, i.e. for Near mainnet and all testnets
@@ -21,7 +21,7 @@ export class NearNativeCoin extends NativeCurrency {
   }
 
   public get wrapped(): Token {
-    const wnear = WNEAR[this.chainId];
+    const wnear = WCOIN(this.chainId);
     invariant(!!wnear, 'WRAPPED');
     return wnear;
   }

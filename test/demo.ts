@@ -15,7 +15,6 @@ import {
   NEAR_TEST_CHAIN,
   NEAR_TEST_MOST,
   NEAR_TEST_NATIVE,
-  NEAR_TEST_WRAP,
   SUPPORTED_CHAIN_LIST,
 } from '../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
@@ -115,8 +114,8 @@ async function demo() {
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
     BSC_TEST_MOST,
-    ChainId.NEAR_TESTNET,
-    ethers.utils.parseEther('1').toString(),
+    ChainId.MAP_TEST,
+    ethers.utils.parseEther('100').toString(),
     provider
   );
   console.log('bridge fee', fee);
@@ -133,7 +132,7 @@ async function demo() {
   // // 3. 获取targetToken
   const tokenCandidates = await getTokenCandidates(
     ChainId.MAP_TEST,
-    ChainId.NEAR_TESTNET,
+    ChainId.BSC_TEST,
     {
       url: 'http://18.142.54.137:7445',
       chainId: 212,

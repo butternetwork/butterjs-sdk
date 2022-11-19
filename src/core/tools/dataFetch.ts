@@ -46,43 +46,33 @@ export async function getBridgeFee(
   const mapProvider = new ethers.providers.JsonRpcProvider(
     rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_PROVIDER(mapChainId)
   );
-  let totalFeeBySrcToken: string;
   const tokenRegister = new TokenRegister(
     TOKEN_REGISTER_ADDRESS_SET[chainId]!,
     mapProvider
   );
-  const toMapFeeAmount = await tokenRegister.getTokenFee(
-    getHexAddress(srcToken.address, srcToken.chainId, true),
-    amount,
-    rpcProvider.chainId.toString()
+  const mapTokenAddress = await tokenRegister.getRelayChainToken(
+    srcToken.chainId.toString(),
+    srcToken
   );
 
-  totalFeeBySrcToken = toMapFeeAmount;
-  if (!IS_MAP(targetChain)) {
-    const mapTokenAddress = await tokenRegister.getRelayChainToken(
-      srcToken.chainId.toString(),
-      srcToken
-    );
-    const adjustedAmount = await tokenRegister.getRelayChainAmount(
-      srcToken,
-      srcToken.chainId.toString(),
-      BigNumber.from(amount).sub(BigNumber.from(toMapFeeAmount)).toString()
-    );
+  const relayChainAmount = await tokenRegister.getRelayChainAmount(
+    mapTokenAddress,
+    srcToken.chainId.toString(),
+    amount
+  );
 
-    const feeAmount = await tokenRegister.getTokenFee(
-      mapTokenAddress,
-      adjustedAmount,
-      targetChain.toString()
-    );
-
-    totalFeeBySrcToken = BigNumber.from(totalFeeBySrcToken)
-      .add(BigNumber.from(feeAmount))
-      .toString();
-  }
+  const feeAmountInMappingToken = await tokenRegister.getTokenFee(
+    mapTokenAddress,
+    amount,
+    targetChain
+  );
+  const feeAmount = BigNumber.from(feeAmountInMappingToken).mul(
+    BigNumber.from(amount).div(relayChainAmount)
+  );
 
   return Promise.resolve({
     feeToken: srcToken,
-    amount: totalFeeBySrcToken.toString(),
+    amount: feeAmount.toString(),
   });
 }
 
@@ -214,7 +204,10 @@ export async function getTokenCandidates(
   const fromChainTokenList = ID_TO_SUPPORTED_TOKEN(fromChainId);
   for (let i = 0; i < fromChainTokenList.length; i++) {
     const token: BaseCurrency = fromChainTokenList[i]!;
-    if ((await getTargetTokenAddress(token, toChainId, provider)) != '0x') {
+    const tokenToCheck: BaseCurrency = token.isNative ? token.wrapped : token;
+    if (
+      (await getTargetTokenAddress(tokenToCheck, toChainId, provider)) != '0x'
+    ) {
       ret.push(token);
     }
   }

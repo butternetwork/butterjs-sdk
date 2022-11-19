@@ -2,8 +2,9 @@ import invariant from 'tiny-invariant';
 import { Currency } from '../Currency';
 import { NativeCurrency } from '../NativeCurrency';
 import { Token } from '../Token';
-import { WETH9 } from '../weth9';
-import { ZERO_ADDRESS } from '../../constants';
+import { WCOIN } from '../wcoin';
+import { ChainId, ID_TO_CHAIN_ID, ZERO_ADDRESS } from '../../constants';
+import { BaseCurrency } from '../BaseCurrency';
 
 /**
  * EVMNativCoin is the main usage of a 'native' currency, i.e. for Ethereum mainnet and all testnets
@@ -20,7 +21,7 @@ export class EVMNativeCoin extends NativeCurrency {
   }
 
   public get wrapped(): Token {
-    const weth9 = WETH9[this.chainId];
+    const weth9 = WCOIN(this.chainId);
     invariant(!!weth9, 'WRAPPED');
     return weth9;
   }

@@ -88,13 +88,13 @@ export class TokenRegister {
   }
 
   async getRelayChainAmount(
-    token: BaseCurrency,
+    tokenAddress: string,
     fromChain: string,
     amount: string
   ): Promise<string> {
     if (this.contract instanceof ethers.Contract) {
       return await this.contract.getRelayChainAmount(
-        getHexAddress(token.address, token.chainId, true),
+        tokenAddress,
         fromChain,
         amount
       );
