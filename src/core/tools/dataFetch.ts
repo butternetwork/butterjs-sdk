@@ -50,26 +50,34 @@ export async function getBridgeFee(
     TOKEN_REGISTER_ADDRESS_SET[chainId]!,
     mapProvider
   );
-  const mapTokenAddress = await tokenRegister.getRelayChainToken(
-    srcToken.chainId.toString(),
-    srcToken
-  );
+  let feeAmount = '';
+  if (IS_MAP(srcToken.chainId)) {
+    feeAmount = await tokenRegister.getTokenFee(
+      srcToken.address,
+      amount,
+      targetChain
+    );
+  } else {
+    const mapTokenAddress = await tokenRegister.getRelayChainToken(
+      srcToken.chainId.toString(),
+      srcToken
+    );
 
-  const relayChainAmount = await tokenRegister.getRelayChainAmount(
-    mapTokenAddress,
-    srcToken.chainId.toString(),
-    amount
-  );
+    const relayChainAmount = await tokenRegister.getRelayChainAmount(
+      mapTokenAddress,
+      srcToken.chainId.toString(),
+      amount
+    );
 
-  const feeAmountInMappingToken = await tokenRegister.getTokenFee(
-    mapTokenAddress,
-    amount,
-    targetChain
-  );
-  const feeAmount = BigNumber.from(feeAmountInMappingToken).mul(
-    BigNumber.from(amount).div(relayChainAmount)
-  );
-
+    const feeAmountInMappingToken = await tokenRegister.getTokenFee(
+      mapTokenAddress,
+      amount,
+      targetChain
+    );
+    feeAmount = BigNumber.from(feeAmountInMappingToken)
+      .mul(BigNumber.from(amount).div(relayChainAmount))
+      .toString();
+  }
   return Promise.resolve({
     feeToken: srcToken,
     amount: feeAmount.toString(),

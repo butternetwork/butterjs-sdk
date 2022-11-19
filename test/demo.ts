@@ -101,10 +101,6 @@ function test(): PromiEvent<TransactionReceipt> {
 
 console.log(typeof nearConfig);
 async function demo() {
-  console.log(
-    'near response',
-    await isTokenMintable(NEAR_TEST_MOST.address, NEAR_TEST_CHAIN.chainId)
-  );
   console.log('start demo');
   const provider: ButterJsonRpcProvider = {
     url: 'http://18.142.54.137:7445',
@@ -113,8 +109,8 @@ async function demo() {
 
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
-    BSC_TEST_MOST,
-    ChainId.MAP_TEST,
+    MAP_TEST_MOST,
+    ChainId.BSC_TEST,
     ethers.utils.parseEther('100').toString(),
     provider
   );
