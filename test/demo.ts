@@ -160,7 +160,7 @@ async function demo() {
     fromChainId: ChainId.MAP_TEST,
     toChainId: ChainId.BSC_TEST,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('10')!.toString(),
+    amount: ethers.utils.parseEther('1')!.toString(),
     options: { signerOrProvider: web3.eth },
   };
   const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
