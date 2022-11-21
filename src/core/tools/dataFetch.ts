@@ -72,15 +72,14 @@ export async function getBridgeFee(
       srcToken.chainId.toString(),
       amount
     );
-
     const feeAmountInMappingToken = await tokenRegister.getTokenFee(
       mapTokenAddress,
       amount,
       targetChain
     );
-    feeAmount = BigNumber.from(feeAmountInMappingToken)
-      .mul(BigNumber.from(amount).div(relayChainAmount))
-      .toString();
+    const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
+    const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
+    feeAmount = feeAmountBN.mul(ratio).toString();
   }
   return Promise.resolve({
     feeToken: srcToken,

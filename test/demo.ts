@@ -9,6 +9,7 @@ import {
   BSC_TEST_MOST,
   BSC_TEST_NATIVE,
   BSC_TEST_NEAR,
+  BSC_TEST_WBNB,
   ChainId,
   ETH_PRIV_NEAR,
   MAP_TEST_BNB,
@@ -117,7 +118,7 @@ async function demo() {
   const fee: ButterFee = await getBridgeFee(
     BSC_TEST_NATIVE,
     ChainId.MAP_TEST,
-    ethers.utils.parseEther('100').toString(),
+    ethers.utils.parseEther('0.01').toString(),
     provider
   );
   console.log('bridge fee', fee);
@@ -160,9 +161,9 @@ async function demo() {
   const bridge: ButterBridge = new ButterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: MAP_TEST_NATIVE,
-    fromChainId: ChainId.MAP_TEST,
-    toChainId: ChainId.BSC_TEST,
+    fromToken: BSC_TEST_NATIVE,
+    fromChainId: ChainId.BSC_TEST,
+    toChainId: ChainId.MAP_TEST,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
     amount: ethers.utils.parseEther('1')!.toString(),
     options: { signerOrProvider: web3.eth },

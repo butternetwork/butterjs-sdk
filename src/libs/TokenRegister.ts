@@ -79,6 +79,9 @@ export class TokenRegister {
     fromChain: string,
     fromToken: BaseCurrency
   ): Promise<string> {
+    if (fromToken.isNative) {
+      fromToken = fromToken.wrapped;
+    }
     if (this.contract instanceof ethers.Contract) {
       return await this.contract.getRelayChainToken(
         fromChain,
