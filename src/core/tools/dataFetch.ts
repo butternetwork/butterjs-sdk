@@ -7,7 +7,6 @@ import {
   IS_MAP,
   IS_NEAR,
   MCS_CONTRACT_ADDRESS_SET,
-  NETWORK_NAME_TO_ID,
   TOKEN_REGISTER_ADDRESS_SET,
   ZERO_ADDRESS,
 } from '../../constants';
@@ -21,12 +20,15 @@ import { asciiToString, getHexAddress } from '../../utils';
 import { VaultToken } from '../../libs/VaultToken';
 import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
 import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
-import { connect, Contract as NearContract } from 'near-api-js';
-import {
-  CodeResult,
-  QueryResponseKind,
-} from 'near-api-js/lib/providers/provider';
+import { connect } from 'near-api-js';
+import { CodeResult } from 'near-api-js/lib/providers/provider';
 import { GET_MCS_TOKENS } from '../../constants/near_method_names';
+import {
+  batchGetRelayChainToken,
+  batchGetToChainToken,
+} from '../../utils/batchRequestUtils';
+import Web3 from 'web3';
+import TokenRegisterMetadata from '../../abis/TokenRegister.json';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -212,7 +214,7 @@ export async function getTargetTokenAddress(
  * @param toChainId
  * @param provider
  */
-export async function getTokenCandidates(
+export async function getTokenCandidatesOneByOne(
   fromChainId: string,
   toChainId: string,
   provider: ButterJsonRpcProvider
@@ -229,6 +231,67 @@ export async function getTokenCandidates(
     }
   }
   return ret;
+}
+
+/**
+ * get token candidates with one transaction call
+ * @param fromChainId
+ * @param toChainId
+ * @param provider
+ */
+export async function getTokenCandidates(
+  fromChainId: string,
+  toChainId: string,
+  provider: ButterJsonRpcProvider
+): Promise<BaseCurrency[]> {
+  const mapUrl = provider.url
+    ? provider.url
+    : ID_TO_DEFAULT_PROVIDER(provider.chainId.toString());
+  const web3 = new Web3(mapUrl);
+
+  const tokenRegisterContract = new web3.eth.Contract(
+    TokenRegisterMetadata.abi as any,
+    TOKEN_REGISTER_ADDRESS_SET[provider.chainId.toString()]
+  );
+
+  let tokenArr = ID_TO_SUPPORTED_TOKEN(fromChainId).map(
+    (token: BaseCurrency) => {
+      if (IS_NEAR(token.chainId)) {
+        if (token.isNative) {
+          return getHexAddress(token.wrapped.address, token.chainId, false);
+        } else return getHexAddress(token.address, token.chainId, false);
+      } else {
+        if (token.isNative) {
+          return token.wrapped.address;
+        } else return token.address;
+      }
+    }
+  );
+  if (!IS_MAP(fromChainId)) {
+    tokenArr = await batchGetRelayChainToken(
+      tokenRegisterContract,
+      fromChainId,
+      tokenArr,
+      mapUrl
+    );
+  }
+
+  if (IS_MAP(toChainId)) {
+    return ID_TO_SUPPORTED_TOKEN(fromChainId);
+  }
+  const toChainTokenList = await batchGetToChainToken(
+    tokenRegisterContract,
+    tokenArr,
+    toChainId,
+    mapUrl
+  );
+  let supportedFromChainTokenArr: BaseCurrency[] = [];
+  for (let i = 0; i < toChainTokenList.length; i++) {
+    if (toChainTokenList[i] != null && toChainTokenList[i] != '0x') {
+      supportedFromChainTokenArr.push(ID_TO_SUPPORTED_TOKEN(fromChainId)[i]!);
+    }
+  }
+  return supportedFromChainTokenArr;
 }
 
 /**

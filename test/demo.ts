@@ -134,6 +134,7 @@ async function demo() {
   console.log('vault balance', balance);
   //
   // // 3. 获取targetToken
+  const now = Date.now();
   const tokenCandidates = await getTokenCandidates(
     ChainId.BSC_TEST,
     ChainId.MAP_TEST,
@@ -142,7 +143,7 @@ async function demo() {
       chainId: 212,
     }
   );
-  console.log('token candidates', tokenCandidates);
+  console.log('token candidates', tokenCandidates, Date.now() - now);
 
   //
   // // 2.a approve spend token if necessary
