@@ -1,12 +1,16 @@
 import { getAddress } from '@ethersproject/address';
 import {
   ChainId,
+  ID_TO_NEAR_NETWORK,
   ID_TO_NETWORK_NAME,
+  ID_TO_RPC_URL,
   IS_EVM,
   IS_NEAR,
 } from '../constants/chains';
 import { Token } from '../entities/Token';
 import { ZERO_ADDRESS } from '../constants';
+import { connect } from 'near-api-js';
+import { NearAccountState } from '../types/responseTypes';
 
 /**
  * Validates an address and returns the parsed (checksummed) version of that address
@@ -30,7 +34,7 @@ export function validateAndParseAddressByChainId(
       }
     }
     // near has two type of accounts
-    // Named accounts, with human readable names such as alice.near.
+    // Named accounts, with human-readable names such as alice.near.
     // Implicit accounts, referred by 64 chars (e.g. 98793cd91a3f870fb126f662858[...]).
     case ChainId.NEAR_TESTNET: {
       address = address.toLowerCase();
@@ -45,6 +49,42 @@ export function validateAndParseAddressByChainId(
     default: {
       throw new Error(`${ID_TO_NETWORK_NAME(chainId)} is not supported`);
     }
+  }
+}
+
+/**
+ * Near account rules
+ * minimum length is 2
+ * maximum length is 64
+ * Account ID consists of Account ID parts separated by .
+ * Account ID part consists of lowercase alphanumeric symbols separated by either _ or -.
+ * Account ID that is 64 characters long and consists of lowercase hex characters is a specific implicit account ID.
+ * @param accountId
+ * @param chainId
+ */
+export async function verifyNearAccountId(
+  accountId: string,
+  chainId: string
+): Promise<NearAccountState> {
+  const connectionConfig = {
+    networkId: ID_TO_NEAR_NETWORK(chainId),
+    nodeUrl: ID_TO_RPC_URL(chainId),
+  };
+  const near = await connect(connectionConfig);
+  const account = await near.account(accountId);
+  try {
+    return {
+      isValid: true,
+      state: await account.state(),
+    };
+  } catch (e) {
+    // @ts-ignore
+    console.log(e.message);
+    return {
+      isValid: false,
+      // @ts-ignore
+      errMsg: e.message,
+    };
   }
 }
 

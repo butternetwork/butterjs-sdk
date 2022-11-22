@@ -44,7 +44,7 @@ import { BaseCurrency } from '../src/entities';
 import { WebsocketProvider } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
-import { asciiToHex } from '../src/utils';
+import { asciiToHex, verifyNearAccountId } from '../src/utils';
 import BN from 'bn.js';
 require('dotenv/config');
 const web3 = new Web3(
@@ -109,11 +109,11 @@ function test(): PromiEvent<TransactionReceipt> {
 console.log(typeof nearConfig);
 async function demo() {
   console.log('start demo');
+  console.log(await verifyNearAccountId('xyli.testnet', ChainId.NEAR_TESTNET));
   const provider: ButterJsonRpcProvider = {
     url: 'http://18.142.54.137:7445',
     chainId: 212,
   };
-
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
     BSC_TEST_NATIVE,
@@ -177,26 +177,26 @@ async function demo() {
   ).toString();
 
   // 3. Bridge(真正的Bridge)
-  // const bridgeRequest: BridgeRequestParam = {
-  //   fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-  //   fromToken: BSC_TEST_MAP,
-  //   fromChainId: ChainId.BSC_TEST,
-  //   toChainId: ChainId.MAP_TEST,
-  //   toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-  //   amount: ethers.utils.parseEther('0.8')!.toString(),
-  //   // amount: parseNearAmount('5')!.toString(),
-  //   options: {
-  //     nearProvider: nearConfig,
-  //     signerOrProvider: bscSigner,
-  //     // gas: '100000000000000',
-  //     // gas: adjustedGas,
-  //   },
-  // };
-  // const response: ButterTransactionResponse = await bridge.bridgeToken(
-  //   bridgeRequest
-  // );
-  // const receipt: ButterTransactionReceipt = await response.wait!();
-  // console.log('receipt', receipt);
+  const bridgeRequest: BridgeRequestParam = {
+    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    fromToken: BSC_TEST_MOST,
+    fromChainId: ChainId.BSC_TEST,
+    toChainId: ChainId.NEAR_TESTNET,
+    toAddress: 'xyli.testnet',
+    amount: ethers.utils.parseEther('0.8')!.toString(),
+    // amount: parseNearAmount('5')!.toString(),
+    options: {
+      nearProvider: nearConfig,
+      signerOrProvider: bscSigner,
+      // gas: '100000000000000',
+      // gas: adjustedGas,
+    },
+  };
+  const response: ButterTransactionResponse = await bridge.bridgeToken(
+    bridgeRequest
+  );
+  const receipt: ButterTransactionReceipt = await response.wait!();
+  console.log('receipt', receipt);
 }
 
 demo()

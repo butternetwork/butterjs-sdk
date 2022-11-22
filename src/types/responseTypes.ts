@@ -5,6 +5,7 @@ import {
   PromiEvent,
   TransactionReceipt as Web3TransactionReceipt,
 } from 'web3-core';
+import { AccountView } from 'near-api-js/lib/providers/provider';
 
 export interface ButterTransactionReceipt {
   to: string;
@@ -34,6 +35,11 @@ export type ButterFeeDistribution = {
   lp?: number;
 };
 
+export type NearAccountState = {
+  isValid: boolean;
+  state?: AccountView;
+  errMsg?: string;
+};
 export interface VaultBalance {
   token: BaseCurrency; // vault token
   balance: string; // amount in minimal uint
