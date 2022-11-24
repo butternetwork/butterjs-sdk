@@ -109,7 +109,12 @@ function test(): PromiEvent<TransactionReceipt> {
 console.log(typeof nearConfig);
 async function demo() {
   console.log('start demo');
-  console.log(await verifyNearAccountId('xyli.testnet', ChainId.NEAR_TESTNET));
+  const nearAccountState = await verifyNearAccountId(
+    'xyli.testnet',
+    ChainId.NEAR_TESTNET
+  );
+  console.log(nearAccountState);
+
   const provider: ButterJsonRpcProvider = {
     url: 'http://18.142.54.137:7445',
     chainId: 212,
