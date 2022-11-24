@@ -20,7 +20,7 @@ export const BSC_TEST_NATIVE = new EVMNativeCoin(
 export const MAP_TEST_NATIVE = new EVMNativeCoin(
   ChainId.MAP_TEST,
   18,
-  'MAP',
+  'MAPO',
   'MAP Protocol',
   'https://files.maplabs.io/bridge/map.png'
 );
@@ -120,8 +120,8 @@ export const MAP_TEST_WMAP = new Token(
   ChainId.MAP_TEST,
   '0x2eD27dF9B4c903aB53666CcA59AFB431F7D15e91',
   18,
-  'wMAP',
-  'Wrapped MAP',
+  'wMAPO',
+  'Wrapped MAPO',
   'https://files.maplabs.io/bridge/map.png'
 );
 
@@ -129,8 +129,8 @@ export const BSC_TEST_MAP = new Token(
   ChainId.BSC_TEST,
   '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273',
   18,
-  'MAP',
-  'BSC MAP',
+  'MAPO',
+  'BSC MAPO',
   'https://files.maplabs.io/bridge/map.png'
 );
 
@@ -138,8 +138,8 @@ export const NEAR_TEST_MAP = new Token(
   ChainId.NEAR_TESTNET,
   'map.mos2.mfac.maplabs.testnet',
   24,
-  'MAP',
-  'NEAR MAP',
+  'MAPO',
+  'NEAR MAPO',
   'https://files.maplabs.io/bridge/map.png'
 );
 
@@ -148,7 +148,7 @@ export const MAP_TEST_BNB = new Token(
   '0xc0fAa9255A4099D50C2b356bFbD440B69359cEa3',
   18,
   'BNB',
-  'MAP BNB',
+  'MAPO BNB',
   'https://files.maplabs.io/bridge/bnb.png'
 );
 
@@ -175,6 +175,6 @@ export const MAP_TEST_NEAR = new Token(
   '0x9a5a085F5ffF09e922149426CbF6892F7df1dF79',
   18,
   'NEAR',
-  'MAP NEAR',
+  'MAPO NEAR',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );

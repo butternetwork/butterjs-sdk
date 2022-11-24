@@ -1,11 +1,16 @@
 import { ChainId, IS_EVM, IS_NEAR } from '../../constants/chains';
-import { getHexAddress, validateAndParseAddressByChainId } from '../../utils';
+import {
+  getHexAddress,
+  validateAndParseAddressByChainId,
+  verifyNearAccountId,
+} from '../../utils';
 import { BridgeRequestParam } from '../../types/requestTypes';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
 import {
   ButterTransactionReceipt,
   ButterTransactionResponse,
+  NearAccountState,
 } from '../../types/responseTypes';
 import BN from 'bn.js';
 import { hexlify } from 'ethers/lib/utils';
@@ -54,6 +59,13 @@ export class ButterBridge {
 
     // convert near address to hex
     if (IS_NEAR(toChainId)) {
+      const accountState: NearAccountState = await verifyNearAccountId(
+        toAddress,
+        toChainId
+      );
+      if (!accountState.isValid) {
+        throw new Error(accountState.errMsg);
+      }
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
     if (fromToken.isNative) {
@@ -108,6 +120,14 @@ export class ButterBridge {
     );
 
     if (IS_NEAR(toChainId)) {
+      const accountState: NearAccountState = await verifyNearAccountId(
+        toAddress,
+        toChainId
+      );
+      if (!accountState.isValid) {
+        throw new Error(accountState.errMsg);
+      }
+
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
 
