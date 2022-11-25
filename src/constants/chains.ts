@@ -164,11 +164,11 @@ export const SUPPORTED_CHAIN_LIST = [
 export const ID_TO_DEFAULT_PROVIDER = (id: string): string => {
   switch (id) {
     case ChainId.MAP:
-      return process.env.JSON_RPC_PROVIDER_MAP!;
+      return MAP_MAINNET_CHAIN.rpc!;
     case ChainId.MAP_TEST:
-      return 'http://18.142.54.137:7445';
+      return MAP_TEST_CHAIN.rpc!;
     case ChainId.ETH_PRIV:
-      return process.env.JSON_RPC_PROVIDER_ETH_PRIV!;
+      return ETH_PRIV_CHAIN.rpc!;
     case ChainId.BSC_TEST:
       return BSC_TEST_CHAIN.rpc!;
     default:
