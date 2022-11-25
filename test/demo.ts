@@ -48,7 +48,7 @@ import { asciiToHex, verifyNearAccountId } from '../src/utils';
 import BN from 'bn.js';
 require('dotenv/config');
 const web3 = new Web3(
-  'http://18.142.54.137:7445'
+  'https://testnet-rpc.maplabs.io'
   // 'https://rpc.ankr.com/bsc_testnet_chapel/9a12629301614050e76136dcaf9627f5ef215f86fb1185d908f9d232b8530ef7'
 );
 const account = web3.eth.accounts.privateKeyToAccount(
@@ -116,7 +116,7 @@ async function demo() {
   console.log(nearAccountState);
 
   const provider: ButterJsonRpcProvider = {
-    url: 'http://18.142.54.137:7445',
+    url: 'https://testnet-rpc.maplabs.io',
     chainId: 212,
   };
   // 1. 获取费用信息
@@ -144,7 +144,7 @@ async function demo() {
     ChainId.BSC_TEST,
     ChainId.MAP_TEST,
     {
-      url: 'http://18.142.54.137:7445',
+      url: 'https://testnet-rpc.maplabs.io',
       chainId: 212,
     }
   );

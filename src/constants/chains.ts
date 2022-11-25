@@ -35,7 +35,7 @@ export const MAP_MAINNET_CHAIN = new Chain(
 export const MAP_TEST_CHAIN = new Chain(
   ChainId.MAP_TEST,
   'MAP Testnet',
-  'http://18.142.54.137:7445',
+  'https://testnet-rpc.maplabs.io',
   'http://18.139.224.21:9001/',
   'https://files.maplabs.io/bridge/map.png',
   'MAP'

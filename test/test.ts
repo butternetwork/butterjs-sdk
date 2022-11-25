@@ -21,7 +21,6 @@ import {
   MAP_TEST_NEAR,
   MCS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_NATIVE,
-  NEAR_TEST_WRAP,
 } from '../src/constants';
 import BN from 'bn.js';
 import { getBridgeFee, getVaultBalance } from '../src/core/tools/dataFetch';
@@ -32,7 +31,7 @@ import { TRANSFER_OUT_TOKEN } from '../src/constants/near_method_names';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 
 const mapProvider = new ethers.providers.JsonRpcProvider(
-  'http://18.142.54.137:7445',
+  'https://testnet-rpc.maplabs.io',
   212
 );
 const mapSigner = new ethers.Wallet(
@@ -83,7 +82,7 @@ async function main() {
     },
     mapNetwork: 'map-testnet',
     mapSigner: mapSigner,
-    srcToken: NEAR_TEST_WRAP,
+    srcToken: NEAR_TEST_NATIVE,
     targetToken: BSC_TEST_NEAR,
     mapToken: MAP_TEST_NEAR,
     nearConfig,
