@@ -4,6 +4,9 @@ import { connect, KeyPair, keyStores, WalletConnection } from 'near-api-js';
 import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
+  BSC_MAINNET_CHAIN,
+  BSC_MAINNET_NATIVE,
+  BSC_MAINNET_WBNB,
   BSC_TEST_CHAIN,
   BSC_TEST_MAP,
   BSC_TEST_MOST,
@@ -11,6 +14,8 @@ import {
   BSC_TEST_NEAR,
   BSC_TEST_WBNB,
   ChainId,
+  MAP_MAINNET_CHAIN,
+  MAP_MAINNET_NATIVE,
   MAP_TEST_BNB,
   MAP_TEST_CHAIN,
   MAP_TEST_MOST,
@@ -47,7 +52,7 @@ import { asciiToHex, verifyNearAccountId } from '../src/utils';
 import BN from 'bn.js';
 require('dotenv/config');
 const web3 = new Web3(
-  'https://testnet-rpc.maplabs.io'
+  MAP_MAINNET_CHAIN.rpc!
   // 'https://rpc.ankr.com/bsc_testnet_chapel/9a12629301614050e76136dcaf9627f5ef215f86fb1185d908f9d232b8530ef7'
 );
 const account = web3.eth.accounts.privateKeyToAccount(
@@ -68,8 +73,8 @@ const nearConfig = new NearNetworkConfig(
 );
 
 const bscProvider = new ethers.providers.JsonRpcProvider(
-  BSC_TEST_CHAIN.rpc,
-  Number.parseInt(BSC_TEST_CHAIN.chainId)
+  BSC_MAINNET_CHAIN.rpc,
+  Number.parseInt(BSC_MAINNET_CHAIN.chainId)
 );
 const bscSigner = new ethers.Wallet(
   'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
@@ -77,8 +82,8 @@ const bscSigner = new ethers.Wallet(
 );
 
 const mapProvider = new ethers.providers.JsonRpcProvider(
-  MAP_TEST_CHAIN.rpc,
-  Number.parseInt(MAP_TEST_CHAIN.chainId)
+  MAP_MAINNET_CHAIN.rpc,
+  Number.parseInt(MAP_MAINNET_CHAIN.chainId)
 );
 const mapSigner = new ethers.Wallet(
   'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
@@ -108,43 +113,38 @@ function test(): PromiEvent<TransactionReceipt> {
 console.log(typeof nearConfig);
 async function demo() {
   console.log('start demo');
-  const nearAccountState = await verifyNearAccountId(
-    'xyli.testnet',
-    ChainId.NEAR_TESTNET
-  );
-  console.log(nearAccountState);
 
   const provider: ButterJsonRpcProvider = {
-    url: 'https://testnet-rpc.maplabs.io',
-    chainId: 212,
+    url: MAP_MAINNET_CHAIN.rpc,
+    chainId: Number.parseInt(MAP_MAINNET_CHAIN.chainId),
   };
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
-    BSC_TEST_NATIVE,
-    ChainId.MAP_TEST,
+    BSC_MAINNET_NATIVE,
+    ChainId.MAP_MAINNET,
     ethers.utils.parseEther('0.01').toString(),
     provider
   );
   console.log('bridge fee', fee);
   //
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
-  const balance: VaultBalance = await getVaultBalance(
-    ChainId.MAP_TEST,
-    MAP_TEST_NATIVE,
-    ChainId.BSC_TEST,
-    provider
-  );
-  console.log('from token', MAP_TEST_NATIVE);
-  console.log('vault balance', balance);
-  //
+  // const balance: VaultBalance = await getVaultBalance(
+  //   ChainId.MAP_MAINNET,
+  //   MAP_MAINNET_NATIVE,
+  //   ChainId.BSC_MAINNET,
+  //   provider
+  // );
+  // console.log('from token', MAP_MAINNET_NATIVE);
+  // console.log('vault balance', balance);
+  // //
   // // 3. 获取targetToken
   const now = Date.now();
   const tokenCandidates = await getTokenCandidates(
-    ChainId.BSC_TEST,
-    ChainId.MAP_TEST,
+    ChainId.BSC_MAINNET,
+    ChainId.MAP_MAINNET,
     {
-      url: 'https://testnet-rpc.maplabs.io',
-      chainId: 212,
+      url: MAP_MAINNET_CHAIN.rpc,
+      chainId: Number.parseInt(MAP_MAINNET_CHAIN.chainId),
     }
   );
   console.log('token candidates', tokenCandidates, Date.now() - now);
@@ -156,7 +156,7 @@ async function demo() {
   //   mapSigner,
   //   MAP_TEST_MOST,
   //   '1',
-  //   MCS_CONTRACT_ADDRESS_SET[ChainId.MAP_TEST],
+  //   MCS_CONTRACT_ADDRESS_SET[ChainId.MAP_MAINNET],
   //   true
   // );
   // console.log('approved');
@@ -166,9 +166,9 @@ async function demo() {
   const bridge: ButterBridge = new ButterBridge();
   const request: BridgeRequestParam = {
     fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: BSC_TEST_NATIVE,
-    fromChainId: ChainId.BSC_TEST,
-    toChainId: ChainId.MAP_TEST,
+    fromToken: BSC_MAINNET_NATIVE,
+    fromChainId: ChainId.BSC_MAINNET,
+    toChainId: ChainId.MAP_MAINNET,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
     amount: ethers.utils.parseEther('1')!.toString(),
     options: { signerOrProvider: web3.eth },
@@ -183,8 +183,8 @@ async function demo() {
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
     fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: BSC_TEST_MOST,
-    fromChainId: ChainId.BSC_TEST,
+    fromToken: BSC_MAINNET_WBNB,
+    fromChainId: ChainId.BSC_MAINNET,
     toChainId: ChainId.NEAR_TESTNET,
     toAddress: 'xyli.testnet',
     amount: ethers.utils.parseEther('0.8')!.toString(),

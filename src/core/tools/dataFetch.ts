@@ -119,6 +119,8 @@ export async function getVaultBalance(
   if (fromToken.isNative) {
     fromToken = fromToken.wrapped;
   }
+
+  console.log('fromtoken', fromToken);
   const mapTokenAddress = IS_MAP(fromChainId)
     ? fromToken.address
     : await tokenRegister.getRelayChainToken(fromChainId.toString(), fromToken);

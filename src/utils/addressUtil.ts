@@ -21,7 +21,8 @@ export function validateAndParseAddressByChainId(
   chainId: string
 ): string {
   switch (chainId) {
-    case ChainId.MAP:
+    case ChainId.MAP_MAINNET:
+    case ChainId.BSC_MAINNET:
     case ChainId.ETH_PRIV:
     case ChainId.BSC_TEST:
     case ChainId.MAP_TEST: {
@@ -40,6 +41,16 @@ export function validateAndParseAddressByChainId(
       address = address.toLowerCase();
       const words: string[] = address.split('.');
       if (words[words.length - 1] != 'testnet' && address.length != 32) {
+        throw new Error(
+          `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
+        );
+      }
+      return address;
+    }
+    case ChainId.NEAR_MAINNET: {
+      address = address.toLowerCase();
+      const words: string[] = address.split('.');
+      if (words[words.length - 1] != 'near' && address.length != 32) {
         throw new Error(
           `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
         );

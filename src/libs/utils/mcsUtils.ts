@@ -14,7 +14,7 @@ export function createMCSInstance(
   options: BridgeOptions
 ): IMapCrossChainService {
   switch (chainId) {
-    case ChainId.MAP:
+    case ChainId.MAP_MAINNET:
     case ChainId.MAP_TEST:
       if (options.signerOrProvider == undefined) {
         throw new Error('signer is not provided for MAP chain');
@@ -26,6 +26,7 @@ export function createMCSInstance(
       );
     case ChainId.ETH_PRIV:
     case ChainId.BSC_TEST:
+    case ChainId.BSC_MAINNET:
       if (options.signerOrProvider == undefined) {
         throw new Error(`signer is not provided for chain: ${chainId}`);
       }
@@ -35,6 +36,7 @@ export function createMCSInstance(
         options.signerOrProvider
       );
     case ChainId.NEAR_TESTNET:
+    case ChainId.NEAR_MAINNET:
       if (options.nearProvider == undefined) {
         throw new Error('near config is not provided');
       }

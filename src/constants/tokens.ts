@@ -153,6 +153,22 @@ export const MAP_TEST_NEAR = new Token(
 );
 
 /************************* mainnet tokens *************************/
+export const BSC_MAINNET_NATIVE = new EVMNativeCoin(
+  ChainId.BSC_MAINNET,
+  18,
+  'BNB',
+  'BNB',
+  'https://files.maplabs.io/bridge/bnb.png'
+);
+export const MAP_MAINNET_NATIVE = new EVMNativeCoin(
+  ChainId.MAP_MAINNET,
+  18,
+  'MAPO',
+  'MAP Protocol',
+  'https://files.maplabs.io/bridge/map.png'
+);
+export const NEAR_MAINNET_NATIVE = new NearNativeCoin(ChainId.NEAR_MAINNET);
+
 export const MAP_MAINNET_WMAP = new Token(
   ChainId.MAP_MAINNET,
   '0x13CB04d4a5Dfb6398Fc5AB005a6c84337256eE23',
