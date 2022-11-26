@@ -2,35 +2,44 @@ import { Chain } from '../entities/Chain';
 import { MAP_TEST_NATIVE } from './tokens';
 
 export enum ChainId {
-  MAP = '22776',
+  MAP_MAINNET = '22776',
   MAP_TEST = '212',
-  ETH_PRIV = '34434',
+
   BSC_TEST = '97',
+  BSC_MAINNET = '56',
+
   NEAR_TESTNET = '5566818579631833089',
+  NEAR_MAINNET = '5566818579631833088',
+
+  ETH_PRIV = '34434',
 }
 export const ID_TO_RPC_URL = (id: string): string => {
   switch (id) {
     case '22776':
-      return '';
+      return MAP_MAINNET_CHAIN.rpc!;
     case '212':
       return MAP_TEST_CHAIN.rpc!;
+    case '56':
+      return BSC_MAINNET_CHAIN.rpc!;
     case '97':
       return BSC_TEST_CHAIN.rpc!;
     case '34434':
       return ETH_PRIV_CHAIN.rpc!;
     case '5566818579631833089':
       return NEAR_TEST_CHAIN.rpc!;
+    case '5566818579631833088':
+      return NEAR_MAINNET_CHAIN.rpc!;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
 };
 export const MAP_MAINNET_CHAIN = new Chain(
-  ChainId.MAP,
+  ChainId.MAP_MAINNET,
   'MAP Mainnet',
   'https://poc3-rpc.maplabs.io/',
   'https://makalu.mapscan.io/',
   'https://files.maplabs.io/bridge/map.png',
-  'MAP'
+  'MAPO'
 );
 export const MAP_TEST_CHAIN = new Chain(
   ChainId.MAP_TEST,
@@ -38,7 +47,7 @@ export const MAP_TEST_CHAIN = new Chain(
   'https://testnet-rpc.maplabs.io',
   'http://18.139.224.21:9001/',
   'https://files.maplabs.io/bridge/map.png',
-  'MAP'
+  'MAPO'
 );
 export const BSC_TEST_CHAIN = new Chain(
   ChainId.BSC_TEST,
@@ -48,7 +57,14 @@ export const BSC_TEST_CHAIN = new Chain(
   'https://files.maplabs.io/bridge/bsc.png',
   'BSC'
 );
-
+export const BSC_MAINNET_CHAIN = new Chain(
+  ChainId.BSC_MAINNET,
+  'BSC Mainnet',
+  'https://rpc.ankr.com/bsc',
+  'https://bscscan.com/',
+  'https://files.maplabs.io/bridge/bsc.png',
+  'BSC'
+);
 export const ETH_PRIV_CHAIN = new Chain(
   ChainId.ETH_PRIV,
   'Ethereum Private',
@@ -66,11 +82,22 @@ export const NEAR_TEST_CHAIN = new Chain(
   'https://cryptologos.cc/logos/near-protocol-near-logo.png',
   'NEAR'
 );
+export const NEAR_MAINNET_CHAIN = new Chain(
+  ChainId.NEAR_MAINNET,
+  'Near Mainnet',
+  'https://rpc.mainnet.near.org',
+  'https://explorer.near.org/',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png',
+  'NEAR'
+);
+
 // TODO: return chain info
 export const ID_TO_NEAR_NETWORK = (id: string): string => {
   switch (id) {
     case '5566818579631833089':
       return 'testnet';
+    case ChainId.NEAR_MAINNET:
+      return 'mainnet';
     default:
       throw new Error(`Unknown chain id when querying near network: ${id}`);
   }
@@ -78,15 +105,19 @@ export const ID_TO_NEAR_NETWORK = (id: string): string => {
 export const ID_TO_CHAIN_ID = (id: string): ChainId => {
   switch (id) {
     case '22776':
-      return ChainId.MAP;
+      return ChainId.MAP_MAINNET;
     case '212':
       return ChainId.MAP_TEST;
     case '97':
       return ChainId.BSC_TEST;
+    case '56':
+      return ChainId.BSC_MAINNET;
     case '34434':
       return ChainId.ETH_PRIV;
     case '5566818579631833089':
       return ChainId.NEAR_TESTNET;
+    case '5566818579631833088':
+      return ChainId.NEAR_MAINNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -98,6 +129,8 @@ export enum ChainName {
   ETH_PRIV = 'eth-priv',
   NEAR_TESTNET = 'near-testnet',
   BSC_TEST = 'bsc-testnet',
+  BSC_MAINNET = 'bsc-mainnet',
+  NEAR_MAINNET = 'near-mainnet',
 }
 
 export enum NativeCurrencyName {
@@ -136,34 +169,41 @@ export const ID_TO_NETWORK_NAME = (id: string): ChainName => {
       return ChainName.ETH_PRIV;
     case '97':
       return ChainName.BSC_TEST;
+    case '56':
+      return ChainName.BSC_MAINNET;
     case '5566818579631833089':
       return ChainName.NEAR_TESTNET;
+    case '5566818579631833088':
+      return ChainName.NEAR_MAINNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
 };
-export const NETWORK_NAME_TO_ID = (network: string): ChainId => {
+export const MAP_NETWORK_NAME_TO_ID = (network: string): ChainId => {
   switch (network) {
     case ChainName.MAP:
-      return ChainId.MAP;
+      return ChainId.MAP_MAINNET;
     case ChainName.MAP_TEST:
       return ChainId.MAP_TEST;
     default:
-      throw new Error(`Unsupported network name: ${network}`);
+      throw new Error(`Unsupported MAPO network name: ${network}`);
   }
 };
 
 export const SUPPORTED_CHAIN_LIST = [
   // MAP_MAINNET_CHAIN,
   MAP_TEST_CHAIN,
-  // ETH_PRIV_CHAIN,
   NEAR_TEST_CHAIN,
   BSC_TEST_CHAIN,
+
+  MAP_MAINNET_CHAIN,
+  NEAR_MAINNET_CHAIN,
+  BSC_MAINNET_CHAIN,
 ];
 
 export const ID_TO_DEFAULT_PROVIDER = (id: string): string => {
   switch (id) {
-    case ChainId.MAP:
+    case ChainId.MAP_MAINNET:
       return MAP_MAINNET_CHAIN.rpc!;
     case ChainId.MAP_TEST:
       return MAP_TEST_CHAIN.rpc!;
@@ -171,6 +211,10 @@ export const ID_TO_DEFAULT_PROVIDER = (id: string): string => {
       return ETH_PRIV_CHAIN.rpc!;
     case ChainId.BSC_TEST:
       return BSC_TEST_CHAIN.rpc!;
+    case ChainId.BSC_MAINNET:
+      return BSC_MAINNET_CHAIN.rpc!;
+    case ChainId.NEAR_MAINNET:
+      return NEAR_MAINNET_CHAIN.rpc!;
     default:
       throw new Error(`Chain id: ${id} not supported`);
   }
@@ -293,7 +337,7 @@ export const ID_TO_DEFAULT_PROVIDER = (id: string): string => {
 
 export const IS_MAP = (id: string): boolean => {
   switch (id) {
-    case ChainId.MAP:
+    case ChainId.MAP_MAINNET:
     case ChainId.MAP_TEST:
       return true;
     default:
@@ -321,6 +365,7 @@ export const IS_NEAR = (id: string): boolean => {
     case '34434':
       return false;
     case '5566818579631833089':
+    case NEAR_MAINNET_CHAIN.chainId:
       return true;
     default:
       throw new Error(`Unsupported chain id: ${id}`);

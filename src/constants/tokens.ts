@@ -26,31 +26,13 @@ export const MAP_TEST_NATIVE = new EVMNativeCoin(
 );
 export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
 
-export const ETH_PRIV_LMAP = new Token(
-  '34434',
-  '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847',
+export const MAP_TEST_WMAP = new Token(
+  ChainId.MAP_TEST,
+  '0x2eD27dF9B4c903aB53666CcA59AFB431F7D15e91',
   18,
-  'lMAP',
-  'Wrapped MAP Token',
-  ''
-);
-
-export const ETH_PRIV_NEAR = new Token(
-  '34434',
-  '0x152fB50d334a66F7fD8559F6Dad057Ac13b3eD44',
-  18,
-  'bNear',
-  'Wrapped Near Token',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
-);
-
-export const ETH_PRIV_WETH = new Token(
-  '34434',
-  '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B',
-  18,
-  'WETH',
-  'Wrapped ETH',
-  'https://files.maplabs.io/bridge/eth.png'
+  'wMAPO',
+  'Wrapped MAPO',
+  'https://files.maplabs.io/bridge/map.png'
 );
 
 export const MAP_TEST_METH = new Token(
@@ -116,15 +98,6 @@ export const MAP_TEST_MOST = new Token(
   'https://files.maplabs.io/bridge/usdc.png'
 );
 
-export const MAP_TEST_WMAP = new Token(
-  ChainId.MAP_TEST,
-  '0x2eD27dF9B4c903aB53666CcA59AFB431F7D15e91',
-  18,
-  'wMAPO',
-  'Wrapped MAPO',
-  'https://files.maplabs.io/bridge/map.png'
-);
-
 export const BSC_TEST_MAP = new Token(
   ChainId.BSC_TEST,
   '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273',
@@ -176,5 +149,33 @@ export const MAP_TEST_NEAR = new Token(
   18,
   'NEAR',
   'MAPO NEAR',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);
+
+/************************* mainnet tokens *************************/
+export const MAP_MAINNET_WMAP = new Token(
+  ChainId.MAP_MAINNET,
+  '0x13CB04d4a5Dfb6398Fc5AB005a6c84337256eE23',
+  18,
+  'wMAPO',
+  'Wrapped MAPO',
+  'https://files.maplabs.io/bridge/map.png'
+);
+
+export const BSC_MAINNET_WBNB = new Token(
+  ChainId.BSC_MAINNET,
+  '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+  18,
+  'WBNB',
+  'Wrapped BNB',
+  'https://files.maplabs.io/bridge/bnb.png'
+);
+
+export const NEAR_MAINNET_WNEAR = new Token(
+  ChainId.NEAR_MAINNET,
+  'wrap.near',
+  24,
+  'wNear',
+  'Wrapped Near',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );

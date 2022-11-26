@@ -5,7 +5,7 @@ import {
   IS_MAP,
   IS_NEAR,
   MCS_CONTRACT_ADDRESS_SET,
-  NETWORK_NAME_TO_ID,
+  MAP_NETWORK_NAME_TO_ID,
   TOKEN_REGISTER_ADDRESS_SET,
 } from '../../constants';
 import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
@@ -43,8 +43,8 @@ export async function addTokenPair({
    * argument check
    */
   if (
-    targetToken.chainId != NETWORK_NAME_TO_ID(mapNetwork) &&
-    srcToken.chainId != NETWORK_NAME_TO_ID(mapNetwork) &&
+    targetToken.chainId != MAP_NETWORK_NAME_TO_ID(mapNetwork) &&
+    srcToken.chainId != MAP_NETWORK_NAME_TO_ID(mapNetwork) &&
     mapToken == undefined
   ) {
     throw new Error('intermediary map token is not specified');
@@ -105,7 +105,7 @@ export async function addTokenPair({
 
   // create contract instance
   const mcsContractAddress: string =
-    MCS_CONTRACT_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)];
+    MCS_CONTRACT_ADDRESS_SET[MAP_NETWORK_NAME_TO_ID(mapNetwork)];
   const mapMCS = new RelayCrossChainService(
     mcsContractAddress,
     MCS_MAP_METADATA.abi,
@@ -113,12 +113,12 @@ export async function addTokenPair({
   );
 
   const tokenRegister = new TokenRegister(
-    TOKEN_REGISTER_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)]!,
+    TOKEN_REGISTER_ADDRESS_SET[MAP_NETWORK_NAME_TO_ID(mapNetwork)]!,
     mapSigner
   );
 
   /** case 1: target chain is map */
-  if (targetToken.chainId == NETWORK_NAME_TO_ID(mapNetwork)) {
+  if (targetToken.chainId == MAP_NETWORK_NAME_TO_ID(mapNetwork)) {
     await tokenRegister.registerToken(
       srcToken.chainId,
       srcToken.address,
@@ -137,7 +137,7 @@ export async function addTokenPair({
       targetToken.chainId,
       targetToken.decimals
     );
-  } else if (srcToken.chainId == NETWORK_NAME_TO_ID(mapNetwork)) {
+  } else if (srcToken.chainId == MAP_NETWORK_NAME_TO_ID(mapNetwork)) {
     /** case 2: source chain is map */
     await tokenRegister.registerToken(
       targetToken.chainId,
