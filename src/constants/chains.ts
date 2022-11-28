@@ -1,6 +1,6 @@
 import { Chain } from '../entities/Chain';
 import { MAP_TEST_NATIVE } from './tokens';
-
+// TODO: add polygon
 export enum ChainId {
   MAP_MAINNET = '22776',
   MAP_TEST = '212',
