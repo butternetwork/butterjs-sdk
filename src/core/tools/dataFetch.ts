@@ -10,7 +10,11 @@ import {
   TOKEN_REGISTER_ADDRESS_SET,
   ZERO_ADDRESS,
 } from '../../constants';
-import { ButterFee, VaultBalance } from '../../types/responseTypes';
+import {
+  ButterFee,
+  ButterFeeRate,
+  VaultBalance,
+} from '../../types/responseTypes';
 import { TokenRegister } from '../../libs/TokenRegister';
 import { BigNumber, ethers } from 'ethers';
 import { getTokenByAddressAndChainId } from '../../utils/tokenUtil';
@@ -54,15 +58,19 @@ export async function getBridgeFee(
     mapProvider
   );
   let feeAmount = '';
+  let feeRate: ButterFeeRate = { lowest: '0', rate: '0', highest: '0' };
   if (IS_MAP(srcToken.chainId)) {
     const tokenAddress = srcToken.isNative
       ? srcToken.wrapped.address
       : srcToken.address;
-    feeAmount = await tokenRegister.getTokenFee(
+    const tokenFeeRate = await tokenRegister.getFeeRate(
       tokenAddress,
-      amount,
       targetChain
     );
+    feeRate.lowest = tokenFeeRate.lowest.toString();
+    feeRate.highest = tokenFeeRate.highest.toString();
+    feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
+    feeAmount = _getFeeAmount(amount, feeRate);
   } else {
     const mapTokenAddress = await tokenRegister.getRelayChainToken(
       srcToken.chainId.toString(),
@@ -74,17 +82,22 @@ export async function getBridgeFee(
       srcToken.chainId.toString(),
       amount
     );
-    const feeAmountInMappingToken = await tokenRegister.getTokenFee(
+    const tokenFeeRate: ButterFeeRate = await tokenRegister.getFeeRate(
       mapTokenAddress,
-      amount,
       targetChain
     );
+    feeRate.lowest = tokenFeeRate.lowest.toString();
+    feeRate.highest = tokenFeeRate.highest.toString();
+    feeRate.rate = tokenFeeRate.rate.toString();
+
+    const feeAmountInMappingToken = _getFeeAmount(amount, feeRate);
     const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
     const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
     feeAmount = feeAmountBN.mul(ratio).toString();
   }
   return Promise.resolve({
     feeToken: srcToken,
+    feeRate: feeRate,
     amount: feeAmount.toString(),
   });
 }
@@ -344,4 +357,15 @@ export async function isTokenMintable(
     );
     return mcs.isMintable(tokenAddress);
   }
+}
+
+function _getFeeAmount(amount: string, feeRate: ButterFeeRate): string {
+  const feeAmount = BigNumber.from(amount).mul(feeRate.rate).div(1000000);
+
+  if (feeAmount.gt(feeRate.highest)) {
+    return feeRate.highest.toString();
+  } else if (feeAmount.lt(feeRate.lowest)) {
+    return feeRate.lowest.toString();
+  }
+  return feeAmount.toString();
 }

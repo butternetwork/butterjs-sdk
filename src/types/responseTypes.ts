@@ -23,9 +23,16 @@ export interface ButterTransactionResponse {
   promiReceipt?: PromiEvent<Web3TransactionReceipt>;
 }
 
+export type ButterFeeRate = {
+  lowest: string;
+  highest: string;
+  rate: string; // bps
+};
+
 export interface ButterFee {
   feeToken: BaseCurrency;
   amount: string;
+  feeRate: ButterFeeRate;
   feeDistribution?: ButterFeeDistribution;
 }
 

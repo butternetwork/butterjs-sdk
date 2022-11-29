@@ -3,7 +3,10 @@ import TokenRegisterMetadata from '../abis/TokenRegister.json';
 import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
 import { ButterContractType, ButterProviderType } from '../types/paramTypes';
 import { Eth } from 'web3-eth';
-import { ButterTransactionReceipt } from '../types/responseTypes';
+import {
+  ButterFeeRate,
+  ButterTransactionReceipt,
+} from '../types/responseTypes';
 import { adaptEthReceipt } from '../utils/responseUtil';
 import { IS_NEAR } from '../constants';
 import { getHexAddress } from '../utils';
@@ -108,6 +111,16 @@ export class TokenRegister {
     if (this.contract instanceof ethers.Contract) {
       return await this.contract.getVaultToken(tokenAddress);
     } else return '';
+  }
+
+  async getFeeRate(
+    tokenAddress: string,
+    toChain: string
+  ): Promise<ButterFeeRate> {
+    if (this.contract instanceof ethers.Contract) {
+      return (await this.contract.getToChainTokenInfo(tokenAddress, toChain))
+        .feeRate;
+    } else throw new Error('contract type not supported');
   }
 
   async getTokenFee(
