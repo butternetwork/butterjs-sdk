@@ -95,6 +95,7 @@ export class NearCrossChainService implements IMapCrossChainService {
           amount: amount,
           to_chain: toChainId,
         },
+        attachedDeposit: new BN(1, 10),
       };
 
       // manual input gas if necessary
