@@ -28,6 +28,7 @@ import {
   getVaultBalance,
   getTokenCandidates,
   isTokenMintable,
+  getDistributeRate,
 } from '../src/core/tools/dataFetch';
 import {
   ButterFee,
@@ -121,12 +122,14 @@ async function demo() {
   };
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
-    MAP_TEST_MOST,
-    ChainId.BSC_TEST,
+    BSC_TEST_MOST,
+    ChainId.NEAR_TESTNET,
     ethers.utils.parseEther('0.01').toString(),
     provider
   );
   console.log('bridge fee', fee);
+
+  console.log('rate', await getDistributeRate('212'));
   //
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(

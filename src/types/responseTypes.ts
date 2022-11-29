@@ -37,9 +37,9 @@ export interface ButterFee {
 }
 
 export type ButterFeeDistribution = {
-  protocol: number;
-  compensation: number;
-  lp?: number;
+  protocol: string; // bps
+  relayer: string; // bps
+  lp: string; // bps
 };
 
 export type NearAccountState = {
