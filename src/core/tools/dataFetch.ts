@@ -89,13 +89,15 @@ export async function getBridgeFee(
       mapTokenAddress,
       targetChain
     );
-    feeRate.lowest = tokenFeeRate.lowest.toString();
-    feeRate.highest = tokenFeeRate.highest.toString();
+    feeRate.lowest = tokenFeeRate.lowest;
+    feeRate.highest = tokenFeeRate.highest;
     feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
 
     const feeAmountInMappingToken = _getFeeAmount(amount, feeRate);
     const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
     const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
+    feeRate.lowest = BigNumber.from(feeRate.lowest).mul(ratio).toString();
+    feeRate.highest = BigNumber.from(feeRate.highest).mul(ratio).toString();
     feeAmount = feeAmountBN.mul(ratio).toString();
   }
   return Promise.resolve({
