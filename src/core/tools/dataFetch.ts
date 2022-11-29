@@ -388,7 +388,7 @@ export async function getDistributeRate(
 }
 
 function _getFeeAmount(amount: string, feeRate: ButterFeeRate): string {
-  const feeAmount = BigNumber.from(amount).mul(feeRate.rate).div(1000000);
+  const feeAmount = BigNumber.from(amount).mul(feeRate.rate).div(10000);
 
   if (feeAmount.gt(feeRate.highest)) {
     return feeRate.highest.toString();

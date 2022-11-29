@@ -122,9 +122,9 @@ async function demo() {
   };
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
-    BSC_TEST_MOST,
-    ChainId.MAP_TEST,
-    ethers.utils.parseEther('1').toString(),
+    MAP_TEST_MOST,
+    ChainId.BSC_TEST,
+    ethers.utils.parseEther('10000000000000000').toString(),
     provider
   );
   console.log('bridge fee', fee);
