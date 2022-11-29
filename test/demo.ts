@@ -127,14 +127,13 @@ async function demo() {
   );
   console.log('bridge fee', fee);
   //
-  // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
+  // // 2. 获取目标链的vault余额(这里表示从map -> bsc, bsc上token的余额)， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
     ChainId.MAP_TEST,
     MAP_TEST_NATIVE,
     ChainId.BSC_TEST,
     provider
   );
-  console.log('from token', MAP_TEST_NATIVE);
   console.log('vault balance', balance);
   //
   // // 3. 获取targetToken

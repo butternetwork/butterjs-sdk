@@ -120,7 +120,6 @@ export async function getVaultBalance(
     fromToken = fromToken.wrapped;
   }
 
-  console.log('fromtoken', fromToken);
   const mapTokenAddress = IS_MAP(fromChainId)
     ? fromToken.address
     : await tokenRegister.getRelayChainToken(fromChainId.toString(), fromToken);
