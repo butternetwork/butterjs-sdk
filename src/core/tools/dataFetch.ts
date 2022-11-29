@@ -93,8 +93,9 @@ export async function getBridgeFee(
     feeRate.highest = tokenFeeRate.highest;
     feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
 
-    const feeAmountInMappingToken = _getFeeAmount(amount, feeRate);
+    const feeAmountInMappingToken = _getFeeAmount(relayChainAmount, feeRate);
     const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
+    console.log('fee amount in mapping token', feeAmountBN.toString());
     const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
     feeRate.lowest = BigNumber.from(feeRate.lowest).mul(ratio).toString();
     feeRate.highest = BigNumber.from(feeRate.highest).mul(ratio).toString();
