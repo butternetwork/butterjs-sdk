@@ -16,6 +16,7 @@ import {
   MAP_TEST_CHAIN,
   MAP_TEST_MOST,
   MAP_TEST_NATIVE,
+  MAP_TEST_WMAP,
   MCS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_CHAIN,
   NEAR_TEST_MOST,
@@ -122,8 +123,8 @@ async function demo() {
   };
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
-    BSC_TEST_MOST,
-    ChainId.MAP_TEST,
+    MAP_TEST_NATIVE,
+    ChainId.BSC_TEST,
     ethers.utils.parseEther('1').mul(1).toString(),
     provider
   );
