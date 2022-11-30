@@ -23,16 +23,23 @@ export interface ButterTransactionResponse {
   promiReceipt?: PromiEvent<Web3TransactionReceipt>;
 }
 
+export type ButterFeeRate = {
+  lowest: string;
+  highest: string;
+  rate: string; // bps
+};
+
 export interface ButterFee {
   feeToken: BaseCurrency;
   amount: string;
+  feeRate: ButterFeeRate;
   feeDistribution?: ButterFeeDistribution;
 }
 
 export type ButterFeeDistribution = {
-  protocol: number;
-  compensation: number;
-  lp?: number;
+  protocol: string; // bps
+  relayer: string; // bps
+  lp: string; // bps
 };
 
 export type NearAccountState = {

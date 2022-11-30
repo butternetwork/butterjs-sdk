@@ -16,6 +16,7 @@ import {
   MAP_TEST_CHAIN,
   MAP_TEST_MOST,
   MAP_TEST_NATIVE,
+  MAP_TEST_WMAP,
   MCS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_CHAIN,
   NEAR_TEST_MOST,
@@ -28,6 +29,7 @@ import {
   getVaultBalance,
   getTokenCandidates,
   isTokenMintable,
+  getDistributeRate,
 } from '../src/core/tools/dataFetch';
 import {
   ButterFee,
@@ -121,18 +123,20 @@ async function demo() {
   };
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
-    BSC_TEST_NATIVE,
-    ChainId.MAP_TEST,
-    ethers.utils.parseEther('0.01').toString(),
+    MAP_TEST_NATIVE,
+    ChainId.BSC_TEST,
+    ethers.utils.parseEther('1').mul(1).toString(),
     provider
   );
   console.log('bridge fee', fee);
+
+  console.log('rate', await getDistributeRate('212'));
   //
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
+    ChainId.NEAR_TESTNET,
+    NEAR_TEST_MOST,
     ChainId.MAP_TEST,
-    MAP_TEST_NATIVE,
-    ChainId.BSC_TEST,
     provider
   );
   console.log('from token', MAP_TEST_NATIVE);
@@ -183,17 +187,17 @@ async function demo() {
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
-    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: BSC_TEST_MOST,
-    fromChainId: ChainId.BSC_TEST,
-    toChainId: ChainId.NEAR_TESTNET,
-    toAddress: 'xyli.testnet',
-    amount: ethers.utils.parseEther('0.8')!.toString(),
+    fromAddress: 'xyli.testnet',
+    fromToken: NEAR_TEST_MOST,
+    fromChainId: ChainId.NEAR_TESTNET,
+    toChainId: ChainId.BSC_TEST,
+    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    amount: ethers.utils.parseEther('100000')!.toString(),
     // amount: parseNearAmount('5')!.toString(),
     options: {
       nearProvider: nearConfig,
       signerOrProvider: bscSigner,
-      // gas: '100000000000000',
+      gas: '100000000000000',
       // gas: adjustedGas,
     },
   };
