@@ -18,7 +18,7 @@ export const MCS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
  * TokenRegister Address: https://github.com/butternetwork/butter-mcs-contracts/blob/master/evm/contracts/TokenRegister.sol
  */
 export const TOKEN_REGISTER_ADDRESS_SET: { [chainId: string]: string } = {
-  '212': '0xc81Fe3f111d44b5469B9179D3b40B99A2527cF7A',
+  [ChainId.MAP_TEST]: '0xc81Fe3f111d44b5469B9179D3b40B99A2527cF7A',
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

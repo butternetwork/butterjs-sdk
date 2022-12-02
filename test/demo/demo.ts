@@ -130,7 +130,7 @@ async function demo() {
   );
   console.log('bridge fee', fee);
 
-  console.log('rate', await getDistributeRate('212'));
+  console.log('rate', await getDistributeRate(ChainId.MAP_TEST));
   //
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(

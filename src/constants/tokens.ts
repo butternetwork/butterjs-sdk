@@ -27,7 +27,7 @@ export const MAP_TEST_NATIVE = new EVMNativeCoin(
 export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
 
 export const ETH_PRIV_LMAP = new Token(
-  '34434',
+  ChainId.ETH_PRIV,
   '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847',
   18,
   'lMAP',
@@ -36,7 +36,7 @@ export const ETH_PRIV_LMAP = new Token(
 );
 
 export const ETH_PRIV_NEAR = new Token(
-  '34434',
+  ChainId.ETH_PRIV,
   '0x152fB50d334a66F7fD8559F6Dad057Ac13b3eD44',
   18,
   'bNear',
@@ -45,7 +45,7 @@ export const ETH_PRIV_NEAR = new Token(
 );
 
 export const ETH_PRIV_WETH = new Token(
-  '34434',
+  ChainId.ETH_PRIV,
   '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B',
   18,
   'WETH',
@@ -54,7 +54,7 @@ export const ETH_PRIV_WETH = new Token(
 );
 
 export const MAP_TEST_METH = new Token(
-  '212',
+  ChainId.MAP_TEST,
   '0x41358EFc7d49d19F76E1E3bdD694f3bff9af3b36',
   18,
   'METH',

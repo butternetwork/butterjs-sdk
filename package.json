@@ -6,7 +6,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "jest --config jest.json"
+    "build": "tsc",
+    "test": "jest --config jest.json",
+    "test:watch": "jest --watch --no-cache --config jest.json",
+    "format": "prettier --write \"./**/*.{ts,json}\""
   },
   "repository": {
     "type": "git",
