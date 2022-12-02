@@ -23,7 +23,7 @@ import {
   NEAR_TEST_NATIVE,
   SUPPORTED_CHAIN_LIST,
 } from '../../src/constants';
-import { ID_TO_SUPPORTED_TOKEN } from '../../src/constants/supported_tokens';
+import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
   getBridgeFee,
   getVaultBalance,

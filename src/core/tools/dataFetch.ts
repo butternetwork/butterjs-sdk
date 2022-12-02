@@ -20,7 +20,7 @@ import { TokenRegister } from '../../libs/TokenRegister';
 import { BigNumber, ethers } from 'ethers';
 import { getTokenByAddressAndChainId } from '../../utils/tokenUtil';
 import { ButterJsonRpcProvider } from '../../types/paramTypes';
-import { ID_TO_SUPPORTED_TOKEN } from '../../constants/supported_tokens';
+import { ID_TO_SUPPORTED_TOKEN } from '../../utils/tokenUtil';
 import { asciiToString, getHexAddress } from '../../utils';
 import { VaultToken } from '../../libs/VaultToken';
 import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
