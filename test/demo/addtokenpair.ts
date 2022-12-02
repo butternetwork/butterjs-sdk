@@ -5,8 +5,8 @@ import {
   AddTokenPairParam,
   BridgeRequestParam,
   NearNetworkConfig,
-} from '../src/types';
-import { ButterBridge } from '../src';
+} from '../../src/types';
+import { ButterBridge } from '../../src';
 import {
   BSC_TEST_CHAIN,
   BSC_TEST_NATIVE,
@@ -21,13 +21,13 @@ import {
   MAP_TEST_NEAR,
   MCS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_NATIVE,
-} from '../src/constants';
+} from '../../src/constants';
 import BN from 'bn.js';
-import { getBridgeFee, getVaultBalance } from '../src/core/tools/dataFetch';
-import { addTokenPair } from '../src/core/tools/manage';
-import { hexToDecimalArray } from '../src/utils';
+import { getBridgeFee, getVaultBalance } from '../../src/core/tools/dataFetch';
+import { addTokenPair } from '../../src/core/tools/tokenManagement';
+import { hexToDecimalArray } from '../../src/utils';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
-import { TRANSFER_OUT_TOKEN } from '../src/constants/near_method_names';
+import { TRANSFER_OUT_TOKEN } from '../../src/constants/near_method_names';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 
 const mapProvider = new ethers.providers.JsonRpcProvider(

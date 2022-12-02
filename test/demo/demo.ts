@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from 'ethers';
 import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
 import { connect, KeyPair, keyStores, WalletConnection } from 'near-api-js';
-import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
+import { BridgeRequestParam, NearNetworkConfig } from '../../src/types';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   BSC_TEST_CHAIN,
@@ -22,31 +22,31 @@ import {
   NEAR_TEST_MOST,
   NEAR_TEST_NATIVE,
   SUPPORTED_CHAIN_LIST,
-} from '../src/constants';
-import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
+} from '../../src/constants';
+import { ID_TO_SUPPORTED_TOKEN } from '../../src/constants/supported_tokens';
 import {
   getBridgeFee,
   getVaultBalance,
   getTokenCandidates,
   isTokenMintable,
   getDistributeRate,
-} from '../src/core/tools/dataFetch';
+} from '../../src/core/tools/dataFetch';
 import {
   ButterFee,
   ButterTransactionReceipt,
   ButterTransactionResponse,
   VaultBalance,
-} from '../src/types/responseTypes';
-import { ButterBridge } from '../src';
-import { approveToken } from '../src/libs/allowance';
+} from '../../src/types/responseTypes';
+import { ButterBridge } from '../../src';
+import { approveToken } from '../../src/libs/allowance';
 import Web3 from 'web3';
 import { JsonRpcProvider } from 'near-api-js/lib/providers';
-import { ButterJsonRpcProvider } from '../src/types/paramTypes';
-import { BaseCurrency } from '../src/entities';
+import { ButterJsonRpcProvider } from '../../src/types/paramTypes';
+import { BaseCurrency } from '../../src/entities';
 import { WebsocketProvider } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
-import { asciiToHex, verifyNearAccountId } from '../src/utils';
+import { asciiToHex, verifyNearAccountId } from '../../src/utils';
 import BN from 'bn.js';
 require('dotenv/config');
 const web3 = new Web3(
@@ -75,7 +75,7 @@ const bscProvider = new ethers.providers.JsonRpcProvider(
   Number.parseInt(BSC_TEST_CHAIN.chainId)
 );
 const bscSigner = new ethers.Wallet(
-  'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
+  process.env.EVM_TEST_PRIVATE_KEY!,
   bscProvider
 );
 
@@ -84,7 +84,7 @@ const mapProvider = new ethers.providers.JsonRpcProvider(
   Number.parseInt(MAP_TEST_CHAIN.chainId)
 );
 const mapSigner = new ethers.Wallet(
-  'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
+  process.env.EVM_TEST_PRIVATE_KEY!,
   mapProvider
 );
 /** 支持的链 {@link ChainId} 调试中仅支持MAP测试网，ETH私链，和Near测试网**/

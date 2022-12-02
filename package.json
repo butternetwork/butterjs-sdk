@@ -6,7 +6,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "jest"
+    "test": "jest --config jest.json"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   ],
   "license": "GPL-3.0-or-later",
   "devDependencies": {
+    "@types/jest": "^29.2.3",
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -28,11 +29,11 @@
     "ts-jest": "^28.0.7"
   },
   "dependencies": {
-    "web3": "^1.8.0",
     "@ethersproject/abstract-provider": "^5.7.0",
     "@types/bn.js": "^5.1.1",
     "bn.js": "^5.2.1",
     "near-api-js": "^1.0.0",
-    "tiny-invariant": "^1.2.0"
+    "tiny-invariant": "^1.2.0",
+    "web3": "^1.8.0"
   }
 }
