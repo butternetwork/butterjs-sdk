@@ -5,7 +5,7 @@ import { ChainId } from './chains';
  * smart contract source code:
  * {@link https://github.com/butternetwork/butter-mcs-contracts/blob/master/evmV2/contracts/MAPCrossChainServiceRelay.sol}
  * {@link https://github.com/butternetwork/
- * butter-mcs-contracts/blob/master/evmV2/contracts/MAPCrossChainService.sol} */
+ * butter-mos-contracts/blob/master/evmV2/contracts/MAPCrossChainService.sol} */
 export const MCS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.ETH_PRIV]: '0x43130059C655314d7ba7eDfb8299d26FbDE726F1',
   [ChainId.MAP]: '',

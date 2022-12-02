@@ -5,7 +5,7 @@ import {
   verifyNearAccountId,
 } from '../../utils';
 import { BridgeRequestParam } from '../../types';
-import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
+import { IMapOmnichainService } from '../../libs/interfaces/IMapOmnichainService';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
 import {
   ButterTransactionResponse,
@@ -46,13 +46,13 @@ export class ButterBridge {
       throw new Error(`Network config must be provided for NEAR blockchain`);
     }
 
-    // create mcs instance base on src token chainId.
-    const mcs: IMapCrossChainService = createMCSInstance(
+    // create mos instance base on src token chainId.
+    const mcs: IMapOmnichainService = createMCSInstance(
       fromToken.chainId,
       options
     );
 
-    let result;
+    let result: ButterTransactionResponse;
     // convert near address to hex
     if (IS_NEAR(toChainId)) {
       const accountState: NearAccountState = await verifyNearAccountId(
@@ -110,8 +110,8 @@ export class ButterBridge {
 
     // near doesn't provide gas estimation yet
 
-    // create mcs instance base on src token chainId.
-    const mcs: IMapCrossChainService = createMCSInstance(
+    // create mos instance base on src token chainId.
+    const mcs: IMapOmnichainService = createMCSInstance(
       fromToken.chainId,
       options
     );

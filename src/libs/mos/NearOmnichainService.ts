@@ -19,7 +19,7 @@ import {
 } from '../../constants/near_method_names';
 import BN from 'bn.js';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
-import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
+import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import { hexToDecimalArray } from '../../utils';
 import {
   ButterTransactionReceipt,
@@ -31,7 +31,7 @@ import {
 } from '../../utils/responseUtil';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 import { NearProviderType } from '../../types/paramTypes';
-export class NearCrossChainService implements IMapCrossChainService {
+export class NearOmnichainService implements IMapOmnichainService {
   provider: NearProviderType;
 
   /**
@@ -62,7 +62,7 @@ export class NearCrossChainService implements IMapCrossChainService {
     let mcsAccountId: string;
     let account: Account | ConnectedWalletAccount;
     if (this.provider instanceof NearNetworkConfig) {
-      // get mcs contract address
+      // get mos contract address
       mcsAccountId =
         this.provider.networkId === 'testnet'
           ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]

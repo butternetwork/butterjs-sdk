@@ -23,7 +23,7 @@ import { ButterJsonRpcProvider } from '../../types/paramTypes';
 import { ID_TO_SUPPORTED_TOKEN } from '../../utils/tokenUtil';
 import { asciiToString, getHexAddress } from '../../utils';
 import { VaultToken } from '../../libs/VaultToken';
-import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
+import { EVMOmnichainService } from '../../libs/mos/EVMOmnichainService';
 import MCS_RELAY_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
 import { connect } from 'near-api-js';
@@ -35,7 +35,7 @@ import {
 } from '../../utils/batchRequestUtils';
 import Web3 from 'web3';
 import TokenRegisterMetadata from '../../abis/TokenRegister.json';
-import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
+import { RelayOmnichainService } from '../../libs/mos/RelayOmnichainService';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -356,7 +356,7 @@ export async function isTokenMintable(
     }
     return false;
   } else {
-    const mcs = new EVMCrossChainService(
+    const mcs = new EVMOmnichainService(
       MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
       MCS_EVM_METADATA.abi,
       rpcProvider

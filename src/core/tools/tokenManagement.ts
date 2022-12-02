@@ -8,10 +8,10 @@ import {
   NETWORK_NAME_TO_ID,
   TOKEN_REGISTER_ADDRESS_SET,
 } from '../../constants';
-import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
+import { EVMOmnichainService } from '../../libs/mos/EVMOmnichainService';
 import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
-import { NearCrossChainService } from '../../libs/mcs/NearCrossChainService';
-import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
+import { NearOmnichainService } from '../../libs/mos/NearOmnichainService';
+import { RelayOmnichainService } from '../../libs/mos/RelayOmnichainService';
 import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
 import { TokenRegister } from '../../libs/TokenRegister';
 import { getHexAddress } from '../../utils';
@@ -67,7 +67,7 @@ export async function addTokenPair({
     const mcsContractAddress: string =
       MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(srcToken.chainId)];
 
-    const mcsService = new EVMCrossChainService(
+    const mcsService = new EVMOmnichainService(
       mcsContractAddress,
       MCS_EVM_METADATA.abi,
       srcSigner!
@@ -81,7 +81,7 @@ export async function addTokenPair({
   } else if (IS_NEAR(srcToken.chainId)) {
     /** case 2: source chain is Near */
     // initialize near contract, nearConfig cannot be undefined cuz we already check previously.
-    const nearMCS = new NearCrossChainService(nearConfig!);
+    const nearMCS = new NearOmnichainService(nearConfig!);
     if (srcToken.isNative) {
       await nearMCS.addNativeToChain(targetToken.chainId);
     } else {
@@ -106,7 +106,7 @@ export async function addTokenPair({
   // create contract instance
   const mcsContractAddress: string =
     MCS_CONTRACT_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)];
-  const mapMCS = new RelayCrossChainService(
+  const mapMCS = new RelayOmnichainService(
     mcsContractAddress,
     MCS_MAP_METADATA.abi,
     mapSigner
