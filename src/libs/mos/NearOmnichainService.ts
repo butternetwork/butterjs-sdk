@@ -9,7 +9,7 @@ import {
   NearNetworkConfig,
   TransferOutOptions,
 } from '../../types/requestTypes';
-import { MCS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
+import { MOS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
 import { ChainId, ID_TO_CHAIN_ID } from '../../constants/chains';
 import {
   ADD_MCS_TOKEN_TO_CHAIN,
@@ -19,7 +19,7 @@ import {
 } from '../../constants/near_method_names';
 import BN from 'bn.js';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
-import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
+import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import { hexToDecimalArray } from '../../utils';
 import {
   ButterTransactionReceipt,
@@ -31,7 +31,7 @@ import {
 } from '../../utils/responseUtil';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 import { NearProviderType } from '../../types/paramTypes';
-export class NearCrossChainService implements IMapCrossChainService {
+export class NearOmnichainService implements IMapOmnichainService {
   provider: NearProviderType;
 
   /**
@@ -59,13 +59,13 @@ export class NearCrossChainService implements IMapCrossChainService {
     toChainId: string,
     options: TransferOutOptions
   ): Promise<ButterTransactionResponse> {
-    let mcsAccountId: string;
+    let mosAccountId: string;
     let account: Account | ConnectedWalletAccount;
     if (this.provider instanceof NearNetworkConfig) {
-      // get mcs contract address
-      mcsAccountId =
+      // get mos contract address
+      mosAccountId =
         this.provider.networkId === 'testnet'
-          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
 
       // prep near connection
@@ -73,9 +73,9 @@ export class NearCrossChainService implements IMapCrossChainService {
       account = await near.account(this.provider.fromAccount);
     } else {
       // this.provider._networkId;
-      mcsAccountId =
+      mosAccountId =
         this.provider._networkId === 'testnet'
-          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
       account = this.provider.account();
     }
@@ -87,7 +87,7 @@ export class NearCrossChainService implements IMapCrossChainService {
       );
       // contract call option
       const nearCallOptions: ChangeFunctionCallOptions = {
-        contractId: mcsAccountId,
+        contractId: mosAccountId,
         methodName: TRANSFER_OUT_TOKEN,
         args: {
           token: tokenAddress,
@@ -125,19 +125,19 @@ export class NearCrossChainService implements IMapCrossChainService {
     amount: string,
     options: TransferOutOptions
   ): Promise<ButterTransactionResponse> {
-    let mcsAccountId: string;
+    let mosAccountId: string;
     let account: Account | ConnectedWalletAccount;
     if (this.provider instanceof NearNetworkConfig) {
-      mcsAccountId =
+      mosAccountId =
         this.provider.networkId === 'testnet'
-          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
 
       const near: Near = await connect(this.provider);
       account = await near.account(this.provider.fromAccount);
     } else {
-      mcsAccountId = this.provider.getAccountId().endsWith('testnet')
-        ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+      mosAccountId = this.provider.getAccountId().endsWith('testnet')
+        ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
         : '';
       account = this.provider.account();
     }
@@ -147,7 +147,7 @@ export class NearCrossChainService implements IMapCrossChainService {
         toChainId
       );
       const nearCallOptions: ChangeFunctionCallOptions = {
-        contractId: mcsAccountId,
+        contractId: mosAccountId,
         methodName: TRANSFER_OUT_NATIVE,
         args: {
           to: decimalArrayAddress,
@@ -173,15 +173,15 @@ export class NearCrossChainService implements IMapCrossChainService {
    */
   public async addNativeToChain(toChainId: string) {
     if (this.provider instanceof NearNetworkConfig) {
-      const mcsAccountId: string =
+      const mosAccountId: string =
         this.provider.networkId === 'testnet'
-          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
 
       const near: Near = await connect(this.provider);
       const account = await near.account(this.provider.fromAccount);
       const nearCallOptions: ChangeFunctionCallOptions = {
-        contractId: mcsAccountId,
+        contractId: mosAccountId,
         methodName: ADD_NATIVE_TO_CHAIN,
         args: {
           to_chain: toChainId,
@@ -194,16 +194,16 @@ export class NearCrossChainService implements IMapCrossChainService {
 
   public async addTokenToChain(tokenAddress: string, toChainId: number) {
     if (this.provider instanceof NearNetworkConfig) {
-      const mcsAccountId: string =
+      const mosAccountId: string =
         this.provider.networkId === 'testnet'
-          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
 
       const near: Near = await connect(this.provider);
       const account = await near.account(this.provider.fromAccount);
 
       const nearCallOptions: ChangeFunctionCallOptions = {
-        contractId: mcsAccountId,
+        contractId: mosAccountId,
         methodName: ADD_MCS_TOKEN_TO_CHAIN,
         args: {
           token: tokenAddress,
@@ -270,16 +270,16 @@ export class NearCrossChainService implements IMapCrossChainService {
     toChainId: string
   ): Promise<void> {
     if (this.provider instanceof NearNetworkConfig) {
-      const mcsAccountId: string =
+      const mosAccountId: string =
         this.provider.networkId === 'testnet'
-          ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
           : '';
 
       const near: Near = await connect(this.provider);
       const account = await near.account(this.provider.fromAccount);
 
       const nearCallOptions: ChangeFunctionCallOptions = {
-        contractId: mcsAccountId,
+        contractId: mosAccountId,
         methodName: 'add_fungible_token_to_chain',
         args: {
           token: tokenAddress,

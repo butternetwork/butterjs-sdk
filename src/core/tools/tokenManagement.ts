@@ -4,15 +4,15 @@ import {
   IS_EVM,
   IS_MAP,
   IS_NEAR,
-  MCS_CONTRACT_ADDRESS_SET,
+  MOS_CONTRACT_ADDRESS_SET,
   NETWORK_NAME_TO_ID,
   TOKEN_REGISTER_ADDRESS_SET,
 } from '../../constants';
-import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
-import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
-import { NearCrossChainService } from '../../libs/mcs/NearCrossChainService';
-import { RelayCrossChainService } from '../../libs/mcs/RelayCrossChainService';
-import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
+import { EVMOmnichainService } from '../../libs/mos/EVMOmnichainService';
+import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
+import { NearOmnichainService } from '../../libs/mos/NearOmnichainService';
+import { RelayOmnichainService } from '../../libs/mos/RelayOmnichainService';
+import MOS_MAP_METADATA from '../../abis/MAPOmnichainServiceRelay.json';
 import { TokenRegister } from '../../libs/TokenRegister';
 import { getHexAddress } from '../../utils';
 
@@ -64,16 +64,16 @@ export async function addTokenPair({
    */
   /** case 1: source chain is non-MAP evm chain*/
   if (IS_EVM(srcToken.chainId) && !IS_MAP(srcToken.chainId)) {
-    const mcsContractAddress: string =
-      MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(srcToken.chainId)];
+    const mosContractAddress: string =
+      MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(srcToken.chainId)];
 
-    const mcsService = new EVMCrossChainService(
-      mcsContractAddress,
-      MCS_EVM_METADATA.abi,
+    const mosService = new EVMOmnichainService(
+      mosContractAddress,
+      MOS_EVM_METADATA.abi,
       srcSigner!
     );
 
-    await mcsService.doSetCanBridgeToken(
+    await mosService.doSetCanBridgeToken(
       srcToken.address,
       targetToken.chainId,
       true
@@ -81,12 +81,12 @@ export async function addTokenPair({
   } else if (IS_NEAR(srcToken.chainId)) {
     /** case 2: source chain is Near */
     // initialize near contract, nearConfig cannot be undefined cuz we already check previously.
-    const nearMCS = new NearCrossChainService(nearConfig!);
+    const nearMOS = new NearOmnichainService(nearConfig!);
     if (srcToken.isNative) {
-      await nearMCS.addNativeToChain(targetToken.chainId);
+      await nearMOS.addNativeToChain(targetToken.chainId);
     } else {
       console.log('not near native,', targetToken.chainId);
-      await nearMCS.addFungibleTokenToChain(
+      await nearMOS.addFungibleTokenToChain(
         srcToken.address,
         targetToken.chainId
       );
@@ -104,11 +104,11 @@ export async function addTokenPair({
    */
 
   // create contract instance
-  const mcsContractAddress: string =
-    MCS_CONTRACT_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)];
-  const mapMCS = new RelayCrossChainService(
-    mcsContractAddress,
-    MCS_MAP_METADATA.abi,
+  const mosContractAddress: string =
+    MOS_CONTRACT_ADDRESS_SET[NETWORK_NAME_TO_ID(mapNetwork)];
+  const mapMOS = new RelayOmnichainService(
+    mosContractAddress,
+    MOS_MAP_METADATA.abi,
     mapSigner
   );
 
@@ -126,13 +126,13 @@ export async function addTokenPair({
     );
 
     // set token decimals for conversion.
-    await mapMCS.doSetTokenOtherChainDecimals(
+    await mapMOS.doSetTokenOtherChainDecimals(
       getHexAddress(srcToken.address, srcToken.chainId, false),
       srcToken.chainId,
       srcToken.decimals
     );
 
-    await mapMCS.doSetTokenOtherChainDecimals(
+    await mapMOS.doSetTokenOtherChainDecimals(
       getHexAddress(srcToken.address, srcToken.chainId, false),
       targetToken.chainId,
       targetToken.decimals
@@ -146,12 +146,12 @@ export async function addTokenPair({
     );
 
     // set token decimals for conversion.
-    await mapMCS.doSetTokenOtherChainDecimals(
+    await mapMOS.doSetTokenOtherChainDecimals(
       srcToken.address,
       srcToken.chainId,
       srcToken.decimals
     );
-    await mapMCS.doSetTokenOtherChainDecimals(
+    await mapMOS.doSetTokenOtherChainDecimals(
       srcToken.address,
       targetToken.chainId,
       targetToken.decimals
@@ -173,13 +173,13 @@ export async function addTokenPair({
     console.log(`register ${targetToken.name} done`);
 
     // set token decimals for conversion.
-    await mapMCS.doSetTokenOtherChainDecimals(
+    await mapMOS.doSetTokenOtherChainDecimals(
       mapToken!.address,
       srcToken.chainId,
       srcToken.decimals
     );
 
-    await mapMCS.doSetTokenOtherChainDecimals(
+    await mapMOS.doSetTokenOtherChainDecimals(
       mapToken!.address,
       targetToken.chainId,
       targetToken.decimals

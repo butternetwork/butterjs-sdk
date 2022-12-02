@@ -8,7 +8,6 @@ import {
   ButterTransactionReceipt,
 } from '../types/responseTypes';
 import { adaptEthReceipt } from '../utils/responseUtil';
-import { IS_NEAR } from '../constants';
 import { getHexAddress } from '../utils';
 import { BaseCurrency } from '../entities';
 

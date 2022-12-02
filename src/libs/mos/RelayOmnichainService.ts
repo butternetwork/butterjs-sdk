@@ -1,12 +1,14 @@
 import {
   BigNumber,
   Contract as EthersContract,
+  ContractInterface,
   ContractTransaction,
   ethers,
   Signer,
 } from 'ethers';
-import { Eth } from 'web3-eth';
-import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
+import { Contract as Web3Contract } from 'web3-eth-contract';
+import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
+import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import {
   ButterTransactionReceipt,
   ButterTransactionResponse,
@@ -15,15 +17,14 @@ import {
   adaptEthReceipt,
   assembleEVMTransactionResponse,
 } from '../../utils/responseUtil';
-
-import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
-import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
+import { Provider } from '@ethersproject/abstract-provider';
+import { Eth } from 'web3-eth';
 import { TransferOutOptions } from '../../types';
-import { ButterContractType, ButterProviderType } from '../../types/paramTypes';
+import { ButterProviderType } from '../../types/paramTypes';
 import { PromiEvent } from 'web3-core';
 
-export class EVMCrossChainService implements IMapCrossChainService {
-  contract: ButterContractType;
+export class RelayOmnichainService implements IMapOmnichainService {
+  contract: EthersContract | Web3Contract;
   provider: ButterProviderType;
 
   constructor(
@@ -63,26 +64,24 @@ export class EVMCrossChainService implements IMapCrossChainService {
     toChainId: string,
     options: TransferOutOptions
   ): Promise<ButterTransactionResponse> {
-    let txHash: string;
+    let txHash;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
         await this.contract.transferOutToken(
           tokenAddress,
           toAddress,
           amount,
-          toChainId,
-          { gasLimit: options.gas }
+          toChainId
         );
       txHash = transferOutTx.hash;
       return assembleEVMTransactionResponse(txHash!, this.provider);
-      // receipt = await transferOutTx.wait();
     } else {
       const promiReceipt: PromiEvent<Web3TransactionReceipt> =
         this.contract.methods
           .transferOutToken(tokenAddress, toAddress, amount, toChainId)
           .send({
             from: fromAddress,
-            gas: Number.parseInt(options.gas!.toString()),
+            gas: options.gas,
           });
       return <ButterTransactionResponse>{
         promiReceipt: promiReceipt,
@@ -131,11 +130,10 @@ export class EVMCrossChainService implements IMapCrossChainService {
     amount: string,
     options: TransferOutOptions
   ): Promise<ButterTransactionResponse> {
-    let txHash: string;
+    let txHash;
     if (this.contract instanceof EthersContract) {
       const transferOutTx: ContractTransaction =
         await this.contract.transferOutNative(toAddress, toChainId, {
-          // gasLimit: options.gas,
           value: amount,
         });
 
@@ -146,7 +144,7 @@ export class EVMCrossChainService implements IMapCrossChainService {
         this.contract.methods.transferOutNative(toAddress, toChainId).send({
           value: amount,
           from: fromAddress,
-          gas: Number.parseInt(options.gas!.toString()),
+          gas: options.gas,
         });
       return <ButterTransactionResponse>{
         promiReceipt: promiReceipt,
@@ -168,13 +166,14 @@ export class EVMCrossChainService implements IMapCrossChainService {
         toChainId,
         {
           value: amount,
+          from: fromAddress,
         }
       );
       estimatedGas = gas.toString();
     } else {
       const gas = await this.contract.methods
         .transferOutNative(toAddress, toChainId)
-        .estimateGas({ value: amount });
+        .estimateGas({ from: fromAddress, value: amount });
       estimatedGas = gas.toString();
     }
     return estimatedGas;
@@ -186,47 +185,131 @@ export class EVMCrossChainService implements IMapCrossChainService {
     to: string,
     amount: string
   ): Promise<string> {
-    let txHash;
     if (this.contract instanceof EthersContract) {
       const depositOutTx: ContractTransaction =
         await this.contract.depositOutToken(tokenAddress, from, to, amount);
 
       const receipt = await depositOutTx.wait();
-      txHash = receipt.transactionHash;
+      return receipt.transactionHash;
     } else {
-      const eth = this.provider as Eth;
-      const receipt = await this.contract.methods
-        .depositOutToken(tokenAddress, from, to, amount)
-        .send({
-          from: eth.defaultAccount,
-        });
-      txHash = receipt.transactionHash;
+      throw new Error('provider not supported');
     }
-    return txHash;
   }
 
-  async doSetCanBridgeToken(
-    tokenAddress: string,
-    toChainId: string,
-    canBridge: boolean
-  ) {
+  /**
+   * set id table
+   * @param chainId
+   * @param id
+   */
+  // async doSetIdTable(chainId: string, id: string): Promise<string> {
+  //   const setIdTableTx: ContractTransaction = await this.contract.setIdTable(
+  //     chainId,
+  //     id
+  //   );
+  //
+  //   const receipt = await setIdTableTx.wait();
+  //   return receipt.transactionHash;
+  // }
+  //
+  // async doSetNearHash(hash: string): Promise<string> {
+  //   const setNearHashTx: ContractTransaction = await this.contract.setNearHash(
+  //     hash
+  //   );
+  //
+  //   const receipt = await setNearHashTx.wait();
+  //   return receipt.transactionHash;
+  // }
+
+  /**
+   * specify token decimal for the convertion of different token on different chain
+   * @param selfTokenAddress
+   * @param chainId
+   * @param decimals
+   */
+  async doSetTokenOtherChainDecimals(
+    selfTokenAddress: string,
+    chainId: string,
+    decimals: number
+  ): Promise<string> {
     if (this.contract instanceof EthersContract) {
-      const tx: ContractTransaction = await this.contract.setCanBridgeToken(
-        tokenAddress,
-        toChainId,
-        canBridge
-      );
+      const tx: ContractTransaction =
+        await this.contract.setTokenOtherChainDecimals(
+          selfTokenAddress,
+          chainId,
+          decimals
+        );
+
       const receipt = await tx.wait();
+      return receipt.transactionHash;
     } else {
-      throw new Error('provided not supported');
+      throw new Error('need ethers provider');
     }
   }
 
-  async isMintable(tokenAddress: string): Promise<boolean> {
+  async doAddAuthToken(tokens: string[]): Promise<string> {
     if (this.contract instanceof EthersContract) {
-      return await this.contract.isMintable(tokenAddress);
+      const addAuthTokenTx: ContractTransaction =
+        await this.contract.addAuthToken(tokens);
+
+      const receipt = await addAuthTokenTx.wait();
+      return receipt.transactionHash;
     } else {
-      throw new Error('provided not supported');
+      throw new Error('need ethers provider');
+    }
+  }
+
+  /**
+   * set accepted bridge address
+   * @param chainId chain id of the bridge address is residing on
+   * @param bridgeAddress bridge address
+   */
+  async doSetBridgeAddress(
+    chainId: string,
+    bridgeAddress: string
+  ): Promise<string> {
+    if (this.contract instanceof EthersContract) {
+      const tx: ContractTransaction = await this.contract.setBridgeAddress(
+        chainId,
+        bridgeAddress
+      );
+
+      const receipt = await tx.wait();
+      return receipt.transactionHash;
+    } else {
+      throw new Error('need ethers provider');
+    }
+  }
+  async setVaultBalance(
+    toChain: number,
+    address: string,
+    amount: string
+  ): Promise<string> {
+    if (this.contract instanceof EthersContract) {
+      const tx: ContractTransaction = await this.contract.setVaultBalance(
+        toChain,
+        address,
+        amount
+      );
+
+      const receipt = await tx.wait();
+      return receipt.transactionHash;
+    } else {
+      throw new Error('need ethers provider');
+    }
+  }
+  async getVaultBalance(
+    toChainId: number,
+    tokenAddress: string
+  ): Promise<string> {
+    if (this.contract instanceof EthersContract) {
+      const balance: BigNumber = await this.contract.vaultBalance(
+        toChainId,
+        tokenAddress
+      );
+
+      return Promise.resolve(balance.toString());
+    } else {
+      throw new Error('need ethers provider');
     }
   }
 }

@@ -1,6 +1,7 @@
 import { Chain } from '../entities/Chain';
 import { MAP_TEST_NATIVE } from './tokens';
 
+/** Chain Id for supported Chain */
 export enum ChainId {
   MAP = '22776',
   MAP_TEST = '212',
@@ -8,17 +9,19 @@ export enum ChainId {
   BSC_TEST = '97',
   NEAR_TESTNET = '5566818579631833089',
 }
+
+/** ID to JSON RPC URL */
 export const ID_TO_RPC_URL = (id: string): string => {
   switch (id) {
     case '22776':
       return '';
-    case '212':
+    case ChainId.MAP_TEST:
       return MAP_TEST_CHAIN.rpc!;
-    case '97':
+    case ChainId.BSC_TEST:
       return BSC_TEST_CHAIN.rpc!;
-    case '34434':
+    case ChainId.ETH_PRIV:
       return ETH_PRIV_CHAIN.rpc!;
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return NEAR_TEST_CHAIN.rpc!;
     default:
       throw new Error(`Unknown chain id: ${id}`);
@@ -69,7 +72,7 @@ export const NEAR_TEST_CHAIN = new Chain(
 // TODO: return chain info
 export const ID_TO_NEAR_NETWORK = (id: string): string => {
   switch (id) {
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return 'testnet';
     default:
       throw new Error(`Unknown chain id when querying near network: ${id}`);
@@ -79,13 +82,13 @@ export const ID_TO_CHAIN_ID = (id: string): ChainId => {
   switch (id) {
     case '22776':
       return ChainId.MAP;
-    case '212':
+    case ChainId.MAP_TEST:
       return ChainId.MAP_TEST;
-    case '97':
+    case ChainId.BSC_TEST:
       return ChainId.BSC_TEST;
-    case '34434':
+    case ChainId.ETH_PRIV:
       return ChainId.ETH_PRIV;
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return ChainId.NEAR_TESTNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
@@ -130,13 +133,13 @@ export const ID_TO_NETWORK_NAME = (id: string): ChainName => {
   switch (id) {
     case '22776':
       return ChainName.MAP;
-    case '212':
+    case ChainId.MAP_TEST:
       return ChainName.MAP_TEST;
-    case '34434':
+    case ChainId.ETH_PRIV:
       return ChainName.ETH_PRIV;
-    case '97':
+    case ChainId.BSC_TEST:
       return ChainName.BSC_TEST;
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return ChainName.NEAR_TESTNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
@@ -310,17 +313,17 @@ export const IS_NEAR = (id: string): boolean => {
     case '42':
     case '10':
     case '69':
-    case '97':
+    case ChainId.BSC_TEST:
     case '42161':
     case '421611':
     case '137':
     case '80001':
     case '56':
     case '22776':
-    case '212':
-    case '34434':
+    case ChainId.MAP_TEST:
+    case ChainId.ETH_PRIV:
       return false;
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return true;
     default:
       throw new Error(`Unsupported chain id: ${id}`);
@@ -339,14 +342,14 @@ export const IS_EVM = (id: string): boolean => {
     case '42161':
     case '421611':
     case '137':
-    case '97':
+    case ChainId.BSC_TEST:
     case '80001':
     case '56':
     case '22776':
-    case '212':
-    case '34434':
+    case ChainId.MAP_TEST:
+    case ChainId.ETH_PRIV:
       return true;
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return false;
     default:
       throw new Error(`Unknown chain id: ${id}`);

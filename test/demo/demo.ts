@@ -17,13 +17,13 @@ import {
   MAP_TEST_MOST,
   MAP_TEST_NATIVE,
   MAP_TEST_WMAP,
-  MCS_CONTRACT_ADDRESS_SET,
+  MOS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_CHAIN,
   NEAR_TEST_MOST,
   NEAR_TEST_NATIVE,
   SUPPORTED_CHAIN_LIST,
 } from '../../src/constants';
-import { ID_TO_SUPPORTED_TOKEN } from '../../src/constants/supported_tokens';
+import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
   getBridgeFee,
   getVaultBalance,
@@ -130,7 +130,7 @@ async function demo() {
   );
   console.log('bridge fee', fee);
 
-  console.log('rate', await getDistributeRate('212'));
+  console.log('rate', await getDistributeRate(ChainId.MAP_TEST));
   //
   // // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
@@ -154,18 +154,6 @@ async function demo() {
   );
   console.log('token candidates', tokenCandidates, Date.now() - now);
 
-  //
-  // // 2.a approve spend token if necessary
-  //
-  // await approveToken(
-  //   mapSigner,
-  //   MAP_TEST_MOST,
-  //   '1',
-  //   MCS_CONTRACT_ADDRESS_SET[ChainId.MAP_TEST],
-  //   true
-  // );
-  // console.log('approved');
-  // //
   // // 3. Bridge(先estimate gas)
   console.log('gas estimate');
   const bridge: ButterBridge = new ButterBridge();

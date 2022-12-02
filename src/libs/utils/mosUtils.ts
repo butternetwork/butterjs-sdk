@@ -1,27 +1,27 @@
-import { IMapCrossChainService } from '../interfaces/IMapCrossChainService';
+import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import { ChainId, ID_TO_CHAIN_ID } from '../../constants/chains';
-import { RelayCrossChainService } from '../mcs/RelayCrossChainService';
-import { MCS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
+import { RelayOmnichainService } from '../mos/RelayOmnichainService';
+import { MOS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
 import { Signer } from 'ethers';
 import { BridgeOptions, NearNetworkConfig } from '../../types/requestTypes';
-import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
-import MCS_MAP_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
-import { EVMCrossChainService } from '../mcs/EVMCrossChainService';
-import { NearCrossChainService } from '../mcs/NearCrossChainService';
+import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
+import MOS_MAP_METADATA from '../../abis/MAPOmnichainServiceRelay.json';
+import { EVMOmnichainService } from '../mos/EVMOmnichainService';
+import { NearOmnichainService } from '../mos/NearOmnichainService';
 
-export function createMCSInstance(
+export function createMOSInstance(
   chainId: string,
   options: BridgeOptions
-): IMapCrossChainService {
+): IMapOmnichainService {
   switch (chainId) {
     case ChainId.MAP:
     case ChainId.MAP_TEST:
       if (options.signerOrProvider == undefined) {
         throw new Error('signer is not provided for MAP chain');
       }
-      return new RelayCrossChainService(
-        MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
-        MCS_MAP_METADATA.abi,
+      return new RelayOmnichainService(
+        MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
+        MOS_MAP_METADATA.abi,
         options.signerOrProvider
       );
     case ChainId.ETH_PRIV:
@@ -29,16 +29,16 @@ export function createMCSInstance(
       if (options.signerOrProvider == undefined) {
         throw new Error(`signer is not provided for chain: ${chainId}`);
       }
-      return new EVMCrossChainService(
-        MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
-        MCS_EVM_METADATA.abi,
+      return new EVMOmnichainService(
+        MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
+        MOS_EVM_METADATA.abi,
         options.signerOrProvider
       );
     case ChainId.NEAR_TESTNET:
       if (options.nearProvider == undefined) {
         throw new Error('near config is not provided');
       }
-      return new NearCrossChainService(options.nearProvider);
+      return new NearOmnichainService(options.nearProvider);
     default:
       throw new Error(`chainId: ${chainId} is not supported yet`);
   }

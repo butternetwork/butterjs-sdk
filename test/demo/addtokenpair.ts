@@ -19,7 +19,7 @@ import {
   MAP_TEST_METH,
   MAP_TEST_NATIVE,
   MAP_TEST_NEAR,
-  MCS_CONTRACT_ADDRESS_SET,
+  MOS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_NATIVE,
 } from '../../src/constants';
 import BN from 'bn.js';
@@ -198,9 +198,9 @@ async function nearToMapToken() {}
 async function nearToEth() {}
 
 async function addChainTypeToNear(chainId: number, chainType: string) {
-  const mcsAccountId: string =
+  const mosAccountId: string =
     nearConfig.networkId === 'testnet'
-      ? MCS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+      ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
       : '';
 
   // prep near connection
@@ -209,7 +209,7 @@ async function addChainTypeToNear(chainId: number, chainType: string) {
 
   // contract call option
   const nearCallOptions: ChangeFunctionCallOptions = {
-    contractId: mcsAccountId,
+    contractId: mosAccountId,
     methodName: 'set_chain_type',
     args: {
       chain_id: chainId,
