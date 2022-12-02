@@ -2,7 +2,7 @@ import { Token } from './Token';
 import {
   BSC_TEST_WBNB,
   ChainId,
-  ChainName,
+  ETH_PRIV_WETH,
   MAP_TEST_WMAP,
   NEAR_TEST_WNEAR,
 } from '../constants';
@@ -13,13 +13,7 @@ import {
 export const WCOIN = (id: string): Token => {
   switch (id) {
     case ChainId.ETH_PRIV:
-      return new Token(
-        '34434',
-        '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B',
-        18,
-        'WETH',
-        'Wrapped EVMNativCoin'
-      );
+      return ETH_PRIV_WETH;
     case ChainId.MAP_TEST:
       return MAP_TEST_WMAP;
     case ChainId.BSC_TEST:

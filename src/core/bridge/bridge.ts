@@ -1,19 +1,16 @@
-import { ChainId, IS_EVM, IS_NEAR } from '../../constants/chains';
+import { ChainId, IS_EVM, IS_NEAR } from '../../constants';
 import {
   getHexAddress,
   validateAndParseAddressByChainId,
   verifyNearAccountId,
 } from '../../utils';
-import { BridgeRequestParam } from '../../types/requestTypes';
+import { BridgeRequestParam } from '../../types';
 import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
 import { createMCSInstance } from '../../libs/utils/mcsUtils';
 import {
-  ButterTransactionReceipt,
   ButterTransactionResponse,
   NearAccountState,
 } from '../../types/responseTypes';
-import BN from 'bn.js';
-import { hexlify } from 'ethers/lib/utils';
 
 export class ButterBridge {
   /**
@@ -56,7 +53,6 @@ export class ButterBridge {
     );
 
     let result;
-
     // convert near address to hex
     if (IS_NEAR(toChainId)) {
       const accountState: NearAccountState = await verifyNearAccountId(
@@ -68,6 +64,7 @@ export class ButterBridge {
       }
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
+
     if (fromToken.isNative) {
       // if input token is Native coin, call transferOutNative method
       result = await mcs.doTransferOutNative(

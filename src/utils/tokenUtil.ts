@@ -6,6 +6,11 @@ import { BaseCurrency } from '../entities';
 import { IS_NEAR } from '../constants';
 import { getHexAddress } from './addressUtil';
 
+/**
+ * get token entity from address and chain id
+ * @param tokenAddress
+ * @param chainId
+ */
 export function getTokenByAddressAndChainId(
   tokenAddress: string,
   chainId: string

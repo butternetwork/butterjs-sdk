@@ -184,8 +184,6 @@ export async function addTokenPair({
       targetToken.chainId,
       targetToken.decimals
     );
-
-    console.log(`setfee done`);
   }
   console.log('token reg done');
 }

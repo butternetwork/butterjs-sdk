@@ -8,6 +8,10 @@ import { NearNetworkConfig } from '../types';
 import { Signer } from 'ethers';
 import { Provider } from '@ethersproject/abstract-provider';
 
+/**
+ * adapt different receipt into unified butter transaction receipt
+ * @param transactionReceipt
+ */
 export function adaptEthReceipt(
   transactionReceipt: ButterReceiptType
 ): ButterTransactionReceipt {
