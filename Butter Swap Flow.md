@@ -42,7 +42,7 @@
 
 当map上没有mBNB和mNear的流动性池时，这时需要借助BSC和Near的dex流动性进行跨链兑换。假设map上没有\$mBNB-\$mNear的流动性，但是有mUSDC的流动性，则butter智能路由给出的最佳路径可能为 BNB -> USDC (PancakeSwap), USDC(MAP), USDC -> NEAR(ref.fi)。此类流程如下:
 
-​	a. 调用bsc的barter core，完成BNB->USDC兑换，并调用bsc mos的swapOut方法。
+​	a. 调用bsc的butter core，完成BNB->USDC兑换，并调用bsc mos的swapOut方法。
 
 ​	b, messenger监听swapOut事件，调用MAP mos的swapIn方法
 
@@ -50,7 +50,7 @@
 
 ​	d. messenger监听swapIn事件，调用Near mos的transferIn方法
 
-​	e. Near mos transfer方法调用near上的barter core，将usdc -> Near, 存入toAddress.
+​	e. Near mos transfer方法调用near上的butter core，将usdc -> Near, 存入toAddress.
 
 
 
@@ -58,7 +58,7 @@
 
 ## Butter Core合约
 
-Barter Core目前主要用于完成聚合兑换，类似MOS，每条链上都有相应的Butter Core来进行改链上的dex合约来完成聚合swap。
+Butter Core目前主要用于完成聚合兑换，类似MOS，每条链上都有相应的Butter Core来进行改链上的dex合约来完成聚合swap。
 
 
 

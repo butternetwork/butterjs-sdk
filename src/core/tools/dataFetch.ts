@@ -6,7 +6,7 @@ import {
   ID_TO_RPC_URL,
   IS_MAP,
   IS_NEAR,
-  MCS_CONTRACT_ADDRESS_SET,
+  MOS_CONTRACT_ADDRESS_SET,
   TOKEN_REGISTER_ADDRESS_SET,
   ZERO_ADDRESS,
 } from '../../constants';
@@ -24,8 +24,8 @@ import { ID_TO_SUPPORTED_TOKEN } from '../../utils/tokenUtil';
 import { asciiToString, getHexAddress } from '../../utils';
 import { VaultToken } from '../../libs/VaultToken';
 import { EVMOmnichainService } from '../../libs/mos/EVMOmnichainService';
-import MCS_RELAY_METADATA from '../../abis/MAPCrossChainServiceRelay.json';
-import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
+import MOS_RELAY_METADATA from '../../abis/MAPOmnichainServiceRelay.json';
+import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
 import { connect } from 'near-api-js';
 import { CodeResult } from 'near-api-js/lib/providers/provider';
 import { GET_MCS_TOKENS } from '../../constants/near_method_names';
@@ -331,7 +331,7 @@ export async function isTokenMintable(
     );
     return tokenRegister.checkMintable(tokenAddress);
   } else if (IS_NEAR(chainId)) {
-    const accountId = MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
+    const accountId = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
     const connectionConfig = {
       networkId: ID_TO_NEAR_NETWORK(chainId),
       nodeUrl: ID_TO_RPC_URL(chainId),
@@ -345,10 +345,10 @@ export async function isTokenMintable(
       args_base64: 'e30=',
     });
     console.log('token address', tokenAddress);
-    const mcsTokenSet = JSON.parse(asciiToString(response.result));
-    for (let i = 0; i < mcsTokenSet.length; i++) {
+    const mosTokenSet = JSON.parse(asciiToString(response.result));
+    for (let i = 0; i < mosTokenSet.length; i++) {
       if (
-        getHexAddress(mcsTokenSet[i][0].toLowerCase(), chainId, false) ===
+        getHexAddress(mosTokenSet[i][0].toLowerCase(), chainId, false) ===
         tokenAddress.toLowerCase()
       ) {
         return true;
@@ -356,12 +356,12 @@ export async function isTokenMintable(
     }
     return false;
   } else {
-    const mcs = new EVMOmnichainService(
-      MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
-      MCS_EVM_METADATA.abi,
+    const mos = new EVMOmnichainService(
+      MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
+      MOS_EVM_METADATA.abi,
       rpcProvider
     );
-    return mcs.isMintable(tokenAddress);
+    return mos.isMintable(tokenAddress);
   }
 }
 
@@ -374,13 +374,13 @@ export async function getDistributeRate(
     throw new Error('chain id is not MAP');
   }
 
-  const mcs = new ethers.Contract(
-    MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(mapChainId)],
-    MCS_RELAY_METADATA.abi,
+  const mos = new ethers.Contract(
+    MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(mapChainId)],
+    MOS_RELAY_METADATA.abi,
     rpcProvider
   );
-  const relayerRate = await mcs.distributeRate(0);
-  const lpRate = await mcs.distributeRate(1);
+  const relayerRate = await mos.distributeRate(0);
+  const lpRate = await mos.distributeRate(1);
   return Promise.resolve({
     relayer: relayerRate.rate.div(100).toString(),
     lp: lpRate.rate.div(100).toString(),

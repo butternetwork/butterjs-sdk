@@ -1,5 +1,5 @@
 import { BSC_TEST_CHAIN, ChainId, NEAR_TEST_CHAIN } from '../src/constants';
-import { createMCSInstance } from '../src/libs/utils/mcsUtils';
+import { createMOSInstance } from '../src/libs/utils/mosUtils';
 import { ethers } from 'ethers';
 
 const evmProvider = new ethers.providers.JsonRpcProvider(
@@ -11,12 +11,12 @@ describe('MOS Generation', () => {
   beforeAll(() => {});
   test('evm bootstrap with no config', () => {
     expect(
-      createMCSInstance(ChainId.BSC_TEST, { signerOrProvider: evmProvider })
+      createMOSInstance(ChainId.BSC_TEST, { signerOrProvider: evmProvider })
     ).toBeDefined();
   });
   test('relay bootstrap with no config', () => {
     expect(
-      createMCSInstance(ChainId.MAP_TEST, { signerOrProvider: evmProvider })
+      createMOSInstance(ChainId.MAP_TEST, { signerOrProvider: evmProvider })
     ).toBeDefined();
   });
 });

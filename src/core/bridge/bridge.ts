@@ -6,7 +6,7 @@ import {
 } from '../../utils';
 import { BridgeRequestParam } from '../../types';
 import { IMapOmnichainService } from '../../libs/interfaces/IMapOmnichainService';
-import { createMCSInstance } from '../../libs/utils/mcsUtils';
+import { createMOSInstance } from '../../libs/utils/mosUtils';
 import {
   ButterTransactionResponse,
   NearAccountState,
@@ -47,7 +47,7 @@ export class ButterBridge {
     }
 
     // create mos instance base on src token chainId.
-    const mcs: IMapOmnichainService = createMCSInstance(
+    const mos: IMapOmnichainService = createMOSInstance(
       fromToken.chainId,
       options
     );
@@ -67,7 +67,7 @@ export class ButterBridge {
 
     if (fromToken.isNative) {
       // if input token is Native coin, call transferOutNative method
-      result = await mcs.doTransferOutNative(
+      result = await mos.doTransferOutNative(
         fromAddress,
         toAddress,
         toChainId.toString(),
@@ -77,7 +77,7 @@ export class ButterBridge {
         }
       );
     } else {
-      result = await mcs.doTransferOutToken(
+      result = await mos.doTransferOutToken(
         fromAddress,
         fromToken.address,
         amount,
@@ -111,7 +111,7 @@ export class ButterBridge {
     // near doesn't provide gas estimation yet
 
     // create mos instance base on src token chainId.
-    const mcs: IMapOmnichainService = createMCSInstance(
+    const mos: IMapOmnichainService = createMOSInstance(
       fromToken.chainId,
       options
     );
@@ -131,14 +131,14 @@ export class ButterBridge {
     let gas;
     // if input token is Native coin, call transferOutNative method
     if (fromToken.isNative) {
-      gas = await mcs.gasEstimateTransferOutNative(
+      gas = await mos.gasEstimateTransferOutNative(
         fromAddress,
         toAddress,
         toChainId.toString(),
         amount
       );
     } else {
-      gas = await mcs.gasEstimateTransferOutToken(
+      gas = await mos.gasEstimateTransferOutToken(
         fromAddress,
         fromToken.address,
         amount,
