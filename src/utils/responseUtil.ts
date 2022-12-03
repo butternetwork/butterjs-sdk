@@ -22,6 +22,7 @@ export function adaptEthReceipt(
     blockHash: transactionReceipt.blockHash,
     transactionHash: transactionReceipt.transactionHash,
     blockNumber: transactionReceipt.blockNumber,
+    logs: transactionReceipt.logs,
   };
 }
 
@@ -35,6 +36,7 @@ export function adaptNearReceipt(
       finalExecutionOutcome.transaction_outcome.outcome.gas_burnt.toString(),
 
     transactionHash: finalExecutionOutcome.transaction.hash,
+    logs: finalExecutionOutcome.transaction_outcome.outcome.logs,
   };
 }
 

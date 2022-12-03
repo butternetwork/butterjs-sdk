@@ -6,12 +6,14 @@ import {
   TransactionReceipt as Web3TransactionReceipt,
 } from 'web3-core';
 import { AccountView } from 'near-api-js/lib/providers/provider';
+import { Log } from '@ethersproject/abstract-provider';
 
 export interface ButterTransactionReceipt {
   to: string;
   from: string;
   gasUsed: string;
   transactionHash: string;
+  logs: Array<Log> | string[]; // string[] for near logs
   blockHash?: string;
   blockNumber?: number;
   success?: boolean; // 1 success, 0 failed
