@@ -117,13 +117,14 @@ export class ButterBridge {
     );
 
     if (IS_NEAR(toChainId)) {
-      const accountState: NearAccountState = await verifyNearAccountId(
-        toAddress,
-        toChainId
-      );
-      if (!accountState.isValid) {
-        throw new Error(accountState.errMsg);
-      }
+      // no need to check address validity for gas estimation
+      // const accountState: NearAccountState = await verifyNearAccountId(
+      //   toAddress,
+      //   toChainId
+      // );
+      // if (!accountState.isValid) {
+      //   throw new Error(accountState.errMsg);
+      // }
 
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
