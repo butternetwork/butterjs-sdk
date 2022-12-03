@@ -101,7 +101,7 @@ export class ButterBridge {
     options,
   }: BridgeRequestParam): Promise<string> {
     // check validity of toAddress according to toChainId
-    toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
+    // toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
 
     // if src chain is evm chain, signer must be provided
     if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
