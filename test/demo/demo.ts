@@ -74,19 +74,13 @@ const bscProvider = new ethers.providers.JsonRpcProvider(
   BSC_TEST_CHAIN.rpc,
   Number.parseInt(BSC_TEST_CHAIN.chainId)
 );
-const bscSigner = new ethers.Wallet(
-  process.env.EVM_TEST_PRIVATE_KEY!,
-  bscProvider
-);
+const bscSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, bscProvider);
 
 const mapProvider = new ethers.providers.JsonRpcProvider(
   MAP_TEST_CHAIN.rpc,
   Number.parseInt(MAP_TEST_CHAIN.chainId)
 );
-const mapSigner = new ethers.Wallet(
-  process.env.EVM_TEST_PRIVATE_KEY!,
-  mapProvider
-);
+const mapSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, mapProvider);
 /** 支持的链 {@link ChainId} 调试中仅支持MAP测试网，ETH私链，和Near测试网**/
 console.log('supported chain', SUPPORTED_CHAIN_LIST);
 /** 支持的token {@link supported_token.ts} **/
@@ -178,13 +172,13 @@ async function demo() {
     fromAddress: 'xyli.testnet',
     fromToken: NEAR_TEST_MOST,
     fromChainId: ChainId.NEAR_TESTNET,
-    toChainId: ChainId.BSC_TEST,
+    toChainId: ChainId.MAP_TEST,
     toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    amount: ethers.utils.parseEther('100000')!.toString(),
+    amount: ethers.utils.parseEther('1000000')!.toString(),
     // amount: parseNearAmount('5')!.toString(),
     options: {
       nearProvider: nearConfig,
-      signerOrProvider: bscSigner,
+      signerOrProvider: mapSigner,
       gas: '100000000000000',
       // gas: adjustedGas,
     },
