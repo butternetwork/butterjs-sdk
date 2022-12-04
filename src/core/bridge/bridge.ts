@@ -21,7 +21,7 @@ export class ButterBridge {
    * @param toAddress target chain receiving address
    * @param amount amount to bridge, in minimal uint. For example wei in Ethereum, yocto in Near
    * @param options of bridging, check {@link BridgeOptions} for more details
-   * @return BN for gas estimation, ContractCallReceipt for actual contract invocation
+   * @return ButterTransactionResponse
    */
   async bridgeToken({
     fromAddress,
