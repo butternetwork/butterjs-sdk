@@ -12,6 +12,7 @@ import {
   BSC_TEST_WBNB,
   ChainId,
   ETH_PRIV_NEAR,
+  ID_TO_CHAIN_ID,
   MAP_TEST_BNB,
   MAP_TEST_CHAIN,
   MAP_TEST_MOST,
@@ -103,6 +104,8 @@ function test(): PromiEvent<TransactionReceipt> {
 }
 
 console.log(typeof nearConfig);
+const address = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID('212')];
+console.log('mcs address', address);
 async function demo() {
   console.log('start demo');
   const nearAccountState = await verifyNearAccountId(

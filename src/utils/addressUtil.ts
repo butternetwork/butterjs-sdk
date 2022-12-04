@@ -37,13 +37,6 @@ export function validateAndParseAddressByChainId(
     // Named accounts, with human-readable names such as alice.near.
     // Implicit accounts, referred by 64 chars (e.g. 98793cd91a3f870fb126f662858[...]).
     case ChainId.NEAR_TESTNET: {
-      address = address.toLowerCase();
-      const words: string[] = address.split('.');
-      if (words[words.length - 1] != 'testnet' && address.length != 32) {
-        throw new Error(
-          `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
-        );
-      }
       return address;
     }
     default: {
