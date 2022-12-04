@@ -6,12 +6,14 @@ import {
   TransactionReceipt as Web3TransactionReceipt,
 } from 'web3-core';
 import { AccountView } from 'near-api-js/lib/providers/provider';
+import { Log } from '@ethersproject/abstract-provider';
 
 export interface ButterTransactionReceipt {
   to: string;
   from: string;
   gasUsed: string;
   transactionHash: string;
+  logs: Array<Log> | string[]; // string[] for near logs
   blockHash?: string;
   blockNumber?: number;
   success?: boolean; // 1 success, 0 failed
@@ -23,16 +25,23 @@ export interface ButterTransactionResponse {
   promiReceipt?: PromiEvent<Web3TransactionReceipt>;
 }
 
+export type ButterFeeRate = {
+  lowest: string;
+  highest: string;
+  rate: string; // bps
+};
+
 export interface ButterFee {
   feeToken: BaseCurrency;
   amount: string;
+  feeRate: ButterFeeRate;
   feeDistribution?: ButterFeeDistribution;
 }
 
 export type ButterFeeDistribution = {
-  protocol: number;
-  compensation: number;
-  lp?: number;
+  protocol: string; // bps
+  relayer: string; // bps
+  lp: string; // bps
 };
 
 export type NearAccountState = {

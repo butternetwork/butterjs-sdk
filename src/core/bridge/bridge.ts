@@ -1,19 +1,16 @@
-import { ChainId, IS_EVM, IS_NEAR } from '../../constants/chains';
+import { ChainId, IS_EVM, IS_NEAR } from '../../constants';
 import {
   getHexAddress,
   validateAndParseAddressByChainId,
   verifyNearAccountId,
 } from '../../utils';
-import { BridgeRequestParam } from '../../types/requestTypes';
-import { IMapCrossChainService } from '../../libs/interfaces/IMapCrossChainService';
-import { createMCSInstance } from '../../libs/utils/mcsUtils';
+import { BridgeRequestParam } from '../../types';
+import { IMapOmnichainService } from '../../libs/interfaces/IMapOmnichainService';
+import { createMOSInstance } from '../../libs/utils/mosUtils';
 import {
-  ButterTransactionReceipt,
   ButterTransactionResponse,
   NearAccountState,
 } from '../../types/responseTypes';
-import BN from 'bn.js';
-import { hexlify } from 'ethers/lib/utils';
 
 export class ButterBridge {
   /**
@@ -24,7 +21,7 @@ export class ButterBridge {
    * @param toAddress target chain receiving address
    * @param amount amount to bridge, in minimal uint. For example wei in Ethereum, yocto in Near
    * @param options of bridging, check {@link BridgeOptions} for more details
-   * @return BN for gas estimation, ContractCallReceipt for actual contract invocation
+   * @return ButterTransactionResponse
    */
   async bridgeToken({
     fromAddress,
@@ -49,14 +46,13 @@ export class ButterBridge {
       throw new Error(`Network config must be provided for NEAR blockchain`);
     }
 
-    // create mcs instance base on src token chainId.
-    const mcs: IMapCrossChainService = createMCSInstance(
+    // create mos instance base on src token chainId.
+    const mos: IMapOmnichainService = createMOSInstance(
       fromToken.chainId,
       options
     );
 
-    let result;
-
+    let result: ButterTransactionResponse;
     // convert near address to hex
     if (IS_NEAR(toChainId)) {
       const accountState: NearAccountState = await verifyNearAccountId(
@@ -68,9 +64,10 @@ export class ButterBridge {
       }
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
+
     if (fromToken.isNative) {
       // if input token is Native coin, call transferOutNative method
-      result = await mcs.doTransferOutNative(
+      result = await mos.doTransferOutNative(
         fromAddress,
         toAddress,
         toChainId.toString(),
@@ -80,7 +77,7 @@ export class ButterBridge {
         }
       );
     } else {
-      result = await mcs.doTransferOutToken(
+      result = await mos.doTransferOutToken(
         fromAddress,
         fromToken.address,
         amount,
@@ -104,7 +101,7 @@ export class ButterBridge {
     options,
   }: BridgeRequestParam): Promise<string> {
     // check validity of toAddress according to toChainId
-    toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
+    // toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
 
     // if src chain is evm chain, signer must be provided
     if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
@@ -113,20 +110,21 @@ export class ButterBridge {
 
     // near doesn't provide gas estimation yet
 
-    // create mcs instance base on src token chainId.
-    const mcs: IMapCrossChainService = createMCSInstance(
+    // create mos instance base on src token chainId.
+    const mos: IMapOmnichainService = createMOSInstance(
       fromToken.chainId,
       options
     );
 
     if (IS_NEAR(toChainId)) {
-      const accountState: NearAccountState = await verifyNearAccountId(
-        toAddress,
-        toChainId
-      );
-      if (!accountState.isValid) {
-        throw new Error(accountState.errMsg);
-      }
+      // no need to check address validity for gas estimation
+      // const accountState: NearAccountState = await verifyNearAccountId(
+      //   toAddress,
+      //   toChainId
+      // );
+      // if (!accountState.isValid) {
+      //   throw new Error(accountState.errMsg);
+      // }
 
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
@@ -134,14 +132,14 @@ export class ButterBridge {
     let gas;
     // if input token is Native coin, call transferOutNative method
     if (fromToken.isNative) {
-      gas = await mcs.gasEstimateTransferOutNative(
+      gas = await mos.gasEstimateTransferOutNative(
         fromAddress,
         toAddress,
         toChainId.toString(),
         amount
       );
     } else {
-      gas = await mcs.gasEstimateTransferOutToken(
+      gas = await mos.gasEstimateTransferOutToken(
         fromAddress,
         fromToken.address,
         amount,

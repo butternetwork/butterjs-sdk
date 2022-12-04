@@ -6,7 +6,7 @@ import { PromiEvent, TransactionReceipt } from 'web3-core';
 /**
  * MAP cross-chain service interface.
  */
-export interface IMapCrossChainService {
+export interface IMapOmnichainService {
   /**
    * transfer out token(not native coin) from source chain to designated token on target chain
    * @param fromAddress

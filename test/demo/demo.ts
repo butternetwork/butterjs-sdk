@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from 'ethers';
 import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
 import { connect, KeyPair, keyStores, WalletConnection } from 'near-api-js';
-import { BridgeRequestParam, NearNetworkConfig } from '../src/types';
+import { BridgeRequestParam, NearNetworkConfig } from '../../src/types';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 import {
   BSC_TEST_CHAIN,
@@ -11,39 +11,42 @@ import {
   BSC_TEST_NEAR,
   BSC_TEST_WBNB,
   ChainId,
+  ID_TO_CHAIN_ID,
   MAP_TEST_BNB,
   MAP_TEST_CHAIN,
   MAP_TEST_MOST,
   MAP_TEST_NATIVE,
-  MCS_CONTRACT_ADDRESS_SET,
+  MAP_TEST_WMAP,
+  MOS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_CHAIN,
   NEAR_TEST_MOST,
   NEAR_TEST_NATIVE,
   SUPPORTED_CHAIN_LIST,
-} from '../src/constants';
-import { ID_TO_SUPPORTED_TOKEN } from '../src/constants/supported_tokens';
+} from '../../src/constants';
+import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
   getBridgeFee,
   getVaultBalance,
   getTokenCandidates,
   isTokenMintable,
-} from '../src/core/tools/dataFetch';
+  getDistributeRate,
+} from '../../src/core/tools/dataFetch';
 import {
   ButterFee,
   ButterTransactionReceipt,
   ButterTransactionResponse,
   VaultBalance,
-} from '../src/types/responseTypes';
-import { ButterBridge } from '../src';
-import { approveToken } from '../src/libs/allowance';
+} from '../../src/types/responseTypes';
+import { ButterBridge } from '../../src';
+import { approveToken } from '../../src/libs/allowance';
 import Web3 from 'web3';
 import { JsonRpcProvider } from 'near-api-js/lib/providers';
-import { ButterJsonRpcProvider } from '../src/types/paramTypes';
-import { BaseCurrency } from '../src/entities';
+import { ButterJsonRpcProvider } from '../../src/types/paramTypes';
+import { BaseCurrency } from '../../src/entities';
 import { WebsocketProvider } from 'web3-core';
 import { Contract } from 'web3-eth-contract';
 import { parseNearAmount } from 'near-api-js/lib/utils/format';
-import { asciiToHex, verifyNearAccountId } from '../src/utils';
+import { asciiToHex, verifyNearAccountId } from '../../src/utils';
 import BN from 'bn.js';
 require('dotenv/config');
 const web3 = new Web3(
@@ -71,19 +74,13 @@ const bscProvider = new ethers.providers.JsonRpcProvider(
   BSC_TEST_CHAIN.rpc,
   Number.parseInt(BSC_TEST_CHAIN.chainId)
 );
-const bscSigner = new ethers.Wallet(
-  'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
-  bscProvider
-);
+const bscSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, bscProvider);
 
 const mapProvider = new ethers.providers.JsonRpcProvider(
   MAP_TEST_CHAIN.rpc,
   Number.parseInt(MAP_TEST_CHAIN.chainId)
 );
-const mapSigner = new ethers.Wallet(
-  'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
-  mapProvider
-);
+const mapSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, mapProvider);
 /** 支持的链 {@link ChainId} 调试中仅支持MAP测试网，ETH私链，和Near测试网**/
 console.log('supported chain', SUPPORTED_CHAIN_LIST);
 /** 支持的token {@link supported_token.ts} **/
@@ -106,6 +103,8 @@ function test(): PromiEvent<TransactionReceipt> {
 }
 
 console.log(typeof nearConfig);
+const address = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID('212')];
+console.log('mcs address', address);
 async function demo() {
   console.log('start demo');
   const nearAccountState = await verifyNearAccountId(
@@ -120,18 +119,20 @@ async function demo() {
   };
   // 1. 获取费用信息
   const fee: ButterFee = await getBridgeFee(
-    BSC_TEST_NATIVE,
-    ChainId.MAP_TEST,
-    ethers.utils.parseEther('0.01').toString(),
+    MAP_TEST_NATIVE,
+    ChainId.BSC_TEST,
+    ethers.utils.parseEther('1').mul(1).toString(),
     provider
   );
   console.log('bridge fee', fee);
+
+  console.log('rate', await getDistributeRate(ChainId.MAP_TEST));
   //
   // // 2. 获取目标链的vault余额(这里表示从map -> bsc, bsc上token的余额)， 如果用户提供的数额大于余额应提示用户
   const balance: VaultBalance = await getVaultBalance(
+    ChainId.NEAR_TESTNET,
+    NEAR_TEST_MOST,
     ChainId.MAP_TEST,
-    MAP_TEST_NATIVE,
-    ChainId.BSC_TEST,
     provider
   );
   console.log('vault balance', balance);
@@ -148,18 +149,6 @@ async function demo() {
   );
   console.log('token candidates', tokenCandidates, Date.now() - now);
 
-  //
-  // // 2.a approve spend token if necessary
-  //
-  // await approveToken(
-  //   mapSigner,
-  //   MAP_TEST_MOST,
-  //   '1',
-  //   MCS_CONTRACT_ADDRESS_SET[ChainId.MAP_TEST],
-  //   true
-  // );
-  // console.log('approved');
-  // //
   // // 3. Bridge(先estimate gas)
   console.log('gas estimate');
   const bridge: ButterBridge = new ButterBridge();
@@ -181,17 +170,17 @@ async function demo() {
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
-    fromAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
-    fromToken: BSC_TEST_MOST,
-    fromChainId: ChainId.BSC_TEST,
-    toChainId: ChainId.NEAR_TESTNET,
-    toAddress: 'xyli.testnet',
-    amount: ethers.utils.parseEther('0.8')!.toString(),
+    fromAddress: 'xyli.testnet',
+    fromToken: NEAR_TEST_MOST,
+    fromChainId: ChainId.NEAR_TESTNET,
+    toChainId: ChainId.MAP_TEST,
+    toAddress: '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94',
+    amount: ethers.utils.parseEther('1000000')!.toString(),
     // amount: parseNearAmount('5')!.toString(),
     options: {
       nearProvider: nearConfig,
-      signerOrProvider: bscSigner,
-      // gas: '100000000000000',
+      signerOrProvider: mapSigner,
+      gas: '100000000000000',
       // gas: adjustedGas,
     },
   };

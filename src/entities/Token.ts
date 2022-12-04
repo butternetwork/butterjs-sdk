@@ -4,7 +4,7 @@ import { BaseCurrency } from './BaseCurrency';
 import { Currency } from './Currency';
 
 /**
- * Represents sn token with a unique address and some metadata.
+ * Represents a token with a unique address and some metadata.
  */
 export class Token extends BaseCurrency {
   public readonly isNative: false = false;

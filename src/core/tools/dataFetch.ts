@@ -6,20 +6,26 @@ import {
   ID_TO_RPC_URL,
   IS_MAP,
   IS_NEAR,
-  MCS_CONTRACT_ADDRESS_SET,
+  MOS_CONTRACT_ADDRESS_SET,
   TOKEN_REGISTER_ADDRESS_SET,
   ZERO_ADDRESS,
 } from '../../constants';
-import { ButterFee, VaultBalance } from '../../types/responseTypes';
+import {
+  ButterFee,
+  ButterFeeDistribution,
+  ButterFeeRate,
+  VaultBalance,
+} from '../../types/responseTypes';
 import { TokenRegister } from '../../libs/TokenRegister';
 import { BigNumber, ethers } from 'ethers';
 import { getTokenByAddressAndChainId } from '../../utils/tokenUtil';
 import { ButterJsonRpcProvider } from '../../types/paramTypes';
-import { ID_TO_SUPPORTED_TOKEN } from '../../constants/supported_tokens';
+import { ID_TO_SUPPORTED_TOKEN } from '../../utils/tokenUtil';
 import { asciiToString, getHexAddress } from '../../utils';
 import { VaultToken } from '../../libs/VaultToken';
-import { EVMCrossChainService } from '../../libs/mcs/EVMCrossChainService';
-import MCS_EVM_METADATA from '../../abis/MAPCrossChainService.json';
+import { EVMOmnichainService } from '../../libs/mos/EVMOmnichainService';
+import MOS_RELAY_METADATA from '../../abis/MAPOmnichainServiceRelay.json';
+import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
 import { connect } from 'near-api-js';
 import { CodeResult } from 'near-api-js/lib/providers/provider';
 import { GET_MCS_TOKENS } from '../../constants/near_method_names';
@@ -29,6 +35,7 @@ import {
 } from '../../utils/batchRequestUtils';
 import Web3 from 'web3';
 import TokenRegisterMetadata from '../../abis/TokenRegister.json';
+import { RelayOmnichainService } from '../../libs/mos/RelayOmnichainService';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -54,15 +61,19 @@ export async function getBridgeFee(
     mapProvider
   );
   let feeAmount = '';
+  let feeRate: ButterFeeRate = { lowest: '0', rate: '0', highest: '0' };
   if (IS_MAP(srcToken.chainId)) {
     const tokenAddress = srcToken.isNative
       ? srcToken.wrapped.address
       : srcToken.address;
-    feeAmount = await tokenRegister.getTokenFee(
+    const tokenFeeRate = await tokenRegister.getFeeRate(
       tokenAddress,
-      amount,
       targetChain
     );
+    feeRate.lowest = tokenFeeRate.lowest.toString();
+    feeRate.highest = tokenFeeRate.highest.toString();
+    feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
+    feeAmount = _getFeeAmount(amount, feeRate);
   } else {
     const mapTokenAddress = await tokenRegister.getRelayChainToken(
       srcToken.chainId.toString(),
@@ -74,17 +85,25 @@ export async function getBridgeFee(
       srcToken.chainId.toString(),
       amount
     );
-    const feeAmountInMappingToken = await tokenRegister.getTokenFee(
+    const tokenFeeRate: ButterFeeRate = await tokenRegister.getFeeRate(
       mapTokenAddress,
-      amount,
       targetChain
     );
+    feeRate.lowest = tokenFeeRate.lowest;
+    feeRate.highest = tokenFeeRate.highest;
+    feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
+
+    const feeAmountInMappingToken = _getFeeAmount(relayChainAmount, feeRate);
     const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
+    console.log('fee amount in mapping token', feeAmountBN.toString());
     const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
+    feeRate.lowest = BigNumber.from(feeRate.lowest).mul(ratio).toString();
+    feeRate.highest = BigNumber.from(feeRate.highest).mul(ratio).toString();
     feeAmount = feeAmountBN.mul(ratio).toString();
   }
   return Promise.resolve({
     feeToken: srcToken,
+    feeRate: feeRate,
     amount: feeAmount.toString(),
   });
 }
@@ -313,7 +332,7 @@ export async function isTokenMintable(
     );
     return tokenRegister.checkMintable(tokenAddress);
   } else if (IS_NEAR(chainId)) {
-    const accountId = MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
+    const accountId = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
     const connectionConfig = {
       networkId: ID_TO_NEAR_NETWORK(chainId),
       nodeUrl: ID_TO_RPC_URL(chainId),
@@ -327,10 +346,10 @@ export async function isTokenMintable(
       args_base64: 'e30=',
     });
     console.log('token address', tokenAddress);
-    const mcsTokenSet = JSON.parse(asciiToString(response.result));
-    for (let i = 0; i < mcsTokenSet.length; i++) {
+    const mosTokenSet = JSON.parse(asciiToString(response.result));
+    for (let i = 0; i < mosTokenSet.length; i++) {
       if (
-        getHexAddress(mcsTokenSet[i][0].toLowerCase(), chainId, false) ===
+        getHexAddress(mosTokenSet[i][0].toLowerCase(), chainId, false) ===
         tokenAddress.toLowerCase()
       ) {
         return true;
@@ -338,11 +357,45 @@ export async function isTokenMintable(
     }
     return false;
   } else {
-    const mcs = new EVMCrossChainService(
-      MCS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
-      MCS_EVM_METADATA.abi,
+    const mos = new EVMOmnichainService(
+      MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
+      MOS_EVM_METADATA.abi,
       rpcProvider
     );
-    return mcs.isMintable(tokenAddress);
+    return mos.isMintable(tokenAddress);
   }
+}
+
+export async function getDistributeRate(
+  mapChainId: string
+): Promise<ButterFeeDistribution> {
+  const rpcUrl = ID_TO_RPC_URL(mapChainId);
+  const rpcProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
+  if (!IS_MAP(mapChainId)) {
+    throw new Error('chain id is not MAP');
+  }
+
+  const mos = new ethers.Contract(
+    MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(mapChainId)],
+    MOS_RELAY_METADATA.abi,
+    rpcProvider
+  );
+  const relayerRate = await mos.distributeRate(0);
+  const lpRate = await mos.distributeRate(1);
+  return Promise.resolve({
+    relayer: relayerRate.rate.div(100).toString(),
+    lp: lpRate.rate.div(100).toString(),
+    protocol: '0',
+  });
+}
+
+function _getFeeAmount(amount: string, feeRate: ButterFeeRate): string {
+  const feeAmount = BigNumber.from(amount).mul(feeRate.rate).div(10000);
+
+  if (feeAmount.gt(feeRate.highest)) {
+    return feeRate.highest.toString();
+  } else if (feeAmount.lt(feeRate.lowest)) {
+    return feeRate.lowest.toString();
+  }
+  return feeAmount.toString();
 }

@@ -1,6 +1,6 @@
 import { Chain } from '../entities/Chain';
-import { MAP_TEST_NATIVE } from './tokens';
-// TODO: add polygon
+
+/** Chain Id for supported Chain */
 export enum ChainId {
   MAP_MAINNET = '22776',
   MAP_TEST = '212',
@@ -13,19 +13,19 @@ export enum ChainId {
 
   ETH_PRIV = '34434',
 }
+
+/** ID to JSON RPC URL */
 export const ID_TO_RPC_URL = (id: string): string => {
   switch (id) {
     case '22776':
-      return MAP_MAINNET_CHAIN.rpc!;
-    case '212':
+      return '';
+    case ChainId.MAP_TEST:
       return MAP_TEST_CHAIN.rpc!;
-    case '56':
-      return BSC_MAINNET_CHAIN.rpc!;
-    case '97':
+    case ChainId.BSC_TEST:
       return BSC_TEST_CHAIN.rpc!;
-    case '34434':
+    case ChainId.ETH_PRIV:
       return ETH_PRIV_CHAIN.rpc!;
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return NEAR_TEST_CHAIN.rpc!;
     case '5566818579631833088':
       return NEAR_MAINNET_CHAIN.rpc!;
@@ -52,7 +52,7 @@ export const MAP_TEST_CHAIN = new Chain(
 export const BSC_TEST_CHAIN = new Chain(
   ChainId.BSC_TEST,
   'BSC Testnet',
-  'https://rpc.ankr.com/bsc_testnet_chapel/9a12629301614050e76136dcaf9627f5ef215f86fb1185d908f9d232b8530ef7',
+  'https://data-seed-prebsc-2-s2.binance.org:8545',
   'https://testnet.bscscan.com/',
   'https://files.maplabs.io/bridge/bsc.png',
   'BSC'
@@ -94,7 +94,7 @@ export const NEAR_MAINNET_CHAIN = new Chain(
 // TODO: return chain info
 export const ID_TO_NEAR_NETWORK = (id: string): string => {
   switch (id) {
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return 'testnet';
     case ChainId.NEAR_MAINNET:
       return 'mainnet';
@@ -104,17 +104,15 @@ export const ID_TO_NEAR_NETWORK = (id: string): string => {
 };
 export const ID_TO_CHAIN_ID = (id: string): ChainId => {
   switch (id) {
-    case '22776':
+    case ChainId.MAP_MAINNET:
       return ChainId.MAP_MAINNET;
-    case '212':
+    case ChainId.MAP_TEST:
       return ChainId.MAP_TEST;
-    case '97':
+    case ChainId.BSC_TEST:
       return ChainId.BSC_TEST;
-    case '56':
-      return ChainId.BSC_MAINNET;
-    case '34434':
+    case ChainId.ETH_PRIV:
       return ChainId.ETH_PRIV;
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return ChainId.NEAR_TESTNET;
     case '5566818579631833088':
       return ChainId.NEAR_MAINNET;
@@ -161,19 +159,17 @@ export enum NativeCurrencyName {
 
 export const ID_TO_NETWORK_NAME = (id: string): ChainName => {
   switch (id) {
-    case '22776':
+    case ChainId.MAP_MAINNET:
       return ChainName.MAP;
-    case '212':
+    case ChainId.MAP_TEST:
       return ChainName.MAP_TEST;
-    case '34434':
+    case ChainId.ETH_PRIV:
       return ChainName.ETH_PRIV;
-    case '97':
+    case ChainId.BSC_TEST:
       return ChainName.BSC_TEST;
-    case '56':
-      return ChainName.BSC_MAINNET;
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return ChainName.NEAR_TESTNET;
-    case '5566818579631833088':
+    case ChainId.NEAR_MAINNET:
       return ChainName.NEAR_MAINNET;
     default:
       throw new Error(`Unknown chain id: ${id}`);
@@ -354,18 +350,17 @@ export const IS_NEAR = (id: string): boolean => {
     case '42':
     case '10':
     case '69':
-    case '97':
+    case ChainId.BSC_TEST:
     case '42161':
     case '421611':
     case '137':
     case '80001':
     case '56':
     case '22776':
-    case '212':
-    case '34434':
+    case ChainId.MAP_TEST:
+    case ChainId.ETH_PRIV:
       return false;
-    case '5566818579631833089':
-    case NEAR_MAINNET_CHAIN.chainId:
+    case ChainId.NEAR_TESTNET:
       return true;
     default:
       throw new Error(`Unsupported chain id: ${id}`);
@@ -384,14 +379,14 @@ export const IS_EVM = (id: string): boolean => {
     case '42161':
     case '421611':
     case '137':
-    case '97':
+    case ChainId.BSC_TEST:
     case '80001':
     case '56':
     case '22776':
-    case '212':
-    case '34434':
+    case ChainId.MAP_TEST:
+    case ChainId.ETH_PRIV:
       return true;
-    case '5566818579631833089':
+    case ChainId.NEAR_TESTNET:
       return false;
     default:
       throw new Error(`Unknown chain id: ${id}`);

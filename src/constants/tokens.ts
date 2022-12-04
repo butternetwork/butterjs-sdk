@@ -36,7 +36,7 @@ export const MAP_TEST_WMAP = new Token(
 );
 
 export const MAP_TEST_METH = new Token(
-  '212',
+  ChainId.MAP_TEST,
   '0x41358EFc7d49d19F76E1E3bdD694f3bff9af3b36',
   18,
   'METH',

@@ -3,6 +3,13 @@ import Web3 from 'web3';
 import BN from 'bn.js';
 import { Method } from 'web3-core-method';
 
+/**
+ * get relaychain token in batch to improve speed
+ * @param contract
+ * @param fromChainId
+ * @param tokenAddressArr
+ * @param mapRpcUrl
+ */
 export async function batchGetRelayChainToken(
   contract: Contract,
   fromChainId: string,
@@ -17,9 +24,16 @@ export async function batchGetRelayChainToken(
       contract.methods.getRelayChainToken(fromChainId, fromTokenAddress).call
     );
   }
-  return await makeBatchRequest(calls, mapRpcUrl);
+  return await _makeBatchRequest(calls, mapRpcUrl);
 }
 
+/**
+ * get tochain token in batch to improve speed
+ * @param contract
+ * @param tokenAddressArr
+ * @param toChain
+ * @param mapRpcUrl
+ */
 export async function batchGetToChainToken(
   contract: Contract,
   tokenAddressArr: string[],
@@ -34,9 +48,15 @@ export async function batchGetToChainToken(
       contract.methods.getToChainToken(tokenAddress, new BN(toChain, 10)).call
     );
   }
-  return await makeBatchRequest(calls, mapRpcUrl);
+  return await _makeBatchRequest(calls, mapRpcUrl);
 }
-function makeBatchRequest(calls: any[], mapRpcUrl: string): Promise<string[]> {
+
+/**
+ * make actual batch request using web3.js's batch request
+ * @param calls
+ * @param mapRpcUrl
+ */
+function _makeBatchRequest(calls: any[], mapRpcUrl: string): Promise<string[]> {
   const web3 = new Web3(mapRpcUrl);
   const batch = new web3.BatchRequest();
 
