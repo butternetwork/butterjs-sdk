@@ -24,6 +24,7 @@ export function validateAndParseAddressByChainId(
     case ChainId.MAP:
     case ChainId.ETH_PRIV:
     case ChainId.BSC_TEST:
+    case ChainId.MATIC_TEST:
     case ChainId.MAP_TEST: {
       try {
         return getAddress(address);
