@@ -24,6 +24,15 @@ export const MAP_TEST_NATIVE = new EVMNativeCoin(
   'MAP Protocol',
   'https://files.maplabs.io/bridge/map.png'
 );
+
+export const MATIC_TEST_NATIVE = new EVMNativeCoin(
+  ChainId.MATIC_TEST,
+  18,
+  'MATIC',
+  'Polygon',
+  'https://files.maplabs.io/bridge/polygon.png'
+);
+
 export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
 
 export const ETH_PRIV_LMAP = new Token(
@@ -136,7 +145,7 @@ export const BSC_TEST_MAP = new Token(
 
 export const NEAR_TEST_MAP = new Token(
   ChainId.NEAR_TESTNET,
-  'map.mos2.mfac.maplabs.testnet',
+  'mapo.maplabs.testnet',
   24,
   'MAPO',
   'NEAR MAPO',
@@ -177,4 +186,31 @@ export const MAP_TEST_NEAR = new Token(
   'NEAR',
   'MAPO NEAR',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);
+
+export const MATIC_TEST_MOST = new Token(
+  ChainId.MATIC_TEST,
+  '0x6d4570191C7B5835226a0bE18734A8E922ff353B',
+  18,
+  'MOST',
+  'MAP Omnichain Service Token',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const MATIC_TEST_MAP = new Token(
+  ChainId.MATIC_TEST,
+  '0xE6687528C7b85115a038D806339dd7E7b869B87C',
+  18,
+  'MAPO',
+  'Matic-Pegged MAPO',
+  'https://files.maplabs.io/bridge/map.png'
+);
+
+export const MATIC_TEST_WMATIC = new Token(
+  ChainId.MATIC_TEST,
+  '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+  18,
+  'WMATIC',
+  'Wrapped Matic',
+  'https://files.maplabs.io/bridge/polygon.png'
 );

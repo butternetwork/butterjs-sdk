@@ -7,6 +7,7 @@ export enum ChainId {
   MAP_TEST = '212',
   ETH_PRIV = '34434',
   BSC_TEST = '97',
+  MATIC_TEST = '80001',
   NEAR_TESTNET = '5566818579631833089',
 }
 
@@ -19,6 +20,8 @@ export const ID_TO_RPC_URL = (id: string): string => {
       return MAP_TEST_CHAIN.rpc!;
     case ChainId.BSC_TEST:
       return BSC_TEST_CHAIN.rpc!;
+    case ChainId.MATIC_TEST:
+      return MATIC_TEST_CHAIN.rpc!;
     case ChainId.ETH_PRIV:
       return ETH_PRIV_CHAIN.rpc!;
     case ChainId.NEAR_TESTNET:
@@ -50,6 +53,15 @@ export const BSC_TEST_CHAIN = new Chain(
   'https://testnet.bscscan.com/',
   'https://files.maplabs.io/bridge/bsc.png',
   'BSC'
+);
+
+export const MATIC_TEST_CHAIN = new Chain(
+  ChainId.MATIC_TEST,
+  'Matic Mumbai',
+  'https://rpc-mumbai.maticvigil.com/',
+  'https://mumbai.polygonscan.com/',
+  'https://files.mapprotocol.io/bridge/polygon.png',
+  'MATIC'
 );
 
 export const ETH_PRIV_CHAIN = new Chain(
@@ -90,6 +102,8 @@ export const ID_TO_CHAIN_ID = (id: string): ChainId => {
       return ChainId.ETH_PRIV;
     case ChainId.NEAR_TESTNET:
       return ChainId.NEAR_TESTNET;
+    case ChainId.MATIC_TEST:
+      return ChainId.MATIC_TEST;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -101,6 +115,7 @@ export enum ChainName {
   ETH_PRIV = 'eth-priv',
   NEAR_TESTNET = 'near-testnet',
   BSC_TEST = 'bsc-testnet',
+  MATIC_TEST = 'matic-mumbai',
 }
 
 export enum NativeCurrencyName {
@@ -139,6 +154,8 @@ export const ID_TO_NETWORK_NAME = (id: string): ChainName => {
       return ChainName.ETH_PRIV;
     case ChainId.BSC_TEST:
       return ChainName.BSC_TEST;
+    case ChainId.MATIC_TEST:
+      return ChainName.MATIC_TEST;
     case ChainId.NEAR_TESTNET:
       return ChainName.NEAR_TESTNET;
     default:
@@ -162,6 +179,7 @@ export const SUPPORTED_CHAIN_LIST = [
   // ETH_PRIV_CHAIN,
   NEAR_TEST_CHAIN,
   BSC_TEST_CHAIN,
+  MATIC_TEST_CHAIN,
 ];
 
 export const ID_TO_DEFAULT_PROVIDER = (id: string): string => {
@@ -174,6 +192,8 @@ export const ID_TO_DEFAULT_PROVIDER = (id: string): string => {
       return ETH_PRIV_CHAIN.rpc!;
     case ChainId.BSC_TEST:
       return BSC_TEST_CHAIN.rpc!;
+    case ChainId.MATIC_TEST:
+      return MATIC_TEST_CHAIN.rpc!;
     default:
       throw new Error(`Chain id: ${id} not supported`);
   }
@@ -317,7 +337,7 @@ export const IS_NEAR = (id: string): boolean => {
     case '42161':
     case '421611':
     case '137':
-    case '80001':
+    case ChainId.MATIC_TEST:
     case '56':
     case '22776':
     case ChainId.MAP_TEST:
@@ -343,7 +363,7 @@ export const IS_EVM = (id: string): boolean => {
     case '421611':
     case '137':
     case ChainId.BSC_TEST:
-    case '80001':
+    case ChainId.MATIC_TEST:
     case '56':
     case '22776':
     case ChainId.MAP_TEST:
