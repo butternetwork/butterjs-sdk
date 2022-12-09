@@ -3,6 +3,52 @@ import { NearNativeCoin } from '../entities/native/Near';
 import { ChainId } from './chains';
 import { EVMNativeCoin } from '../entities/native/EVMNativeCoin';
 
+/************************* mainnet tokens *************************/
+export const BSC_MAINNET_NATIVE = new EVMNativeCoin(
+  ChainId.BSC_MAINNET,
+  18,
+  'BNB',
+  'BNB',
+  'https://files.maplabs.io/bridge/bnb.png'
+);
+export const MAP_MAINNET_NATIVE = new EVMNativeCoin(
+  ChainId.MAP_MAINNET,
+  18,
+  'MAPO',
+  'MAP Protocol',
+  'https://files.maplabs.io/bridge/map.png'
+);
+export const NEAR_MAINNET_NATIVE = new NearNativeCoin(ChainId.NEAR_MAINNET);
+
+export const MAP_MAINNET_WMAP = new Token(
+  ChainId.MAP_MAINNET,
+  '0x13CB04d4a5Dfb6398Fc5AB005a6c84337256eE23',
+  18,
+  'wMAPO',
+  'Wrapped MAPO',
+  'https://files.maplabs.io/bridge/map.png'
+);
+
+export const BSC_MAINNET_WBNB = new Token(
+  ChainId.BSC_MAINNET,
+  '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
+  18,
+  'WBNB',
+  'Wrapped BNB',
+  'https://files.maplabs.io/bridge/bnb.png'
+);
+
+export const NEAR_MAINNET_WNEAR = new Token(
+  ChainId.NEAR_MAINNET,
+  'wrap.near',
+  24,
+  'wNear',
+  'Wrapped Near',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);
+
+/************************* testnet tokens *************************/
+
 export const ETH_PRIV_NATIVE = new EVMNativeCoin(
   ChainId.ETH_PRIV,
   18,
@@ -26,7 +72,7 @@ export const MAP_TEST_NATIVE = new EVMNativeCoin(
 );
 
 export const MATIC_TEST_NATIVE = new EVMNativeCoin(
-  ChainId.MATIC_TEST,
+  ChainId.POLYGON_TEST,
   18,
   'MATIC',
   'Polygon',
@@ -189,7 +235,7 @@ export const MAP_TEST_NEAR = new Token(
 );
 
 export const MATIC_TEST_MOST = new Token(
-  ChainId.MATIC_TEST,
+  ChainId.POLYGON_TEST,
   '0x6d4570191C7B5835226a0bE18734A8E922ff353B',
   18,
   'MOST',
@@ -198,7 +244,7 @@ export const MATIC_TEST_MOST = new Token(
 );
 
 export const MATIC_TEST_MAP = new Token(
-  ChainId.MATIC_TEST,
+  ChainId.POLYGON_TEST,
   '0xE6687528C7b85115a038D806339dd7E7b869B87C',
   18,
   'MAPO',
@@ -207,7 +253,7 @@ export const MATIC_TEST_MAP = new Token(
 );
 
 export const MATIC_TEST_WMATIC = new Token(
-  ChainId.MATIC_TEST,
+  ChainId.POLYGON_TEST,
   '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
   18,
   'WMATIC',

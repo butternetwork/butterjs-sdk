@@ -64,7 +64,7 @@ export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
       return [NEAR_TEST_MOST, NEAR_TEST_MAP, NEAR_TEST_NATIVE];
     case ChainId.BSC_TEST:
       return [BSC_TEST_MOST, BSC_TEST_MAP, BSC_TEST_NATIVE];
-    case ChainId.MATIC_TEST:
+    case ChainId.POLYGON_TEST:
       return [MATIC_TEST_MOST];
     default:
       throw new Error(`Unknown chain id: ${id}`);
@@ -88,7 +88,7 @@ export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
       return [NEAR_TEST_MOST, NEAR_TEST_MAP, NEAR_TEST_WNEAR, NEAR_TEST_NATIVE];
     case ChainId.BSC_TEST:
       return [BSC_TEST_MOST, BSC_TEST_WBNB, BSC_TEST_MAP, BSC_TEST_NATIVE];
-    case ChainId.MATIC_TEST:
+    case ChainId.POLYGON_TEST:
       return [
         MATIC_TEST_MOST,
         MATIC_TEST_WMATIC,

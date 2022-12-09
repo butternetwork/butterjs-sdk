@@ -1,9 +1,8 @@
 import { BaseCurrency } from '../../entities';
 import {
   ID_TO_CHAIN_ID,
-  ID_TO_DEFAULT_PROVIDER,
   ID_TO_NEAR_NETWORK,
-  ID_TO_RPC_URL,
+  ID_TO_DEFAULT_RPC_URL,
   IS_MAP,
   IS_NEAR,
   MOS_CONTRACT_ADDRESS_SET,
@@ -54,7 +53,7 @@ export async function getBridgeFee(
 
   const mapChainId: string = rpcProvider.chainId.toString();
   const mapProvider = new ethers.providers.JsonRpcProvider(
-    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_PROVIDER(mapChainId)
+    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
   );
   const tokenRegister = new TokenRegister(
     TOKEN_REGISTER_ADDRESS_SET[chainId]!,
@@ -127,7 +126,7 @@ export async function getVaultBalance(
 
   const mapChainId: string = rpcProvider.chainId.toString();
   const provider = new ethers.providers.JsonRpcProvider(
-    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_PROVIDER(mapChainId)
+    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
   );
 
   const tokenRegister = new TokenRegister(
@@ -204,7 +203,7 @@ export async function getTargetTokenAddress(
 ): Promise<string> {
   const mapChainId: string = rpcProvider.chainId.toString();
   const provider = new ethers.providers.JsonRpcProvider(
-    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_PROVIDER(mapChainId)
+    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
   );
   const tokenRegister = new TokenRegister(
     TOKEN_REGISTER_ADDRESS_SET[mapChainId]!,
@@ -265,7 +264,7 @@ export async function getTokenCandidates(
 ): Promise<BaseCurrency[]> {
   const mapUrl = provider.url
     ? provider.url
-    : ID_TO_DEFAULT_PROVIDER(provider.chainId.toString());
+    : ID_TO_DEFAULT_RPC_URL(provider.chainId.toString());
   const web3 = new Web3(mapUrl);
 
   const tokenRegisterContract = new web3.eth.Contract(
@@ -322,7 +321,7 @@ export async function isTokenMintable(
   tokenAddress: string,
   chainId: string
 ): Promise<boolean> {
-  const rpcUrl = ID_TO_RPC_URL(chainId);
+  const rpcUrl = ID_TO_DEFAULT_RPC_URL(chainId);
   const rpcProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
   if (IS_MAP(chainId)) {
     const tokenRegister = new TokenRegister(
@@ -334,7 +333,7 @@ export async function isTokenMintable(
     const accountId = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
     const connectionConfig = {
       networkId: ID_TO_NEAR_NETWORK(chainId),
-      nodeUrl: ID_TO_RPC_URL(chainId),
+      nodeUrl: ID_TO_DEFAULT_RPC_URL(chainId),
     };
     const near = await connect(connectionConfig);
     const response: CodeResult = await near.connection.provider.query({
@@ -368,7 +367,7 @@ export async function isTokenMintable(
 export async function getDistributeRate(
   mapChainId: string
 ): Promise<ButterFeeDistribution> {
-  const rpcUrl = ID_TO_RPC_URL(mapChainId);
+  const rpcUrl = ID_TO_DEFAULT_RPC_URL(mapChainId);
   const rpcProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
   if (!IS_MAP(mapChainId)) {
     throw new Error('chain id is not MAP');

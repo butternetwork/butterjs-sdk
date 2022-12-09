@@ -3,7 +3,7 @@ import {
   ChainId,
   ID_TO_NEAR_NETWORK,
   ID_TO_NETWORK_NAME,
-  ID_TO_RPC_URL,
+  ID_TO_DEFAULT_RPC_URL,
   IS_EVM,
   IS_NEAR,
 } from '../constants/chains';
@@ -20,29 +20,18 @@ export function validateAndParseAddressByChainId(
   address: string,
   chainId: string
 ): string {
-  switch (chainId) {
-    case ChainId.MAP:
-    case ChainId.ETH_PRIV:
-    case ChainId.BSC_TEST:
-    case ChainId.MATIC_TEST:
-    case ChainId.MAP_TEST: {
-      try {
-        return getAddress(address);
-      } catch (error) {
-        throw new Error(
-          `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
-        );
-      }
+  if (IS_EVM(chainId)) {
+    try {
+      return getAddress(address);
+    } catch (error) {
+      throw new Error(
+        `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
+      );
     }
-    // near has two type of accounts
-    // Named accounts, with human-readable names such as alice.near.
-    // Implicit accounts, referred by 64 chars (e.g. 98793cd91a3f870fb126f662858[...]).
-    case ChainId.NEAR_TESTNET: {
-      return address;
-    }
-    default: {
-      throw new Error(`${ID_TO_NETWORK_NAME(chainId)} is not supported`);
-    }
+  } else if (IS_NEAR(chainId)) {
+    return address;
+  } else {
+    throw new Error(`${ID_TO_NETWORK_NAME(chainId)} is not supported`);
   }
 }
 
@@ -62,7 +51,7 @@ export async function verifyNearAccountId(
 ): Promise<NearAccountState> {
   const connectionConfig = {
     networkId: ID_TO_NEAR_NETWORK(chainId),
-    nodeUrl: ID_TO_RPC_URL(chainId),
+    nodeUrl: ID_TO_DEFAULT_RPC_URL(chainId),
   };
   const near = await connect(connectionConfig);
   const account = await near.account(accountId);

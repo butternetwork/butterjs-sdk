@@ -21,9 +21,9 @@ export const WCOIN = (id: string): Token => {
       return BSC_TEST_WBNB;
     case ChainId.NEAR_TESTNET:
       return NEAR_TEST_WNEAR;
-    case ChainId.MAP:
+    case ChainId.MAP_MAINNET:
       return MAP_TEST_WMAP;
-    case ChainId.MATIC_TEST:
+    case ChainId.POLYGON_TEST:
       return MATIC_TEST_WMATIC;
     default:
       throw new Error('could not find wrapped token for chain id: ' + id);
