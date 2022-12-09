@@ -10,6 +10,7 @@ import {
   MAP_TEST_MOST,
   MATIC_TEST_MOST,
   POLYGON_MAINNET_USDC,
+  POLYGON_TEST_CHAIN,
   SUPPORTED_CHAIN_LIST,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
@@ -57,7 +58,16 @@ const bscProvider = new ethers.providers.JsonRpcProvider(
   BSC_TEST_CHAIN.rpc,
   Number.parseInt(BSC_TEST_CHAIN.chainId)
 );
+
+const maticProvider = new ethers.providers.JsonRpcProvider(
+  POLYGON_TEST_CHAIN.rpc,
+  Number.parseInt(POLYGON_TEST_CHAIN.chainId)
+);
 const bscSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, bscProvider);
+const maticSinger = new ethers.Wallet(
+  process.env.EVM_PRIVATE_KEY!,
+  maticProvider
+);
 
 const mapProvider = new ethers.providers.JsonRpcProvider(
   MAP_TEST_CHAIN.rpc,
@@ -95,12 +105,17 @@ async function demo() {
   const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
-  const fromChainId = ChainId.POLYGON_MAINNET;
-  const toChainId = ChainId.BSC_MAINNET;
+  const fromChainId = ChainId.POLYGON_TEST;
+  const toChainId = ChainId.BSC_TEST;
 
-  const fromToken = POLYGON_MAINNET_USDC;
+  const fromToken = MATIC_TEST_MOST;
 
   const amount = ethers.utils.parseEther('1').toString();
+
+  // const provider: ButterJsonRpcProvider = {
+  //   url: 'https://testnet-rpc.maplabs.io',
+  //   chainId: 212,
+  // };
 
   const provider: ButterJsonRpcProvider = {
     url: 'https://testnet-rpc.maplabs.io',
@@ -108,10 +123,11 @@ async function demo() {
   };
 
   // 获取token 从bsc链可以bridge到near链的token列表
-  const tokenCandidates = await getTokenCandidates(fromChainId, toChainId, {
-    url: MAP_MAINNET_CHAIN.rpc,
-    chainId: 22776,
-  });
+  const tokenCandidates = await getTokenCandidates(
+    fromChainId,
+    toChainId,
+    provider
+  );
   console.log('token candidates', tokenCandidates);
 
   // 1. 获取费用信息
@@ -142,7 +158,7 @@ async function demo() {
     toChainId: toChainId,
     toAddress: toAddress,
     amount: amount,
-    options: { signerOrProvider: web3.eth },
+    options: { signerOrProvider: maticSinger },
   };
   const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
 
@@ -161,7 +177,7 @@ async function demo() {
     amount: amount,
     options: {
       nearProvider: nearConfig,
-      signerOrProvider: mapSigner,
+      signerOrProvider: maticSinger,
       // gas: '100000000000000',
       gas: adjustedGas,
     },

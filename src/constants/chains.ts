@@ -97,7 +97,7 @@ export const BSC_TEST_CHAIN = new Chain(
 
 export const POLYGON_TEST_CHAIN = new Chain(
   ChainId.POLYGON_TEST,
-  'Matic Mumbai',
+  'Polygon Testnet',
   'https://rpc-mumbai.maticvigil.com/',
   'https://mumbai.polygonscan.com/',
   'https://files.mapprotocol.io/bridge/polygon.png',
