@@ -7,10 +7,10 @@ import { ChainId } from './chains';
  * {@link https://github.com/butternetwork/
  * butter-mos-contracts/blob/master/evmV2/contracts/MAPCrossChainService.sol} */
 export const MOS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
-  [ChainId.MAP_MAINNET]: '',
-  [ChainId.BSC_MAINNET]: '',
-  [ChainId.POLYGON_MAINNET]: '',
-  [ChainId.NEAR_MAINNET]: '',
+  [ChainId.MAP_MAINNET]: '0x630105189c7114667a7179Aa57f07647a5f42B7F',
+  [ChainId.BSC_MAINNET]: '0x630105189c7114667a7179Aa57f07647a5f42B7F',
+  [ChainId.POLYGON_MAINNET]: '0x630105189c7114667a7179Aa57f07647a5f42B7F',
+  [ChainId.NEAR_MAINNET]: 'mos.mfac.butternetwork.near',
 
   [ChainId.ETH_PRIV]: '0x43130059C655314d7ba7eDfb8299d26FbDE726F1',
   [ChainId.BSC_TEST]: '0x220bE51C717c4E257Cb8e96be8591740336623F8',
