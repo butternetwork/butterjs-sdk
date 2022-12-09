@@ -1,5 +1,6 @@
 import { BaseCurrency } from '../entities';
 import {
+  BSC_MAINNET_USDC,
   BSC_TEST_MAP,
   BSC_TEST_MOST,
   BSC_TEST_NATIVE,
@@ -14,10 +15,12 @@ import {
   MATIC_TEST_MAP,
   MATIC_TEST_MOST,
   MATIC_TEST_WMATIC,
+  NEAR_MAINNET_USDC,
   NEAR_TEST_MAP,
   NEAR_TEST_MOST,
   NEAR_TEST_NATIVE,
   NEAR_TEST_WNEAR,
+  POLYGON_MAINNET_USDC,
 } from '../constants';
 import { getHexAddress } from './addressUtil';
 
@@ -50,6 +53,14 @@ export function getTokenByAddressAndChainId(
 /** Chain Id to supported tokens */
 export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
   switch (id) {
+    case ChainId.MAP_MAINNET:
+      return [];
+    case ChainId.BSC_MAINNET:
+      return [BSC_MAINNET_USDC];
+    case ChainId.POLYGON_MAINNET:
+      return [POLYGON_MAINNET_USDC];
+    case ChainId.NEAR_MAINNET:
+      return [NEAR_MAINNET_USDC];
     case ChainId.MAP_TEST:
       return [
         MAP_TEST_MOST,

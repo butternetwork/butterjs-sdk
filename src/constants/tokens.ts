@@ -18,6 +18,14 @@ export const MAP_MAINNET_NATIVE = new EVMNativeCoin(
   'MAP Protocol',
   'https://files.maplabs.io/bridge/map.png'
 );
+export const POLYGON_MAINNET_NATIVE = new EVMNativeCoin(
+  ChainId.POLYGON_MAINNET,
+  18,
+  'MAPO',
+  'MAP Protocol',
+  'https://files.maplabs.io/bridge/map.png'
+);
+
 export const NEAR_MAINNET_NATIVE = new NearNativeCoin(ChainId.NEAR_MAINNET);
 
 export const MAP_MAINNET_WMAP = new Token(
@@ -45,6 +53,41 @@ export const NEAR_MAINNET_WNEAR = new Token(
   'wNear',
   'Wrapped Near',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);
+
+export const POLYGON_MAINNET_WMATIC = new Token(
+  ChainId.POLYGON_MAINNET,
+  '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
+  18,
+  'WMATIC',
+  'Wrapped Matic'
+);
+
+export const BSC_MAINNET_USDC = new Token(
+  ChainId.BSC_MAINNET,
+  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+  18,
+  'USDC',
+  'Binance-Peg USD Coin',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const POLYGON_MAINNET_USDC = new Token(
+  ChainId.POLYGON_MAINNET,
+  '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+  6,
+  'USDC',
+  'USD Circle',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const NEAR_MAINNET_USDC = new Token(
+  ChainId.POLYGON_MAINNET,
+  'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near',
+  6,
+  'USDC',
+  'USD Circle',
+  'https://files.maplabs.io/bridge/usdc.png'
 );
 
 /************************* testnet tokens *************************/
