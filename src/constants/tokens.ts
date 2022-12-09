@@ -62,6 +62,14 @@ export const POLYGON_MAINNET_WMATIC = new Token(
   'WMATIC',
   'Wrapped Matic'
 );
+export const MAP_MAINNET_USDC = new Token(
+  ChainId.MAP_MAINNET,
+  '0x9f722b2cb30093f766221fd0d37964949ed66918',
+  18,
+  'USDC',
+  'MAP USDC',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
 
 export const BSC_MAINNET_USDC = new Token(
   ChainId.BSC_MAINNET,

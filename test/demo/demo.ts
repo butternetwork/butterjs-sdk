@@ -5,9 +5,11 @@ import { BridgeRequestParam, NearNetworkConfig } from '../../src/types';
 import {
   BSC_TEST_CHAIN,
   ChainId,
+  MAP_MAINNET_CHAIN,
   MAP_TEST_CHAIN,
   MAP_TEST_MOST,
   MATIC_TEST_MOST,
+  POLYGON_MAINNET_USDC,
   SUPPORTED_CHAIN_LIST,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
@@ -93,10 +95,10 @@ async function demo() {
   const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
-  const fromChainId = ChainId.MAP_TEST;
-  const toChainId = ChainId.POLYGON_TEST;
+  const fromChainId = ChainId.POLYGON_MAINNET;
+  const toChainId = ChainId.BSC_MAINNET;
 
-  const fromToken = MAP_TEST_MOST;
+  const fromToken = POLYGON_MAINNET_USDC;
 
   const amount = ethers.utils.parseEther('1').toString();
 
@@ -107,8 +109,8 @@ async function demo() {
 
   // 获取token 从bsc链可以bridge到near链的token列表
   const tokenCandidates = await getTokenCandidates(fromChainId, toChainId, {
-    url: 'https://testnet-rpc.maplabs.io',
-    chainId: 212,
+    url: MAP_MAINNET_CHAIN.rpc,
+    chainId: 22776,
   });
   console.log('token candidates', tokenCandidates);
 

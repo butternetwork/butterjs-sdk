@@ -24,7 +24,7 @@ export const MOS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
  */
 export const TOKEN_REGISTER_ADDRESS_SET: { [chainId: string]: string } = {
   [ChainId.MAP_TEST]: '0xc81Fe3f111d44b5469B9179D3b40B99A2527cF7A',
-  [ChainId.MAP_MAINNET]: '',
+  [ChainId.MAP_MAINNET]: '0xff44790d336d3C004F2Dac7e401E4EA5680529dD',
 };
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
