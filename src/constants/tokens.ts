@@ -82,7 +82,7 @@ export const POLYGON_MAINNET_USDC = new Token(
 );
 
 export const NEAR_MAINNET_USDC = new Token(
-  ChainId.POLYGON_MAINNET,
+  ChainId.NEAR_MAINNET,
   'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near',
   6,
   'USDC',
