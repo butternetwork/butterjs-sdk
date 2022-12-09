@@ -3,24 +3,36 @@ import { MAP_TEST_NATIVE } from './tokens';
 
 /** Chain Id for supported Chain */
 export enum ChainId {
-  MAP = '22776',
+  MAP_MAINNET = '22776',
+  BSC_MAINNET = '56',
+  POLYGON_MAINNET = '137',
+  NEAR_MAINNET = '5566818579631833088',
+
   MAP_TEST = '212',
   ETH_PRIV = '34434',
   BSC_TEST = '97',
-  MATIC_TEST = '80001',
+  POLYGON_TEST = '80001',
   NEAR_TESTNET = '5566818579631833089',
 }
 
 /** ID to JSON RPC URL */
-export const ID_TO_RPC_URL = (id: string): string => {
+export const ID_TO_DEFAULT_RPC_URL = (id: string): string => {
   switch (id) {
-    case '22776':
-      return '';
+    // mainnet
+    case ChainId.MAP_MAINNET:
+      return MAP_MAINNET_CHAIN.rpc!;
+    case ChainId.BSC_MAINNET:
+      return BSC_MAINNET_CHAIN.rpc!;
+    case ChainId.POLYGON_MAINNET:
+      return POLYGON_MAINNET_CHAIN.rpc!;
+    case ChainId.NEAR_MAINNET:
+      return NEAR_MAINNET_CHAIN.rpc!;
+    // testnet
     case ChainId.MAP_TEST:
       return MAP_TEST_CHAIN.rpc!;
     case ChainId.BSC_TEST:
       return BSC_TEST_CHAIN.rpc!;
-    case ChainId.MATIC_TEST:
+    case ChainId.POLYGON_TEST:
       return MATIC_TEST_CHAIN.rpc!;
     case ChainId.ETH_PRIV:
       return ETH_PRIV_CHAIN.rpc!;
@@ -31,13 +43,41 @@ export const ID_TO_RPC_URL = (id: string): string => {
   }
 };
 export const MAP_MAINNET_CHAIN = new Chain(
-  ChainId.MAP,
+  ChainId.MAP_MAINNET,
   'MAP Mainnet',
   'https://poc3-rpc.maplabs.io/',
   'https://makalu.mapscan.io/',
   'https://files.maplabs.io/bridge/map.png',
   'MAP'
 );
+
+export const BSC_MAINNET_CHAIN = new Chain(
+  ChainId.BSC_MAINNET,
+  'BSC Mainnet',
+  'https://bsc-dataseed1.defibit.io/',
+  'https://bscscan.com/',
+  'https://files.maplabs.io/bridge/bsc.png',
+  'BSC'
+);
+
+export const POLYGON_MAINNET_CHAIN = new Chain(
+  ChainId.BSC_MAINNET,
+  'Polygon Mainnet',
+  'https://polygon-rpc.com/',
+  'https://polygonscan.com/',
+  'https://files.maplabs.io/bridge/polygon.png',
+  'MATIC'
+);
+
+export const NEAR_MAINNET_CHAIN = new Chain(
+  ChainId.NEAR_MAINNET,
+  'Near Mainnet',
+  'https://rpc.mainnet.near.org',
+  'https://explorer.near.org/',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png',
+  'NEAR'
+);
+
 export const MAP_TEST_CHAIN = new Chain(
   ChainId.MAP_TEST,
   'MAP Testnet',
@@ -56,7 +96,7 @@ export const BSC_TEST_CHAIN = new Chain(
 );
 
 export const MATIC_TEST_CHAIN = new Chain(
-  ChainId.MATIC_TEST,
+  ChainId.POLYGON_TEST,
   'Matic Mumbai',
   'https://rpc-mumbai.maticvigil.com/',
   'https://mumbai.polygonscan.com/',
@@ -92,8 +132,15 @@ export const ID_TO_NEAR_NETWORK = (id: string): string => {
 };
 export const ID_TO_CHAIN_ID = (id: string): ChainId => {
   switch (id) {
-    case '22776':
-      return ChainId.MAP;
+    case ChainId.MAP_MAINNET:
+      return ChainId.MAP_MAINNET;
+    case ChainId.BSC_MAINNET:
+      return ChainId.BSC_MAINNET;
+    case ChainId.POLYGON_MAINNET:
+      return ChainId.POLYGON_MAINNET;
+    case ChainId.NEAR_MAINNET:
+      return ChainId.NEAR_MAINNET;
+
     case ChainId.MAP_TEST:
       return ChainId.MAP_TEST;
     case ChainId.BSC_TEST:
@@ -102,15 +149,26 @@ export const ID_TO_CHAIN_ID = (id: string): ChainId => {
       return ChainId.ETH_PRIV;
     case ChainId.NEAR_TESTNET:
       return ChainId.NEAR_TESTNET;
-    case ChainId.MATIC_TEST:
-      return ChainId.MATIC_TEST;
+    case ChainId.POLYGON_TEST:
+      return ChainId.POLYGON_TEST;
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
 };
 
+export const SUPPORTED_CHAIN_LIST = [
+  MAP_TEST_CHAIN,
+  NEAR_TEST_CHAIN,
+  BSC_TEST_CHAIN,
+  MATIC_TEST_CHAIN,
+];
+
 export enum ChainName {
-  MAP = 'map-mainnet',
+  MAP_MAINNET = 'map-mainnet',
+  BSC_MAINNET = 'bsc-mainnet',
+  POLYGON_MAINNET = 'polygon-mainnet',
+  NEAR_MAINNET = 'near-mainnet',
+
   MAP_TEST = 'map-testnet',
   ETH_PRIV = 'eth-priv',
   NEAR_TESTNET = 'near-testnet',
@@ -146,15 +204,22 @@ export enum NativeCurrencyName {
 
 export const ID_TO_NETWORK_NAME = (id: string): ChainName => {
   switch (id) {
-    case '22776':
-      return ChainName.MAP;
+    case ChainId.MAP_MAINNET:
+      return ChainName.MAP_MAINNET;
+    case ChainId.BSC_MAINNET:
+      return ChainName.BSC_MAINNET;
+    case ChainId.POLYGON_MAINNET:
+      return ChainName.POLYGON_MAINNET;
+    case ChainId.NEAR_MAINNET:
+      return ChainName.NEAR_MAINNET;
+
     case ChainId.MAP_TEST:
       return ChainName.MAP_TEST;
     case ChainId.ETH_PRIV:
       return ChainName.ETH_PRIV;
     case ChainId.BSC_TEST:
       return ChainName.BSC_TEST;
-    case ChainId.MATIC_TEST:
+    case ChainId.POLYGON_TEST:
       return ChainName.MATIC_TEST;
     case ChainId.NEAR_TESTNET:
       return ChainName.NEAR_TESTNET;
@@ -162,40 +227,14 @@ export const ID_TO_NETWORK_NAME = (id: string): ChainName => {
       throw new Error(`Unknown chain id: ${id}`);
   }
 };
-export const NETWORK_NAME_TO_ID = (network: string): ChainId => {
+export const MAP_NETWORK_NAME_TO_ID = (network: string): ChainId => {
   switch (network) {
-    case ChainName.MAP:
-      return ChainId.MAP;
+    case ChainName.MAP_MAINNET:
+      return ChainId.MAP_MAINNET;
     case ChainName.MAP_TEST:
       return ChainId.MAP_TEST;
     default:
       throw new Error(`Unsupported network name: ${network}`);
-  }
-};
-
-export const SUPPORTED_CHAIN_LIST = [
-  // MAP_MAINNET_CHAIN,
-  MAP_TEST_CHAIN,
-  // ETH_PRIV_CHAIN,
-  NEAR_TEST_CHAIN,
-  BSC_TEST_CHAIN,
-  MATIC_TEST_CHAIN,
-];
-
-export const ID_TO_DEFAULT_PROVIDER = (id: string): string => {
-  switch (id) {
-    case ChainId.MAP:
-      return MAP_MAINNET_CHAIN.rpc!;
-    case ChainId.MAP_TEST:
-      return MAP_TEST_CHAIN.rpc!;
-    case ChainId.ETH_PRIV:
-      return ETH_PRIV_CHAIN.rpc!;
-    case ChainId.BSC_TEST:
-      return BSC_TEST_CHAIN.rpc!;
-    case ChainId.MATIC_TEST:
-      return MATIC_TEST_CHAIN.rpc!;
-    default:
-      throw new Error(`Chain id: ${id} not supported`);
   }
 };
 
@@ -316,7 +355,7 @@ export const ID_TO_DEFAULT_PROVIDER = (id: string): string => {
 
 export const IS_MAP = (id: string): boolean => {
   switch (id) {
-    case ChainId.MAP:
+    case ChainId.MAP_MAINNET:
     case ChainId.MAP_TEST:
       return true;
     default:
@@ -333,17 +372,19 @@ export const IS_NEAR = (id: string): boolean => {
     case '42':
     case '10':
     case '69':
-    case ChainId.BSC_TEST:
     case '42161':
     case '421611':
     case '137':
-    case ChainId.MATIC_TEST:
-    case '56':
-    case '22776':
     case ChainId.MAP_TEST:
     case ChainId.ETH_PRIV:
+    case ChainId.BSC_TEST:
+    case ChainId.POLYGON_TEST:
+    case ChainId.MAP_MAINNET:
+    case ChainId.BSC_MAINNET:
+    case ChainId.POLYGON_MAINNET:
       return false;
     case ChainId.NEAR_TESTNET:
+    case ChainId.NEAR_MAINNET:
       return true;
     default:
       throw new Error(`Unsupported chain id: ${id}`);
@@ -361,15 +402,17 @@ export const IS_EVM = (id: string): boolean => {
     case '69':
     case '42161':
     case '421611':
-    case '137':
+    case ChainId.POLYGON_MAINNET:
+    case ChainId.BSC_MAINNET:
+    case ChainId.MAP_MAINNET:
+
     case ChainId.BSC_TEST:
-    case ChainId.MATIC_TEST:
-    case '56':
-    case '22776':
+    case ChainId.POLYGON_TEST:
     case ChainId.MAP_TEST:
     case ChainId.ETH_PRIV:
       return true;
     case ChainId.NEAR_TESTNET:
+    case ChainId.NEAR_MAINNET:
       return false;
     default:
       throw new Error(`Unknown chain id: ${id}`);

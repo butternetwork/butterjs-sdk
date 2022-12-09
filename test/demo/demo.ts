@@ -94,7 +94,7 @@ async function demo() {
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
   const fromChainId = ChainId.MAP_TEST;
-  const toChainId = ChainId.MATIC_TEST;
+  const toChainId = ChainId.POLYGON_TEST;
 
   const fromToken = MAP_TEST_MOST;
 
