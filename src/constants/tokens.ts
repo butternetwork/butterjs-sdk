@@ -142,6 +142,15 @@ export const MAP_TEST_NEAR = new Token(
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
 
+export const MAP_TEST_USDC = new Token(
+  ChainId.MAP_TEST,
+  '0x6Ac66dCBE1680aAC446B28BE5371Be869B5059cF',
+  18,
+  'USDC',
+  'USDC Circle',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
 export const MAP_TEST_BNB = new Token(
   ChainId.MAP_TEST,
   '0xc0fAa9255A4099D50C2b356bFbD440B69359cEa3',
@@ -160,6 +169,24 @@ export const BSC_TEST_NATIVE = new EVMNativeCoin(
   'https://files.maplabs.io/bridge/bnb.png'
 );
 
+export const BSC_TEST_USDC = new Token(
+  ChainId.BSC_TEST,
+  '0x223476eCEA662bFcc1258638c917D8860253Ccb0',
+  18,
+  'bUSDC',
+  'Butter USDC',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const BSC_TEST_BMOS = new Token(
+  ChainId.BSC_TEST,
+  '0x593F6F6748dc203DFa636c299EeA6a39C0734EEd',
+  18,
+  'BMOS',
+  'Butter MOST',
+  'https://logos-world.net/imageup/Bitcoin/Bitcoin-Logo-PNG14.png'
+);
+
 export const BSC_TEST_NEAR = new Token(
   ChainId.BSC_TEST,
   '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c',
@@ -167,15 +194,6 @@ export const BSC_TEST_NEAR = new Token(
   'Near',
   'Near',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
-);
-
-export const BSC_TEST_USDC = new Token(
-  ChainId.BSC_TEST,
-  '0x223476eCEA662bFcc1258638c917D8860253Ccb0',
-  18,
-  'USDC',
-  'USD Circle',
-  'https://files.maplabs.io/bridge/usdc.png'
 );
 
 export const BSC_TEST_MOST = new Token(
@@ -212,6 +230,24 @@ export const MATIC_TEST_NATIVE = new EVMNativeCoin(
   'MATIC',
   'Polygon',
   'https://files.maplabs.io/bridge/polygon.png'
+);
+
+export const POLYGON_TEST_USDC = new Token(
+  ChainId.POLYGON_TEST,
+  '0x1E01CF4503808Fb30F17806035A87cf5A5217727',
+  18,
+  'bUSDC',
+  'Butter USDC',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const POLYGON_TEST_BMOS = new Token(
+  ChainId.POLYGON_TEST,
+  '0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa',
+  18,
+  'BMOS',
+  'Butter MOST',
+  'https://logos-world.net/imageup/Bitcoin/Bitcoin-Logo-PNG14.png'
 );
 
 export const MATIC_TEST_MOST = new Token(
