@@ -284,12 +284,13 @@ export class EVMOmnichainService implements IMapOmnichainService {
         tokenAddress,
         toAddress,
         amount,
-        toChainId
+        toChainId,
+        swapData
       );
       estimatedGas = gas.toString();
     } else {
       const gas = await this.contract.methods
-        .swapOutToken(tokenAddress, toAddress, amount, toChainId)
+        .swapOutToken(tokenAddress, toAddress, amount, toChainId, swapData)
         .estimateGas({ from: fromAddress });
       estimatedGas = gas.toString();
     }
@@ -309,6 +310,7 @@ export class EVMOmnichainService implements IMapOmnichainService {
       const gas = await this.contract.estimateGas.swapOutNative!(
         toAddress,
         toChainId,
+        swapData,
         {
           value: amount,
         }
@@ -316,7 +318,7 @@ export class EVMOmnichainService implements IMapOmnichainService {
       estimatedGas = gas.toString();
     } else {
       const gas = await this.contract.methods
-        .swapOutNative(toAddress, toChainId)
+        .swapOutNative(toAddress, toChainId, swapData)
         .estimateGas({ value: amount });
       estimatedGas = gas.toString();
     }

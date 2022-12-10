@@ -5,6 +5,8 @@ import {
   BridgeRequestParam,
   ButterCrossChainRoute,
   NearNetworkConfig,
+  SwapOptions,
+  SwapRequestParam,
 } from '../../src/types';
 import {
   BSC_TEST_CHAIN,
@@ -21,6 +23,8 @@ import {
   BSC_TEST_MOST,
   BSC_TEST_BMOS,
   NEAR_TEST_WNEAR,
+  BSC_TEST_USDC,
+  MOS_CONTRACT_ADDRESS_SET,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
@@ -41,6 +45,9 @@ import {
   assembleCrossChainRouteFromJson,
   assembleTargetSwapDataFromRoute,
 } from '../../src/utils/requestUtils';
+import { ButterSwap } from '../../src/core/swap/exchange';
+import { BaseCurrency } from '../../src/entities';
+import { approveToken } from '../../src/libs/allowance';
 require('dotenv/config');
 
 // web3.js config
@@ -112,26 +119,60 @@ async function demo() {
   const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
-  const fromChainId = ChainId.BSC_MAINNET;
+  const signer = bscSigner;
+  const fromChainId = ChainId.BSC_TEST;
   const toChainId = ChainId.POLYGON_TEST;
 
-  const fromToken = BSC_TEST_BMOS;
+  const fromToken = BSC_TEST_USDC;
   const toToken = POLYGON_TEST_BMOS;
 
-  const amount = ethers.utils.parseEther('1').toString();
-
-  // const provider: ButterJsonRpcProvider = {
-  //   url: 'https://testnet-rpc.maplabs.io',
-  //   chainId: 212,
-  // };
+  const amount = ethers.utils.parseEther('1.5').toString();
 
   const provider: ButterJsonRpcProvider = {
     url: 'https://testnet-rpc.maplabs.io',
     chainId: 212,
   };
   const route: ButterCrossChainRoute = assembleCrossChainRouteFromJson(jsonStr);
-  const swapData = await assembleTargetSwapDataFromRoute(route, toToken);
-  console.log(swapData);
+
+  await approveToken(
+    signer,
+    fromToken,
+    '1',
+    MOS_CONTRACT_ADDRESS_SET[fromChainId],
+    true
+  );
+  console.log('approved');
+  // gas estimation
+  const swap: ButterSwap = new ButterSwap();
+  const request: SwapRequestParam = {
+    fromAddress,
+    fromToken,
+    toAddress,
+    toToken,
+    amountIn: amount,
+    swapRoute: route,
+    options: { signerOrProvider: signer },
+  };
+  const estimatedGas: string = await swap.gasEstimateSwap(request);
+
+  console.log('gas', estimatedGas);
+  const adjustedGas = Math.floor(
+    Number.parseFloat(estimatedGas) * 1.2
+  ).toString();
+
+  // swap action
+  const swapRequestParam: SwapRequestParam = {
+    fromAddress,
+    fromToken,
+    toAddress,
+    toToken,
+    amountIn: amount,
+    swapRoute: route,
+    options: { signerOrProvider: signer, gas: adjustedGas },
+  };
+  const response: ButterTransactionResponse = await swap.swap(swapRequestParam);
+  const receipt: ButterTransactionReceipt = await response.wait!();
+  console.log('receipt', receipt);
 }
 
 demo()

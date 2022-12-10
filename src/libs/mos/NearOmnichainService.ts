@@ -271,6 +271,50 @@ export class NearOmnichainService implements IMapOmnichainService {
     return Promise.resolve('');
   }
 
+  gasEstimateTransferOutNative(
+    fromAddress: string,
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    options?: TransferOutOptions
+  ): Promise<string> {
+    return Promise.resolve('');
+  }
+
+  gasEstimateTransferOutToken(
+    fromAddress: string,
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
+    options?: TransferOutOptions
+  ): Promise<string> {
+    return Promise.resolve('');
+  }
+
+  gasEstimateSwapOutNative(
+    fromAddress: string,
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    swapData: string,
+    options?: TransferOutOptions
+  ): Promise<string> {
+    return Promise.resolve('');
+  }
+
+  gasEstimateSwapOutToken(
+    fromAddress: string,
+    tokenAddress: string,
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    swapData: string,
+    options?: TransferOutOptions
+  ): Promise<string> {
+    return Promise.resolve('');
+  }
+
   async addFungibleTokenToChain(
     tokenAddress: string,
     toChainId: string

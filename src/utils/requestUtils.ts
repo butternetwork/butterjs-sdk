@@ -55,7 +55,7 @@ export async function assembleEVMSwapDataFromRoute(
         tokenAddressArr.push(butterPath.tokenOut.address);
       }
     }
-    console.log('tokenAddressArr', tokenAddressArr);
+    // console.log('tokenAddressArr', tokenAddressArr);
     swapParam.push(abi.encode(['address[]'], [tokenAddressArr]));
     const routerIndex = '0';
     swapParam.push(routerIndex);
@@ -64,7 +64,7 @@ export async function assembleEVMSwapDataFromRoute(
   swapData.push(swapParamArr);
   swapData.push(targetChainTokenOut.address);
   swapData.push(mapTargetTokenAddress);
-  console.log(swapData);
+  // console.log(swapData);
   return abi.encode(swapDataAbi, swapData);
 }
 
