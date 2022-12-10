@@ -32,7 +32,7 @@ export async function assembleEVMSwapDataFromRoute(
   let swapData = [];
   let swapParamArr: any[] = [];
 
-  const targetRoute: ButterSwapRoute[] = route.srcChain;
+  const targetRoute: ButterSwapRoute[] = route.targetChain;
   for (let swapRoute of targetRoute) {
     let swapParam = [];
     swapParam.push(
@@ -55,6 +55,7 @@ export async function assembleEVMSwapDataFromRoute(
         tokenAddressArr.push(butterPath.tokenOut.address);
       }
     }
+    console.log('tokenAddressArr', tokenAddressArr);
     swapParam.push(abi.encode(['address[]'], [tokenAddressArr]));
     const routerIndex = '0';
     swapParam.push(routerIndex);
