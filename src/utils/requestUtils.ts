@@ -7,39 +7,52 @@ import {
 } from '../types';
 import { BaseCurrency } from '../entities';
 import { ethers } from 'ethers';
-import { IS_EVM, IS_NEAR } from '../constants';
+import {
+  BUTTER_CORE_ADDRESS_SET,
+  ID_TO_CHAIN_ID,
+  IS_EVM,
+  IS_NEAR,
+  MOS_CONTRACT_ADDRESS_SET,
+} from '../constants';
 
 const abi = ethers.utils.defaultAbiCoder;
 
-/**
-struct AccessParams {
-  uint256[]  amountInArr;
-  bytes[]    paramsArr;
-  uint32[]  routerIndex;
-  address[2]  inputOutAddre;  // 0 -input  1- Out
-}
-**/
 export async function assembleButterRouterParamFromRoute(
   routes: ButterCrossChainRoute,
+  amount: string,
+  fromChainId: string,
+  toChainId: string,
+  toAddress: string,
   targetChainTokenOut: BaseCurrency
 ): Promise<ButterRouterParam> {
-  let routerParam: ButterRouterParam;
   const targetSwapData = await assembleTargetSwapDataFromRoute(
     routes,
     targetChainTokenOut
   );
+  const tokenIn = routes.srcChain[0]!.tokenIn;
+  const tokenOut = routes.srcChain[0]!.tokenOut;
 
-  const coreSwapData = await assembleSrcSwapDataFromRoute(routes);
-  return routerParam;
+  const coreSwapData = await assembleSrcSwapDataFromRoute(
+    routes,
+    tokenIn.address,
+    tokenOut.address,
+    fromChainId
+  );
+
+  return <ButterRouterParam>{
+    coreSwapData: coreSwapData,
+    targetSwapData: targetSwapData,
+    amount: amount,
+    toChainId: toChainId,
+    toAddress: toAddress,
+  };
 }
 export async function assembleSrcSwapDataFromRoute(
-  route: ButterCrossChainRoute
+  route: ButterCrossChainRoute,
+  tokenIn: string,
+  tokenOut: string,
+  fromChainId: string
 ): Promise<ButterCoreParam> {
-  // amountInArr: string[];
-  // paramsArr: string[];
-  // routerIndex: string[];
-  // inAndOutTokenAddr: string[2];
-  let coreParam: ButterCoreParam;
   const srcRoute: ButterSwapRoute[] = route.srcChain;
 
   let amountInArr: string[] = [];
@@ -65,17 +78,18 @@ export async function assembleSrcSwapDataFromRoute(
         tokenAddressArr.push(butterPath.tokenOut.address);
       }
     }
+
     /**
-     *         (amountInArr, amountOutMinArr, pathArr, to, deadLines, inputAddre, outAddre) = abi.decode(
-     *             exchangeData,
-     *             (uint256,
-     *             uint256,
-     *             bytes,address[]
-     *             address,
-     *             uint256,
-     *             address,
-     *             address));
-     */
+     struct AccessParams {
+  uint256[]  amountInArr;
+  bytes[]    paramsArr;
+  uint32[]  routerIndex;
+  address[2]  inputOutAddre;  // 0 -input  1- Out
+}
+     **/
+    const butterCoreAddress =
+      BUTTER_CORE_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
+
     const coreParamAbi = [
       'uint256',
       'uint256',
@@ -90,7 +104,7 @@ export async function assembleSrcSwapDataFromRoute(
         amountIn,
         amountOut,
         abi.encode(['address[]'], tokenAddressArr),
-        to,
+        butterCoreAddress,
         (Date.now() + 1000).toString(),
         tokenIn,
         tokenOut,
@@ -102,7 +116,7 @@ export async function assembleSrcSwapDataFromRoute(
     amountInArr: amountInArr,
     paramsArr: paramsArr,
     routerIndex: routerIndexArr,
-    inAndOutTokenAddr: ['', ''],
+    inputOutAddre: [tokenIn, tokenOut],
   };
 }
 export async function assembleTargetSwapDataFromRoute(

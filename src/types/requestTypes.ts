@@ -110,7 +110,7 @@ export interface ButterCoreParam {
   amountInArr: string[];
   paramsArr: string[];
   routerIndex: string[];
-  inAndOutTokenAddr: [string, string];
+  inputOutAddre: [string, string];
 }
 
 export type ButterRouterParam = {
