@@ -3,14 +3,8 @@ import { NearNativeCoin } from '../entities/native/Near';
 import { ChainId } from './chains';
 import { EVMNativeCoin } from '../entities/native/EVMNativeCoin';
 
-/************************* mainnet tokens *************************/
-export const BSC_MAINNET_NATIVE = new EVMNativeCoin(
-  ChainId.BSC_MAINNET,
-  18,
-  'BNB',
-  'BNB',
-  'https://files.maplabs.io/bridge/bnb.png'
-);
+/************************* mainnet  *************************/
+/** map **/
 export const MAP_MAINNET_NATIVE = new EVMNativeCoin(
   ChainId.MAP_MAINNET,
   18,
@@ -18,15 +12,6 @@ export const MAP_MAINNET_NATIVE = new EVMNativeCoin(
   'MAP Protocol',
   'https://files.maplabs.io/bridge/map.png'
 );
-export const POLYGON_MAINNET_NATIVE = new EVMNativeCoin(
-  ChainId.POLYGON_MAINNET,
-  18,
-  'MAPO',
-  'MAP Protocol',
-  'https://files.maplabs.io/bridge/map.png'
-);
-
-export const NEAR_MAINNET_NATIVE = new NearNativeCoin(ChainId.NEAR_MAINNET);
 
 export const MAP_MAINNET_WMAP = new Token(
   ChainId.MAP_MAINNET,
@@ -35,6 +20,15 @@ export const MAP_MAINNET_WMAP = new Token(
   'wMAPO',
   'Wrapped MAPO',
   'https://files.maplabs.io/bridge/map.png'
+);
+
+/** bsc **/
+export const BSC_MAINNET_NATIVE = new EVMNativeCoin(
+  ChainId.BSC_MAINNET,
+  18,
+  'BNB',
+  'BNB',
+  'https://files.maplabs.io/bridge/bnb.png'
 );
 
 export const BSC_MAINNET_WBNB = new Token(
@@ -46,13 +40,22 @@ export const BSC_MAINNET_WBNB = new Token(
   'https://files.maplabs.io/bridge/bnb.png'
 );
 
-export const NEAR_MAINNET_WNEAR = new Token(
-  ChainId.NEAR_MAINNET,
-  'wrap.near',
-  24,
-  'wNear',
-  'Wrapped Near',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+export const BSC_MAINNET_USDC = new Token(
+  ChainId.BSC_MAINNET,
+  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
+  18,
+  'USDC',
+  'Binance-Peg USD Coin',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+/** polygon **/
+export const POLYGON_MAINNET_NATIVE = new EVMNativeCoin(
+  ChainId.POLYGON_MAINNET,
+  18,
+  'MAPO',
+  'MAP Protocol',
+  'https://files.maplabs.io/bridge/map.png'
 );
 
 export const POLYGON_MAINNET_WMATIC = new Token(
@@ -63,15 +66,6 @@ export const POLYGON_MAINNET_WMATIC = new Token(
   'Wrapped Matic'
 );
 
-export const BSC_MAINNET_USDC = new Token(
-  ChainId.BSC_MAINNET,
-  '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
-  18,
-  'USDC',
-  'Binance-Peg USD Coin',
-  'https://files.maplabs.io/bridge/usdc.png'
-);
-
 export const POLYGON_MAINNET_USDC = new Token(
   ChainId.POLYGON_MAINNET,
   '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
@@ -79,6 +73,18 @@ export const POLYGON_MAINNET_USDC = new Token(
   'USDC',
   'USD Circle',
   'https://files.maplabs.io/bridge/usdc.png'
+);
+
+/** near **/
+export const NEAR_MAINNET_NATIVE = new NearNativeCoin(ChainId.NEAR_MAINNET);
+
+export const NEAR_MAINNET_WNEAR = new Token(
+  ChainId.NEAR_MAINNET,
+  'wrap.near',
+  24,
+  'wNear',
+  'Wrapped Near',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
 
 export const NEAR_MAINNET_USDC = new Token(
@@ -91,64 +97,13 @@ export const NEAR_MAINNET_USDC = new Token(
 );
 
 /************************* testnet tokens *************************/
-
-export const ETH_PRIV_NATIVE = new EVMNativeCoin(
-  ChainId.ETH_PRIV,
-  18,
-  'ETH',
-  'ether',
-  'https://files.maplabs.io/bridge/eth.png'
-);
-export const BSC_TEST_NATIVE = new EVMNativeCoin(
-  ChainId.BSC_TEST,
-  18,
-  'BNB',
-  'BNB',
-  'https://files.maplabs.io/bridge/bnb.png'
-);
+/** map test **/
 export const MAP_TEST_NATIVE = new EVMNativeCoin(
   ChainId.MAP_TEST,
   18,
   'MAPO',
   'MAP Protocol',
   'https://files.maplabs.io/bridge/map.png'
-);
-
-export const MATIC_TEST_NATIVE = new EVMNativeCoin(
-  ChainId.POLYGON_TEST,
-  18,
-  'MATIC',
-  'Polygon',
-  'https://files.maplabs.io/bridge/polygon.png'
-);
-
-export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
-
-export const ETH_PRIV_LMAP = new Token(
-  ChainId.ETH_PRIV,
-  '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847',
-  18,
-  'lMAP',
-  'Wrapped MAP Token',
-  ''
-);
-
-export const ETH_PRIV_NEAR = new Token(
-  ChainId.ETH_PRIV,
-  '0x152fB50d334a66F7fD8559F6Dad057Ac13b3eD44',
-  18,
-  'bNear',
-  'Wrapped Near Token',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
-);
-
-export const ETH_PRIV_WETH = new Token(
-  ChainId.ETH_PRIV,
-  '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B',
-  18,
-  'WETH',
-  'Wrapped ETH',
-  'https://files.maplabs.io/bridge/eth.png'
 );
 
 export const MAP_TEST_METH = new Token(
@@ -158,51 +113,6 @@ export const MAP_TEST_METH = new Token(
   'METH',
   'MAP ETH',
   'https://files.maplabs.io/bridge/eth.png'
-);
-
-export const BSC_TEST_NEAR = new Token(
-  ChainId.BSC_TEST,
-  '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c',
-  18,
-  'Near',
-  'Near',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
-);
-
-export const BSC_TEST_USDC = new Token(
-  ChainId.BSC_TEST,
-  '0x223476eCEA662bFcc1258638c917D8860253Ccb0',
-  18,
-  'USDC',
-  'USD Circle',
-  'https://files.maplabs.io/bridge/usdc.png'
-);
-
-export const NEAR_TEST_USDC = new Token(
-  ChainId.NEAR_TESTNET,
-  'dev-1668420264923-33906828202995',
-  6,
-  'USDC',
-  'USD Circle',
-  'https://files.maplabs.io/bridge/usdc.png'
-);
-
-export const NEAR_TEST_MOST = new Token(
-  ChainId.NEAR_TESTNET,
-  'most.mos2.mfac.maplabs.testnet',
-  24,
-  'MOST',
-  'MOST Token',
-  'https://files.maplabs.io/bridge/usdc.png'
-);
-
-export const BSC_TEST_MOST = new Token(
-  ChainId.BSC_TEST,
-  '0x688f3Ef5f728995a9DcB299DAEC849CA2E49ddE1',
-  18,
-  'MOST',
-  'MOST Token',
-  'https://files.maplabs.io/bridge/usdc.png'
 );
 
 export const MAP_TEST_MOST = new Token(
@@ -223,22 +133,13 @@ export const MAP_TEST_WMAP = new Token(
   'https://files.maplabs.io/bridge/map.png'
 );
 
-export const BSC_TEST_MAP = new Token(
-  ChainId.BSC_TEST,
-  '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273',
+export const MAP_TEST_NEAR = new Token(
+  ChainId.MAP_TEST,
+  '0x9a5a085F5ffF09e922149426CbF6892F7df1dF79',
   18,
-  'MAPO',
-  'BSC MAPO',
-  'https://files.maplabs.io/bridge/map.png'
-);
-
-export const NEAR_TEST_MAP = new Token(
-  ChainId.NEAR_TESTNET,
-  'mapo.maplabs.testnet',
-  24,
-  'MAPO',
-  'NEAR MAPO',
-  'https://files.maplabs.io/bridge/map.png'
+  'NEAR',
+  'MAPO NEAR',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
 
 export const MAP_TEST_BNB = new Token(
@@ -250,6 +151,51 @@ export const MAP_TEST_BNB = new Token(
   'https://files.maplabs.io/bridge/bnb.png'
 );
 
+/** bsc test **/
+export const BSC_TEST_NATIVE = new EVMNativeCoin(
+  ChainId.BSC_TEST,
+  18,
+  'BNB',
+  'BNB',
+  'https://files.maplabs.io/bridge/bnb.png'
+);
+
+export const BSC_TEST_NEAR = new Token(
+  ChainId.BSC_TEST,
+  '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c',
+  18,
+  'Near',
+  'Near',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);
+
+export const BSC_TEST_USDC = new Token(
+  ChainId.BSC_TEST,
+  '0x223476eCEA662bFcc1258638c917D8860253Ccb0',
+  18,
+  'USDC',
+  'USD Circle',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const BSC_TEST_MOST = new Token(
+  ChainId.BSC_TEST,
+  '0x688f3Ef5f728995a9DcB299DAEC849CA2E49ddE1',
+  18,
+  'MOST',
+  'MOST Token',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const BSC_TEST_MAP = new Token(
+  ChainId.BSC_TEST,
+  '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273',
+  18,
+  'MAPO',
+  'BSC MAPO',
+  'https://files.maplabs.io/bridge/map.png'
+);
+
 export const BSC_TEST_WBNB = new Token(
   ChainId.BSC_TEST,
   '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
@@ -259,22 +205,13 @@ export const BSC_TEST_WBNB = new Token(
   'https://files.maplabs.io/bridge/bnb.png'
 );
 
-export const NEAR_TEST_WNEAR = new Token(
-  ChainId.NEAR_TESTNET,
-  'wrap.testnet',
-  24,
-  'wNear',
-  'Wrapped Near',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
-);
-
-export const MAP_TEST_NEAR = new Token(
-  ChainId.MAP_TEST,
-  '0x9a5a085F5ffF09e922149426CbF6892F7df1dF79',
+/** polygon test **/
+export const MATIC_TEST_NATIVE = new EVMNativeCoin(
+  ChainId.POLYGON_TEST,
   18,
-  'NEAR',
-  'MAPO NEAR',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+  'MATIC',
+  'Polygon',
+  'https://files.maplabs.io/bridge/polygon.png'
 );
 
 export const MATIC_TEST_MOST = new Token(
@@ -302,4 +239,79 @@ export const MATIC_TEST_WMATIC = new Token(
   'WMATIC',
   'Wrapped Matic',
   'https://files.maplabs.io/bridge/polygon.png'
+);
+
+/** near test **/
+export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
+
+export const NEAR_TEST_USDC = new Token(
+  ChainId.NEAR_TESTNET,
+  'dev-1668420264923-33906828202995',
+  6,
+  'USDC',
+  'USD Circle',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const NEAR_TEST_MOST = new Token(
+  ChainId.NEAR_TESTNET,
+  'most.mos2.mfac.maplabs.testnet',
+  24,
+  'MOST',
+  'MOST Token',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const NEAR_TEST_MAP = new Token(
+  ChainId.NEAR_TESTNET,
+  'mapo.maplabs.testnet',
+  24,
+  'MAPO',
+  'NEAR MAPO',
+  'https://files.maplabs.io/bridge/map.png'
+);
+
+export const NEAR_TEST_WNEAR = new Token(
+  ChainId.NEAR_TESTNET,
+  'wrap.testnet',
+  24,
+  'wNear',
+  'Wrapped Near',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+);
+
+/** eth priv **/
+export const ETH_PRIV_NATIVE = new EVMNativeCoin(
+  ChainId.ETH_PRIV,
+  18,
+  'ETH',
+  'ether',
+  'https://files.maplabs.io/bridge/eth.png'
+);
+
+export const ETH_PRIV_WETH = new Token(
+  ChainId.ETH_PRIV,
+  '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B',
+  18,
+  'WETH',
+  'Wrapped ETH',
+  'https://files.maplabs.io/bridge/eth.png'
+);
+
+export const ETH_PRIV_LMAP = new Token(
+  ChainId.ETH_PRIV,
+  '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847',
+  18,
+  'lMAP',
+  'Wrapped MAP Token',
+  ''
+);
+
+export const ETH_PRIV_NEAR = new Token(
+  ChainId.ETH_PRIV,
+  '0x152fB50d334a66F7fD8559F6Dad057Ac13b3eD44',
+  18,
+  'bNear',
+  'Wrapped Near Token',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
