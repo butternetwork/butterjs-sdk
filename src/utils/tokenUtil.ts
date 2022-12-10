@@ -12,9 +12,9 @@ import {
   MAP_TEST_NATIVE,
   MAP_TEST_NEAR,
   MAP_TEST_WMAP,
-  MATIC_TEST_MAP,
-  MATIC_TEST_MOST,
-  MATIC_TEST_WMATIC,
+  POLYGON_TEST_MAP,
+  POLYGON_TEST_MOST,
+  POLYGON_TEST_WMATIC,
   NEAR_MAINNET_USDC,
   NEAR_TEST_MAP,
   NEAR_TEST_MOST,
@@ -76,7 +76,7 @@ export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
     case ChainId.BSC_TEST:
       return [BSC_TEST_MOST, BSC_TEST_MAP, BSC_TEST_NATIVE];
     case ChainId.POLYGON_TEST:
-      return [MATIC_TEST_MOST];
+      return [POLYGON_TEST_MOST];
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }
@@ -101,9 +101,9 @@ export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
       return [BSC_TEST_MOST, BSC_TEST_WBNB, BSC_TEST_MAP, BSC_TEST_NATIVE];
     case ChainId.POLYGON_TEST:
       return [
-        MATIC_TEST_MOST,
-        MATIC_TEST_WMATIC,
-        MATIC_TEST_MAP,
+        POLYGON_TEST_MOST,
+        POLYGON_TEST_WMATIC,
+        POLYGON_TEST_MAP,
         MAP_TEST_NATIVE,
       ];
     default:

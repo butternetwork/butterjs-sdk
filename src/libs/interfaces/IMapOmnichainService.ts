@@ -79,6 +79,40 @@ export interface IMapOmnichainService {
     options?: TransferOutOptions
   ): Promise<ButterTransactionResponse>;
 
+  gasEstimateTransferOutToken(
+    fromAddress: string,
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
+    options?: TransferOutOptions
+  ): Promise<string>;
+
+  gasEstimateTransferOutNative(
+    fromAddress: string,
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    options?: TransferOutOptions
+  ): Promise<string>;
+
+  gasEstimateSwapOutToken(
+    fromAddress: string,
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
+    swapData: string
+  ): Promise<string>;
+
+  gasEstimateSwapOutNative(
+    fromAddress: string,
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    swapData: string
+  ): Promise<string>;
+
   /**
    * TODO: In development
    * @param tokenAddress

@@ -65,6 +65,14 @@ export const POLYGON_MAINNET_WMATIC = new Token(
   'WMATIC',
   'Wrapped Matic'
 );
+export const MAP_MAINNET_USDC = new Token(
+  ChainId.MAP_MAINNET,
+  '0x9f722b2cb30093f766221fd0d37964949ed66918',
+  18,
+  'USDC',
+  'MAP USDC',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
 
 export const POLYGON_MAINNET_USDC = new Token(
   ChainId.POLYGON_MAINNET,
@@ -250,7 +258,7 @@ export const POLYGON_TEST_BMOS = new Token(
   'https://logos-world.net/imageup/Bitcoin/Bitcoin-Logo-PNG14.png'
 );
 
-export const MATIC_TEST_MOST = new Token(
+export const POLYGON_TEST_MOST = new Token(
   ChainId.POLYGON_TEST,
   '0x6d4570191C7B5835226a0bE18734A8E922ff353B',
   18,
@@ -259,7 +267,7 @@ export const MATIC_TEST_MOST = new Token(
   'https://files.maplabs.io/bridge/usdc.png'
 );
 
-export const MATIC_TEST_MAP = new Token(
+export const POLYGON_TEST_MAP = new Token(
   ChainId.POLYGON_TEST,
   '0xE6687528C7b85115a038D806339dd7E7b869B87C',
   18,
@@ -268,7 +276,7 @@ export const MATIC_TEST_MAP = new Token(
   'https://files.maplabs.io/bridge/map.png'
 );
 
-export const MATIC_TEST_WMATIC = new Token(
+export const POLYGON_TEST_WMATIC = new Token(
   ChainId.POLYGON_TEST,
   '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
   18,

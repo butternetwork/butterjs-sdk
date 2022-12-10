@@ -33,7 +33,7 @@ export const ID_TO_DEFAULT_RPC_URL = (id: string): string => {
     case ChainId.BSC_TEST:
       return BSC_TEST_CHAIN.rpc!;
     case ChainId.POLYGON_TEST:
-      return MATIC_TEST_CHAIN.rpc!;
+      return POLYGON_TEST_CHAIN.rpc!;
     case ChainId.ETH_PRIV:
       return ETH_PRIV_CHAIN.rpc!;
     case ChainId.NEAR_TESTNET:
@@ -61,7 +61,7 @@ export const BSC_MAINNET_CHAIN = new Chain(
 );
 
 export const POLYGON_MAINNET_CHAIN = new Chain(
-  ChainId.BSC_MAINNET,
+  ChainId.POLYGON_MAINNET,
   'Polygon Mainnet',
   'https://polygon-rpc.com/',
   'https://polygonscan.com/',
@@ -95,9 +95,9 @@ export const BSC_TEST_CHAIN = new Chain(
   'BSC'
 );
 
-export const MATIC_TEST_CHAIN = new Chain(
+export const POLYGON_TEST_CHAIN = new Chain(
   ChainId.POLYGON_TEST,
-  'Matic Mumbai',
+  'Polygon Testnet',
   'https://rpc-mumbai.maticvigil.com/',
   'https://mumbai.polygonscan.com/',
   'https://files.mapprotocol.io/bridge/polygon.png',
@@ -160,7 +160,13 @@ export const SUPPORTED_CHAIN_LIST = [
   MAP_TEST_CHAIN,
   NEAR_TEST_CHAIN,
   BSC_TEST_CHAIN,
-  MATIC_TEST_CHAIN,
+  POLYGON_TEST_CHAIN,
+];
+
+export const SUPPORTED_CHAIN_LIST_MAINNET = [
+  NEAR_MAINNET_CHAIN,
+  BSC_MAINNET_CHAIN,
+  POLYGON_MAINNET_CHAIN,
 ];
 
 export enum ChainName {

@@ -11,6 +11,7 @@ import {
   ButterTransactionResponse,
   NearAccountState,
 } from '../../types/responseTypes';
+import { assembleTargetSwapDataFromRoute } from '../../utils/requestUtils';
 
 export class ButterSwap {
   /**
@@ -47,7 +48,11 @@ export class ButterSwap {
       throw new Error(`Network config must be provided for NEAR blockchain`);
     }
 
-    const swapData: string = assembleSwapDataFromRoute(swapRoute);
+    const swapData: string = await assembleTargetSwapDataFromRoute(
+      swapRoute,
+      toToken
+    );
+
     // create mos instance base on src token chainId.
     const mos: IMapOmnichainService = createMOSInstance(
       fromToken.chainId,
@@ -74,6 +79,7 @@ export class ButterSwap {
         toAddress,
         toChainId.toString(),
         amountIn,
+        swapData,
         {
           gas: options.gas,
         }
@@ -85,6 +91,7 @@ export class ButterSwap {
         amountIn,
         toAddress,
         toChainId.toString(),
+        swapData,
         {
           gas: options.gas,
         }
@@ -105,6 +112,7 @@ export class ButterSwap {
   }: SwapRequestParam): Promise<string> {
     // check validity of toAddress according to toChainId
     // toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
+    const toChainId = toToken.chainId;
 
     // if src chain is evm chain, signer must be provided
     if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
@@ -117,6 +125,11 @@ export class ButterSwap {
     const mos: IMapOmnichainService = createMOSInstance(
       fromToken.chainId,
       options
+    );
+
+    const swapData: string = await assembleTargetSwapDataFromRoute(
+      swapRoute,
+      toToken
     );
 
     if (IS_NEAR(toChainId)) {
@@ -139,15 +152,17 @@ export class ButterSwap {
         fromAddress,
         toAddress,
         toChainId.toString(),
-        amount
+        amountIn,
+        swapData
       );
     } else {
       gas = await mos.gasEstimateSwapOutToken(
         fromAddress,
         fromToken.address,
-        amount,
+        amountIn,
         toAddress,
-        toChainId.toString()
+        toChainId.toString(),
+        swapData
       );
     }
 

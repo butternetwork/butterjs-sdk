@@ -27,13 +27,13 @@ export type SwapRequestParam = {
   options: SwapOptions;
 };
 
-export type ButterCrossChainRoute = {
-  srcRoute: ButterSwapRoute[];
-  mapRoute: ButterSwapRoute[];
-  targetRoute: ButterSwapRoute[];
-};
+export interface ButterCrossChainRoute {
+  srcChain: ButterSwapRoute[];
+  mapChain: ButterSwapRoute[];
+  targetChain: ButterSwapRoute[];
+}
 
-export type ButterSwapRoute = {
+export interface ButterSwapRoute {
   chainId: string;
   amountIn: string;
   amountOut: string;
@@ -41,19 +41,19 @@ export type ButterSwapRoute = {
   dexName: string;
   tokenIn: BaseCurrency;
   tokenOut: BaseCurrency;
-};
+}
 
-export type ButterPath = {
+export interface ButterPath {
   tokenIn: PathToken;
   tokenOut: PathToken;
   poolId: string;
-};
+}
 
-export type PathToken = {
+export interface PathToken {
   address: string;
   icon?: string;
   symbol?: string;
-};
+}
 
 export type SwapOptions = {
   signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider or Web3.js Eth info

@@ -6,7 +6,7 @@ import {
   ETH_PRIV_WETH,
   MAP_MAINNET_WMAP,
   MAP_TEST_WMAP,
-  MATIC_TEST_WMATIC,
+  POLYGON_TEST_WMATIC,
   NEAR_MAINNET_WNEAR,
   NEAR_TEST_WNEAR,
   POLYGON_MAINNET_WMATIC,
@@ -35,7 +35,7 @@ export const WCOIN = (id: string): Token => {
       return NEAR_TEST_WNEAR;
       return MAP_TEST_WMAP;
     case ChainId.POLYGON_TEST:
-      return MATIC_TEST_WMATIC;
+      return POLYGON_TEST_WMATIC;
     default:
       throw new Error('could not find wrapped token for chain id: ' + id);
   }
