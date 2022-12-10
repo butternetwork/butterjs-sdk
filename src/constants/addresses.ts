@@ -27,4 +27,16 @@ export const TOKEN_REGISTER_ADDRESS_SET: { [chainId: string]: string } = {
   [ChainId.MAP_MAINNET]: '',
 };
 
+export const BUTTER_ROUTER_ADDRESS_SET: { [chainId in ChainId]: string } = {
+  [ChainId.MAP_MAINNET]: '',
+  [ChainId.BSC_MAINNET]: '',
+  [ChainId.POLYGON_MAINNET]: '',
+  [ChainId.NEAR_MAINNET]: '',
+
+  [ChainId.ETH_PRIV]: '0x43130059C655314d7ba7eDfb8299d26FbDE726F1',
+  [ChainId.BSC_TEST]: '0x99429764FE9ec59f273f0D3032dC4276746f56a2',
+  [ChainId.MAP_TEST]: '',
+  [ChainId.POLYGON_TEST]: '0x2680f8D0b18C0fae32521A14A4666d317D305126',
+  [ChainId.NEAR_TESTNET]: '',
+};
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';

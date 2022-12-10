@@ -18,18 +18,46 @@ export type BridgeRequestParam = {
 };
 
 export type SwapRequestParam = {
+  fromAddress: string;
   fromToken: BaseCurrency;
+  toAddress: string;
   toToken: BaseCurrency;
   amountIn: string;
-  amountOutMin: string;
-  tradeType: number; // 0 for EXACT_IN, 1 for EXACT_OUT
+  swapRoute: ButterCrossChainRoute;
   options: SwapOptions;
 };
 
+export type ButterCrossChainRoute = {
+  srcRoute: ButterSwapRoute[];
+  mapRoute: ButterSwapRoute[];
+  targetRoute: ButterSwapRoute[];
+};
+
+export type ButterSwapRoute = {
+  chainId: string;
+  amountIn: string;
+  amountOut: string;
+  path: ButterPath[];
+  dexName: string;
+  tokenIn: BaseCurrency;
+  tokenOut: BaseCurrency;
+};
+
+export type ButterPath = {
+  tokenIn: PathToken;
+  tokenOut: PathToken;
+  poolId: string;
+};
+
+export type PathToken = {
+  address: string;
+  icon?: string;
+  symbol?: string;
+};
+
 export type SwapOptions = {
-  signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider infor or Web3.js Eth info
-  nearConfig?: NearNetworkConfig; // mandatory when src chain is near
-  useAggregator?: boolean; // whether Butter's Smart Router Aggregator or not
+  signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider or Web3.js Eth info
+  nearProvider?: NearProviderType; // mandatory when src chain is near
   gas?: string;
 };
 

@@ -25,15 +25,6 @@ export interface IMapOmnichainService {
     options?: TransferOutOptions
   ): Promise<ButterTransactionResponse>;
 
-  gasEstimateTransferOutToken(
-    fromAddress: string,
-    tokenAddress: string,
-    amount: string,
-    toAddress: string,
-    toChainId: string,
-    options?: TransferOutOptions
-  ): Promise<string>;
-
   /**
    * transfer out native coin from source chain to designated token on target chain
    * @param fromAddress
@@ -50,13 +41,43 @@ export interface IMapOmnichainService {
     options?: TransferOutOptions
   ): Promise<ButterTransactionResponse>;
 
-  gasEstimateTransferOutNative(
+  /**
+   * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param fromAddress
+   * @param tokenAddress input token address
+   * @param amount amount in minimal unit
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param swapData
+   * @param options see {@link TransferOutOptions} for more detail
+   */
+  doSwapOutToken(
+    fromAddress: string,
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
+    swapData: string,
+    options?: TransferOutOptions
+  ): Promise<ButterTransactionResponse>;
+
+  /**
+   * transfer out native coin from source chain to designated token on target chain
+   * @param fromAddress
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param amount amount to bridge in minimal unit
+   * @param swapData
+   * @param options see {@link TransferOutOptions} for more detail
+   */
+  doSwapOutNative(
     fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
+    swapData: string,
     options?: TransferOutOptions
-  ): Promise<string>;
+  ): Promise<ButterTransactionResponse>;
 
   /**
    * TODO: In development
@@ -70,7 +91,6 @@ export interface IMapOmnichainService {
     tokenAddress: string,
     from: string,
     to: string,
-    amount: string,
-    options?: TransferOutOptions
+    amount: string
   ): Promise<string>;
 }

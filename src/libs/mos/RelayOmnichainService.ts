@@ -71,7 +71,8 @@ export class RelayOmnichainService implements IMapOmnichainService {
           tokenAddress,
           toAddress,
           amount,
-          toChainId
+          toChainId,
+          { gasLimit: options.gas }
         );
       txHash = transferOutTx.hash;
       return assembleEVMTransactionResponse(txHash!, this.provider);
@@ -87,32 +88,6 @@ export class RelayOmnichainService implements IMapOmnichainService {
         promiReceipt: promiReceipt,
       };
     }
-  }
-
-  async gasEstimateTransferOutToken(
-    fromAddress: string,
-    tokenAddress: string,
-    amount: string,
-    toAddress: string,
-    toChainId: string
-  ): Promise<string> {
-    // gas estimation
-    let estimatedGas = '';
-    if (this.contract instanceof EthersContract) {
-      const gas: BigNumber = await this.contract.estimateGas.transferOutToken!(
-        tokenAddress,
-        toAddress,
-        amount,
-        toChainId
-      );
-      estimatedGas = gas.toString();
-    } else {
-      const gas = await this.contract.methods
-        .transferOutToken(tokenAddress, toAddress, amount, toChainId)
-        .estimateGas({ from: fromAddress });
-      estimatedGas = gas.toString();
-    }
-    return estimatedGas;
   }
 
   /**
@@ -151,6 +126,122 @@ export class RelayOmnichainService implements IMapOmnichainService {
       };
     }
   }
+  /**
+   * transfer out token(not native coin) from source chain to designated token on target chain
+   * @param fromAddress
+   * @param tokenAddress input token address
+   * @param amount amount in minimal unit
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param swapData
+   * @param options
+   */
+  async doSwapOutToken(
+    fromAddress: string,
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
+    swapData: string,
+    options: TransferOutOptions
+  ): Promise<ButterTransactionResponse> {
+    let txHash: string;
+    if (this.contract instanceof EthersContract) {
+      const SwapOutTx: ContractTransaction = await this.contract.swapOutToken(
+        tokenAddress,
+        toAddress,
+        amount,
+        toChainId,
+        swapData,
+        { gasLimit: options.gas }
+      );
+      txHash = SwapOutTx.hash;
+      return assembleEVMTransactionResponse(txHash!, this.provider);
+      // receipt = await SwapOutTx.wait();
+    } else {
+      const promiReceipt: PromiEvent<Web3TransactionReceipt> =
+        this.contract.methods
+          .swapOutToken(tokenAddress, toAddress, amount, toChainId, swapData)
+          .send({
+            from: fromAddress,
+            gas: Number.parseInt(options.gas!.toString()),
+          });
+      return <ButterTransactionResponse>{
+        promiReceipt: promiReceipt,
+      };
+    }
+  }
+
+  /**
+   * transfer out native coin from source chain to designated token on target chain
+   * @param fromAddress
+   * @param toAddress target chain receiving address
+   * @param toChainId target chain id
+   * @param amount amount to bridge in minimal unit
+   * @param swapData
+   * @param options
+   */
+  async doSwapOutNative(
+    fromAddress: string,
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    swapData: string,
+    options: TransferOutOptions
+  ): Promise<ButterTransactionResponse> {
+    let txHash: string;
+    if (this.contract instanceof EthersContract) {
+      const SwapOutTx: ContractTransaction = await this.contract.swapOutNative(
+        toAddress,
+        toChainId,
+        swapData,
+        {
+          // gasLimit: options.gas,
+          value: amount,
+        }
+      );
+
+      txHash = SwapOutTx.hash;
+      return assembleEVMTransactionResponse(txHash!, this.provider);
+    } else {
+      const promiReceipt: PromiEvent<Web3TransactionReceipt> =
+        this.contract.methods
+          .swapOutNative(toAddress, toChainId, swapData)
+          .send({
+            value: amount,
+            from: fromAddress,
+            gas: Number.parseInt(options.gas!.toString()),
+          });
+      return <ButterTransactionResponse>{
+        promiReceipt: promiReceipt,
+      };
+    }
+  }
+  async gasEstimateTransferOutToken(
+    fromAddress: string,
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string
+  ): Promise<string> {
+    // gas estimation
+    let estimatedGas = '';
+    if (this.contract instanceof EthersContract) {
+      const gas: BigNumber = await this.contract.estimateGas.transferOutToken!(
+        tokenAddress,
+        toAddress,
+        amount,
+        toChainId
+      );
+      estimatedGas = gas.toString();
+    } else {
+      const gas = await this.contract.methods
+        .transferOutToken(tokenAddress, toAddress, amount, toChainId)
+        .estimateGas({ from: fromAddress });
+      estimatedGas = gas.toString();
+    }
+    return estimatedGas;
+  }
 
   async gasEstimateTransferOutNative(
     fromAddress: string,
@@ -174,6 +265,60 @@ export class RelayOmnichainService implements IMapOmnichainService {
       const gas = await this.contract.methods
         .transferOutNative(toAddress, toChainId)
         .estimateGas({ from: fromAddress, value: amount });
+      estimatedGas = gas.toString();
+    }
+    return estimatedGas;
+  }
+
+  async gasEstimateSwapOutToken(
+    fromAddress: string,
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
+    swapData: string
+  ): Promise<string> {
+    // gas estimation
+    let estimatedGas = '';
+    if (this.contract instanceof EthersContract) {
+      const gas: BigNumber = await this.contract.estimateGas.swapOutToken!(
+        tokenAddress,
+        toAddress,
+        amount,
+        toChainId
+      );
+      estimatedGas = gas.toString();
+    } else {
+      const gas = await this.contract.methods
+        .swapOutToken(tokenAddress, toAddress, amount, toChainId)
+        .estimateGas({ from: fromAddress });
+      estimatedGas = gas.toString();
+    }
+    return estimatedGas;
+  }
+
+  async gasEstimateSwapOutNative(
+    fromAddress: string,
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    swapData: string
+  ): Promise<string> {
+    // gas estimation
+    let estimatedGas;
+    if (this.contract instanceof EthersContract) {
+      const gas = await this.contract.estimateGas.swapOutNative!(
+        toAddress,
+        toChainId,
+        {
+          value: amount,
+        }
+      );
+      estimatedGas = gas.toString();
+    } else {
+      const gas = await this.contract.methods
+        .swapOutNative(toAddress, toChainId)
+        .estimateGas({ value: amount });
       estimatedGas = gas.toString();
     }
     return estimatedGas;

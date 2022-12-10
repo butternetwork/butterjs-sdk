@@ -171,7 +171,7 @@ export const BSC_TEST_NATIVE = new EVMNativeCoin(
 
 export const BSC_TEST_USDC = new Token(
   ChainId.BSC_TEST,
-  '0x223476eCEA662bFcc1258638c917D8860253Ccb0',
+  '0x3F1E91BFC874625f4ee6EF6D8668E79291882373',
   18,
   'bUSDC',
   'Butter USDC',

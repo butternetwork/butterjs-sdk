@@ -167,6 +167,33 @@ export class NearOmnichainService implements IMapOmnichainService {
     }
   }
 
+  async doSwapOutToken(
+    fromAddress: string,
+    tokenAddress: string,
+    amount: string,
+    toAddress: string,
+    toChainId: string,
+    swapData: string,
+    options: TransferOutOptions
+  ): Promise<ButterTransactionResponse> {
+    return <ButterTransactionResponse>{
+      hash: 'executionOutcome.transaction.hash',
+    };
+  }
+
+  async doSwapOutNative(
+    fromAddress: string,
+    toAddress: string,
+    toChainId: string,
+    amount: string,
+    swapData: string,
+    options: TransferOutOptions
+  ): Promise<ButterTransactionResponse> {
+    return <ButterTransactionResponse>{
+      hash: 'executionOutcome.transaction.hash',
+    };
+  }
+
   /**
    * add tochain to allowed transfer out chains.
    * @param toChainId
@@ -239,27 +266,6 @@ export class NearOmnichainService implements IMapOmnichainService {
     from: string,
     to: string,
     amount: string,
-    options?: TransferOutOptions
-  ): Promise<string> {
-    return Promise.resolve('');
-  }
-
-  gasEstimateTransferOutNative(
-    fromAddress: string,
-    toAddress: string,
-    toChainId: string,
-    amount: string,
-    options?: TransferOutOptions
-  ): Promise<string> {
-    return Promise.resolve('');
-  }
-
-  gasEstimateTransferOutToken(
-    fromAddress: string,
-    tokenAddress: string,
-    amount: string,
-    toAddress: string,
-    toChainId: string,
     options?: TransferOutOptions
   ): Promise<string> {
     return Promise.resolve('');
