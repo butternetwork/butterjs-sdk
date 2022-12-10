@@ -105,3 +105,18 @@ export type FeeRate = {
   highest: BigNumber; // highest fee in token amount
   lowest: BigNumber; // lowest fee in token amount
 };
+
+export interface ButterCoreParam {
+  amountInArr: string[];
+  paramsArr: string[];
+  routerIndex: string[];
+  inAndOutTokenAddr: [string, string];
+}
+
+export type ButterRouterParam = {
+  coreSwapData: ButterCoreParam;
+  targetSwapData: string;
+  amount: string;
+  toChainId: string;
+  toAddress: string;
+};
