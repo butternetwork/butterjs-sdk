@@ -101,7 +101,12 @@ export class ButterRouter {
     // gas estimation
     let estimatedGas = '';
     if (this.contract instanceof EthersContract) {
-      console.log('token in', coreParam.inputOutAddre[0]);
+      console.log('access param', coreParam);
+      console.log('swapData', targetSwapData);
+      console.log('amount', amount);
+      console.log('toChain', toChain);
+      console.log('tagetToAddress', targetToAddress);
+
       const gas: BigNumber = await this.contract.estimateGas.entrance!(
         coreParam,
         targetSwapData,

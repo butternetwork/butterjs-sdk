@@ -51,6 +51,8 @@ import {
 import { ButterSwap } from '../../src/core/swap/exchange';
 import { BaseCurrency } from '../../src/entities';
 import { approveToken } from '../../src/libs/allowance';
+import axios from 'axios';
+
 require('dotenv/config');
 
 // web3.js config
@@ -116,16 +118,14 @@ const mapSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, mapProvider);
 
 // let jsonStr =
 //   '{"srcChain":[{"chainId":"97","amountIn":"1.5","amountOut":"1.2","path":[{"tokenIn":{"icon":"https://files.mapprotocol.io/bridge/bnb.png","address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd"},"tokenOut":{"symbol":"USDC","icon":"https://files.mapprotocol.io/bridge/usdc.png","address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373"}}],"dexName":"PANCAKESWAP","tokenIn":{"address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd","decimals":18,"icon":"https://files.mapprotocol.io/bridge/bnb.png"},"tokenOut":{"address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373","name":"USDC","decimals":18,"symbol":"Mapped USD Coin","icon":"https://files.mapprotocol.io/bridge/usdc.png"}}],"mapChain":[{"chainId":"22776","dexName":"HIVESWAP","amountIn":"","amountOut":"","tokenIn":{"address":"0x6Ac66dCBE1680aAC446B28BE5371Be869B5059cF","name":"USDC","decimals":18,"symbol":"Mapped USD Coin","icon":"https://files.mapprotocol.io/bridge/usdc.png"},"tokenOut":{"address":"0x6Ac66dCBE1680aAC446B28BE5371Be869B5059cF","name":"USDC","decimals":18,"symbol":"Mapped USD Coin","icon":"https://files.mapprotocol.io/bridge/usdc.png"},"path":[]}],"targetChain":[{"chainId":"80001","amountIn":"1","amountOut":"0.8","path":[{"tokenIn":{"address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727","name":"USD Coin","symbol":"USDC.e","icon":""},"tokenOut":{"address":"0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa","name":"BMOS","symbol":"BMOS","icon":""}}],"dexName":"REF","tokenIn":{"address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727","name":"USDC","decimals":18,"symbol":"Mapped USD Coin","icon":"https://files.mapprotocol.io/bridge/usdc.png"},"tokenOut":{"address":"0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa","name":"wrap.near","decimals":18,"icon":"https://cryptologos.cc/logos/near-protocol-near-logo.png"}}]}';
-const bscSwap2matic =
-  '{"srcChain":[{"chainId":"97","amountIn":"1","amountOut":"1","path":[{"id":"0x7Ca52dd9B883280F6c1EC5f648896c1fbD4f2408","tokenIn":{"symbol":"WMOS","icon":"","address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd"},"tokenOut":{"symbol":"BUSD","icon":"","address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373"}}],"dexName":"Pancakeswap","tokenIn":{"address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd","decimals":18,"symbol":"WMOS","icon":""},"tokenOut":{"address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373","name":"BUSD","decimals":18,"symbol":"BUSD","icon":""}}],"mapChain":[{"chainId":"212","dexName":"","amountIn":"1","amountOut":"1","tokenIn":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"tokenOut":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"path":[]}],"targetChain":[{"chainId":"80001","dexName":"","amountIn":"1","amountOut":"1","tokenIn":{"address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727","name":"PolygonUSD","decimals":18,"symbol":"PUSD","icon":""},"tokenOut":{"address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727","name":"PolygonUSD","decimals":18,"symbol":"PUSD","icon":""},"path":[]}]}';
-const bscSwap2maticSwap =
-  '{"srcChain":[{"chainId":"97","amountIn":"1","amountOut":"1","path":[{"id":"0x7Ca52dd9B883280F6c1EC5f648896c1fbD4f2408","tokenIn":{"symbol":"WMOS","icon":"","address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd"},"tokenOut":{"symbol":"BUSD","icon":"","address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373"}}],"dexName":"Pancakeswap","tokenIn":{"address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd","decimals":18,"symbol":"WMOS","icon":""},"tokenOut":{"address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373","name":"BUSD","decimals":18,"symbol":"BUSD","icon":""}}],"mapChain":[{"chainId":"212","dexName":"","amountIn":"1","amountOut":"1","tokenIn":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"tokenOut":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"path":[]}],"targetChain":[{"chainId":"80001","amountIn":"1","amountOut":"-0.000496904054139972","path":[{"id":"0x23C7dA39924Da6CAE645912884306e95A494Aac1","tokenIn":{"name":"PolygonUSD","symbol":"PUSD","icon":"","address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727"},"tokenOut":{"symbol":"PMOS","icon":"","address":"0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa"}}],"dexName":"Quickswap","tokenIn":{"address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727","name":"PolygonUSD","decimals":18,"symbol":"PUSD","icon":""},"tokenOut":{"address":"0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa","decimals":18,"symbol":"PUSD","icon":""}}]}';
-
-const bsc2maticSwap = '';
-const noswapstr =
-  '{"srcChain":[],"mapChain":[{"chainId":"212","dexName":"","amountIn":"0","amountOut":"0","tokenIn":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"tokenOut":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"path":[]}],"targetChain":[]}';
-
-let routeStr = bscSwap2matic;
+// const bscSwap2matic =
+//   '{"srcChain":[{"chainId":"97","amountIn":"1","amountOut":"1","path":[{"id":"0x7Ca52dd9B883280F6c1EC5f648896c1fbD4f2408","tokenIn":{"symbol":"WMOS","icon":"","address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd"},"tokenOut":{"symbol":"BUSD","icon":"","address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373"}}],"dexName":"Pancakeswap","tokenIn":{"address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd","decimals":18,"symbol":"WMOS","icon":""},"tokenOut":{"address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373","name":"BUSD","decimals":18,"symbol":"BUSD","icon":""}}],"mapChain":[{"chainId":"212","dexName":"","amountIn":"1","amountOut":"1","tokenIn":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"tokenOut":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"path":[]}],"targetChain":[{"chainId":"80001","dexName":"","amountIn":"1","amountOut":"1","tokenIn":{"address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727","name":"PolygonUSD","decimals":18,"symbol":"PUSD","icon":""},"tokenOut":{"address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727","name":"PolygonUSD","decimals":18,"symbol":"PUSD","icon":""},"path":[]}]}';
+// const bscSwap2maticSwap =
+//   '{"srcChain":[{"chainId":"97","amountIn":"1","amountOut":"1","path":[{"id":"0x7Ca52dd9B883280F6c1EC5f648896c1fbD4f2408","tokenIn":{"symbol":"WMOS","icon":"","address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd"},"tokenOut":{"symbol":"BUSD","icon":"","address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373"}}],"dexName":"Pancakeswap","tokenIn":{"address":"0x593F6F6748dc203DFa636c299EeA6a39C0734EEd","decimals":18,"symbol":"WMOS","icon":""},"tokenOut":{"address":"0x3F1E91BFC874625f4ee6EF6D8668E79291882373","name":"BUSD","decimals":18,"symbol":"BUSD","icon":""}}],"mapChain":[{"chainId":"212","dexName":"","amountIn":"1","amountOut":"1","tokenIn":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"tokenOut":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"path":[]}],"targetChain":[{"chainId":"80001","amountIn":"1","amountOut":"-0.000496904054139972","path":[{"id":"0x23C7dA39924Da6CAE645912884306e95A494Aac1","tokenIn":{"name":"PolygonUSD","symbol":"PUSD","icon":"","address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727"},"tokenOut":{"symbol":"PMOS","icon":"","address":"0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa"}}],"dexName":"Quickswap","tokenIn":{"address":"0x1E01CF4503808Fb30F17806035A87cf5A5217727","name":"PolygonUSD","decimals":18,"symbol":"PUSD","icon":""},"tokenOut":{"address":"0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa","decimals":18,"symbol":"PUSD","icon":""}}]}';
+//
+// const bsc2maticSwap = '';
+// const noswapstr =
+//   '{"srcChain":[],"mapChain":[{"chainId":"212","dexName":"","amountIn":"0","amountOut":"0","tokenIn":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"tokenOut":{"address":"0x5F91a91DBa041073858E1e2236605C4Db2F5488C","name":"map usdc","decimals":18,"symbol":"mUSDC","icon":""},"path":[]}],"targetChain":[]}';
 
 async function demo() {
   console.log('start demo');
@@ -145,6 +145,22 @@ async function demo() {
     url: 'https://testnet-rpc.maplabs.io',
     chainId: 212,
   };
+  let routeStr = '';
+  // get best route
+  console.log('amount', ethers.utils.formatUnits(amount, fromToken.decimals));
+  const requestUrl =
+    `http://54.255.196.147:9009/router/best_route?fromChainId=${fromChainId}&toChainId=${toChainId}&amountIn=` +
+    `${ethers.utils.formatUnits(amount, fromToken.decimals)}&` +
+    `tokenInAddress=${fromToken.address}&` +
+    `tokenInDecimal=${fromToken.decimals}&` +
+    `tokenInSymbol=${fromToken.symbol}&` +
+    `tokenOutAddress=${toToken.address}&` +
+    `tokenOutDecimal=${toToken.decimals}&` +
+    `tokenOutSymbol=${toToken.symbol}`;
+
+  await axios.get(requestUrl).then(function (response) {
+    routeStr = JSON.stringify(response.data);
+  });
 
   await approveToken(
     signer,

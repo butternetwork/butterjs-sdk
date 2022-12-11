@@ -103,7 +103,6 @@ export class ButterSwap {
         BUTTER_ROUTER_METADATA.abi,
         options.signerOrProvider!
       );
-      console.log('call router from address', fromAddress);
       result = await butterRouter.entrance(
         fromAddress,
         routerParam.coreSwapData,
@@ -203,7 +202,6 @@ export class ButterSwap {
         BUTTER_ROUTER_METADATA.abi,
         options.signerOrProvider!
       );
-      console.log('call router from address', fromAddress);
       gas = await butterRouter.gasEstimateEntrance(
         fromAddress,
         routerParam.coreSwapData,

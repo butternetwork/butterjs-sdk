@@ -8,7 +8,7 @@ import {
 import { BaseCurrency } from '../entities';
 import { ethers } from 'ethers';
 import {
-  BUTTER_CORE_ADDRESS_SET,
+  BUTTER_ROUTER_ADDRESS_SET,
   ID_TO_CHAIN_ID,
   IS_EVM,
   IS_NEAR,
@@ -28,13 +28,13 @@ export async function assembleButterRouterParamFromRoute(
   );
   const tokenIn = routes.srcChain[0]!.tokenIn;
   const tokenOut = routes.srcChain[0]!.tokenOut;
-  const butterCoreAddress =
-    BUTTER_CORE_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
+  const butterRouterAddress =
+    BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
   const coreSwapData = await assembleSrcSwapDataFromRoute(
     routes,
     tokenIn.address,
     tokenOut.address,
-    butterCoreAddress
+    butterRouterAddress
   );
 
   const toChainId = targetChainTokenOut.chainId;
@@ -43,7 +43,7 @@ export async function assembleButterRouterParamFromRoute(
     targetSwapData: targetSwapData,
     amount: amount,
     toChainId: toChainId,
-    toAddress: butterCoreAddress,
+    toAddress: butterRouterAddress,
   };
 }
 export async function assembleSrcSwapDataFromRoute(
@@ -58,11 +58,7 @@ export async function assembleSrcSwapDataFromRoute(
   let paramsArr: string[] = [];
   let routerIndexArr: string[] = [];
   for (let swapRoute of srcRoute) {
-    amountInArr.push(
-      ethers.utils
-        .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
-        .toString()
-    );
+    amountInArr.push(swapRoute.amountIn);
     routerIndexArr.push('0');
     const amountIn = swapRoute.amountIn;
     const amountOut = swapRoute.amountOut;
@@ -90,7 +86,7 @@ export async function assembleSrcSwapDataFromRoute(
     const coreParamAbi = [
       'uint256',
       'uint256',
-      'bytes',
+      'address[]',
       'address',
       'uint256',
       'address',
@@ -100,7 +96,7 @@ export async function assembleSrcSwapDataFromRoute(
       abi.encode(coreParamAbi, [
         amountIn,
         amountOut,
-        abi.encode(['address[]'], [tokenAddressArr]),
+        tokenAddressArr,
         toAddress,
         (Math.floor(Date.now() / 1000) + 1000).toString(),
         tokenIn,

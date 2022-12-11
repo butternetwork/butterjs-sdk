@@ -23,6 +23,7 @@
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@types/jest": "^29.2.3",
+    "axios": "^1.2.1",
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
