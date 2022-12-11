@@ -27,12 +27,15 @@ import {
   MOS_CONTRACT_ADDRESS_SET,
   BUTTER_ROUTER_ADDRESS_SET,
   ID_TO_CHAIN_ID,
+  BSC_TEST_NATIVE,
+  POLYGON_TEST_NATIVE,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
   getBridgeFee,
   getVaultBalance,
   getTokenCandidates,
+  getSwapFee,
 } from '../../src/core/tools/dataFetch';
 import {
   ButterFee,
@@ -132,14 +135,21 @@ async function demo() {
   const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
-  const signer = bscSigner;
-  const fromChainId = ChainId.BSC_TEST;
-  const toChainId = ChainId.POLYGON_TEST;
+  let signer;
 
-  const fromToken = BSC_TEST_BMOS;
-  const toToken = POLYGON_TEST_USDC;
-
+  const fromToken = POLYGON_TEST_BMOS;
+  const toToken = BSC_TEST_BMOS;
+  const fromChainId = fromToken.chainId;
+  const toChainId = toToken.chainId;
   const amount = ethers.utils.parseEther('1').toString();
+
+  if (fromChainId === POLYGON_TEST_CHAIN.chainId) {
+    signer = maticSinger;
+  } else if (fromChainId === BSC_TEST_CHAIN.chainId) {
+    signer = bscSigner;
+  } else {
+    throw new Error('chain id not supported');
+  }
 
   const provider: ButterJsonRpcProvider = {
     url: 'https://testnet-rpc.maplabs.io',
@@ -157,11 +167,21 @@ async function demo() {
     `tokenOutAddress=${toToken.address}&` +
     `tokenOutDecimal=${toToken.decimals}&` +
     `tokenOutSymbol=${toToken.symbol}`;
-
+  console.log(requestUrl);
   await axios.get(requestUrl).then(function (response) {
     routeStr = JSON.stringify(response.data);
   });
 
+  console.log(
+    'swap fee',
+    await getSwapFee(
+      fromToken,
+      toChainId,
+      amount,
+      assembleCrossChainRouteFromJson(routeStr).srcChain,
+      provider
+    )
+  );
   await approveToken(
     signer,
     fromToken,
@@ -178,6 +198,7 @@ async function demo() {
 
   // 当源链路径的path为空，授权这个地址
   const mosAddress = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
+
   const request: SwapRequestParam = {
     fromAddress,
     fromToken,

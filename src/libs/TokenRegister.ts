@@ -87,7 +87,7 @@ export class TokenRegister {
     if (this.contract instanceof ethers.Contract) {
       return await this.contract.getRelayChainToken(
         fromChain,
-        getHexAddress(fromToken.address, fromToken.chainId, false)
+        getHexAddress(fromToken.address, fromChain, false)
       );
     } else return '';
   }

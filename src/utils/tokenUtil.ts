@@ -39,16 +39,13 @@ export function getTokenByAddressAndChainId(
   tokenAddress: string,
   chainId: string
 ): BaseCurrency {
-  const supportedToken: BaseCurrency[] = ID_TO_ALL_TOKEN(chainId);
-  for (let i = 0; i < supportedToken.length; i++) {
+  const allToken: BaseCurrency[] = ID_TO_ALL_TOKEN(chainId);
+  for (let i = 0; i < allToken.length; i++) {
     if (
-      getHexAddress(
-        supportedToken[i]!.address,
-        chainId,
-        false
-      ).toLowerCase() === tokenAddress.toLowerCase()
+      getHexAddress(allToken[i]!.address, chainId, false).toLowerCase() ===
+      tokenAddress.toLowerCase()
     ) {
-      return supportedToken[i]!;
+      return allToken[i]!;
     }
   }
   throw new Error(
@@ -92,15 +89,25 @@ export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
         MAP_TEST_NEAR,
         MAP_TEST_BNB,
         MAP_TEST_NATIVE,
+        MAP_TEST_USDC,
       ];
     case ChainId.ETH_PRIV:
       return [];
     case ChainId.NEAR_TESTNET:
       return [NEAR_TEST_MOST, NEAR_TEST_MAP, NEAR_TEST_WNEAR, NEAR_TEST_NATIVE];
     case ChainId.BSC_TEST:
-      return [BSC_TEST_MOST, BSC_TEST_WBNB, BSC_TEST_MAP, BSC_TEST_NATIVE];
+      return [
+        BSC_TEST_MOST,
+        BSC_TEST_WBNB,
+        BSC_TEST_MAP,
+        BSC_TEST_NATIVE,
+        BSC_TEST_USDC,
+        BSC_TEST_BMOS,
+      ];
     case ChainId.POLYGON_TEST:
       return [
+        POLYGON_TEST_USDC,
+        POLYGON_TEST_BMOS,
         POLYGON_TEST_MOST,
         POLYGON_TEST_WMATIC,
         POLYGON_TEST_MAP,

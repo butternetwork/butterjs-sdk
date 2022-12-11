@@ -35,6 +35,7 @@ import {
 import Web3 from 'web3';
 import TokenRegisterMetadata from '../../abis/TokenRegister.json';
 import { RelayOmnichainService } from '../../libs/mos/RelayOmnichainService';
+import { ButterSwapRoute } from '../../types';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -106,7 +107,80 @@ export async function getBridgeFee(
     amount: feeAmount.toString(),
   });
 }
+export async function getSwapFee(
+  srcToken: BaseCurrency,
+  targetChain: string,
+  amount: string,
+  srcRoute: ButterSwapRoute[],
+  mapRpcProvider: ButterJsonRpcProvider
+): Promise<ButterFee> {
+  if (srcRoute.length === 0 || srcRoute[0]!.path.length === 0) {
+    return await getBridgeFee(srcToken, targetChain, amount, mapRpcProvider);
+  }
+  let totalAmountOut: string = '0';
+  for (let route of srcRoute) {
+    totalAmountOut = BigNumber.from(totalAmountOut)
+      .add(route.amountOut)
+      .toString();
+  }
+  const tokenOut: BaseCurrency = srcRoute[0]!.tokenOut;
 
+  const chainId: string = mapRpcProvider.chainId.toString();
+
+  const mapChainId: string = mapRpcProvider.chainId.toString();
+  const mapProvider = new ethers.providers.JsonRpcProvider(
+    mapRpcProvider.url ? mapRpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
+  );
+  const tokenRegister = new TokenRegister(
+    TOKEN_REGISTER_ADDRESS_SET[chainId]!,
+    mapProvider
+  );
+  let feeAmount = '';
+  let feeRate: ButterFeeRate = { lowest: '0', rate: '0', highest: '0' };
+  if (IS_MAP(srcToken.chainId)) {
+    const tokenAddress = srcToken.isNative
+      ? srcToken.wrapped.address
+      : srcToken.address;
+    const tokenFeeRate = await tokenRegister.getFeeRate(
+      tokenAddress,
+      targetChain
+    );
+    feeRate.lowest = tokenFeeRate.lowest.toString();
+    feeRate.highest = tokenFeeRate.highest.toString();
+    feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
+    feeAmount = _getFeeAmount(amount, feeRate);
+  } else {
+    const mapTokenAddress = await tokenRegister.getRelayChainToken(
+      srcToken.chainId.toString(),
+      tokenOut
+    );
+
+    const relayChainAmount = await tokenRegister.getRelayChainAmount(
+      mapTokenAddress,
+      srcToken.chainId.toString(),
+      totalAmountOut
+    );
+    const tokenFeeRate: ButterFeeRate = await tokenRegister.getFeeRate(
+      mapTokenAddress,
+      targetChain
+    );
+    feeRate.lowest = tokenFeeRate.lowest;
+    feeRate.highest = tokenFeeRate.highest;
+    feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
+
+    const feeAmountInMappingToken = _getFeeAmount(relayChainAmount, feeRate);
+    const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
+    const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
+    feeRate.lowest = BigNumber.from(feeRate.lowest).mul(ratio).toString();
+    feeRate.highest = BigNumber.from(feeRate.highest).mul(ratio).toString();
+    feeAmount = feeAmountBN.mul(ratio).toString();
+  }
+  return Promise.resolve({
+    feeToken: getTokenByAddressAndChainId(tokenOut.address, srcToken.chainId),
+    feeRate: feeRate,
+    amount: feeAmount.toString(),
+  });
+}
 /**
  * get vault balance
  * @param fromChainId

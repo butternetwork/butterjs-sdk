@@ -24,6 +24,7 @@ export type SwapRequestParam = {
   toToken: BaseCurrency;
   amountIn: string; // in wei
   swapRouteStr: string;
+  slippage?: number; // in bps
   options: SwapOptions;
 };
 
@@ -44,9 +45,9 @@ export interface ButterSwapRoute {
 }
 
 export interface ButterPath {
+  poolId: string;
   tokenIn: PathToken;
   tokenOut: PathToken;
-  poolId: string;
 }
 
 export interface PathToken {

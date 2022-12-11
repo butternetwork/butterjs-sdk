@@ -23,7 +23,7 @@ export const MOS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
  * TokenRegister Address: https://github.com/butternetwork/butter-mos-contracts/blob/master/evm/contracts/TokenRegister.sol
  */
 export const TOKEN_REGISTER_ADDRESS_SET: { [chainId: string]: string } = {
-  [ChainId.MAP_TEST]: '0xc81Fe3f111d44b5469B9179D3b40B99A2527cF7A',
+  [ChainId.MAP_TEST]: '0x2a1E22c89754735c90f507844BDcd94A0193D986',
   [ChainId.MAP_MAINNET]: '0xff44790d336d3C004F2Dac7e401E4EA5680529dD',
 };
 
@@ -34,9 +34,9 @@ export const BUTTER_ROUTER_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.NEAR_MAINNET]: '',
 
   [ChainId.ETH_PRIV]: '',
-  [ChainId.BSC_TEST]: '0x533549f85185b8D284a9Eb517fC2f94096e01422',
+  [ChainId.BSC_TEST]: '0x23727fdd88801b9d0A12DE64Ae9c91D671d17c33',
   [ChainId.MAP_TEST]: '',
-  [ChainId.POLYGON_TEST]: '0xEEcD7362c56F8993EBB802602433B9560A066857',
+  [ChainId.POLYGON_TEST]: '0x7A88B312893b56D1FA81bF16775536F9adb68329',
   [ChainId.NEAR_TESTNET]: '',
 };
 export const BUTTER_CORE_ADDRESS_SET: { [chainId in ChainId]: string } = {
