@@ -137,7 +137,7 @@ async function demo() {
 
   let signer;
 
-  const fromToken = POLYGON_TEST_BMOS;
+  const fromToken = POLYGON_TEST_USDC;
   const toToken = BSC_TEST_BMOS;
   const fromChainId = fromToken.chainId;
   const toChainId = toToken.chainId;
@@ -174,14 +174,9 @@ async function demo() {
 
   console.log(
     'swap fee',
-    await getSwapFee(
-      fromToken,
-      toChainId,
-      amount,
-      assembleCrossChainRouteFromJson(routeStr).srcChain,
-      provider
-    )
+    await getSwapFee(fromToken, toChainId, amount, routeStr, provider)
   );
+
   await approveToken(
     signer,
     fromToken,
