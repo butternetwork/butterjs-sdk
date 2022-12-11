@@ -22,7 +22,7 @@ export type SwapRequestParam = {
   fromToken: BaseCurrency;
   toAddress: string;
   toToken: BaseCurrency;
-  amountIn: string;
+  amountIn: string; // in wei
   swapRouteStr: string;
   options: SwapOptions;
 };

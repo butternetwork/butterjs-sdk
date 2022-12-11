@@ -170,9 +170,14 @@ async function demo() {
     true
   );
   console.log('approved');
+
   // gas estimation
   const swap: ButterSwap = new ButterSwap();
+  // 当源链路径的path不为空，授权这个地址
+  const routerAddress = BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
 
+  // 当源链路径的path为空，授权这个地址
+  const mosAddress = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
   const request: SwapRequestParam = {
     fromAddress,
     fromToken,
@@ -198,7 +203,7 @@ async function demo() {
     toToken,
     amountIn: amount,
     swapRouteStr: routeStr,
-    options: { signerOrProvider: signer, gas: '1000000' },
+    options: { signerOrProvider: signer, gas: adjustedGas },
   };
   const response: ButterTransactionResponse = await swap.swap(swapRequestParam);
   const receipt: ButterTransactionReceipt = await response.wait!();
