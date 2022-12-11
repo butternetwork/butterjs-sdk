@@ -7,7 +7,7 @@ import {
 } from 'near-api-js';
 import {
   NearNetworkConfig,
-  TransferOutOptions,
+  TransactionOptions,
 } from '../../types/requestTypes';
 import { MOS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
 import { ChainId, ID_TO_CHAIN_ID } from '../../constants/chains';
@@ -49,7 +49,7 @@ export class NearOmnichainService implements IMapOmnichainService {
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
-   * @param options see {@link TransferOutOptions} for more detail
+   * @param options see {@link TransactionOptions} for more detail
    */
   async doTransferOutToken(
     fromAddress: string,
@@ -57,7 +57,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     amount: string,
     toAddress: string,
     toChainId: string,
-    options: TransferOutOptions
+    options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
     let mosAccountId: string;
     let account: Account | ConnectedWalletAccount;
@@ -116,14 +116,14 @@ export class NearOmnichainService implements IMapOmnichainService {
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
-   * @param options see {@link TransferOutOptions} for more detail
+   * @param options see {@link TransactionOptions} for more detail
    */
   async doTransferOutNative(
     fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
-    options: TransferOutOptions
+    options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
     let mosAccountId: string;
     let account: Account | ConnectedWalletAccount;
@@ -174,7 +174,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     toAddress: string,
     toChainId: string,
     swapData: string,
-    options: TransferOutOptions
+    options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
     return <ButterTransactionResponse>{
       hash: 'executionOutcome.transaction.hash',
@@ -187,7 +187,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     toChainId: string,
     amount: string,
     swapData: string,
-    options: TransferOutOptions
+    options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
     return <ButterTransactionResponse>{
       hash: 'executionOutcome.transaction.hash',
@@ -266,7 +266,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     from: string,
     to: string,
     amount: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<string> {
     return Promise.resolve('');
   }
@@ -276,7 +276,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     toAddress: string,
     toChainId: string,
     amount: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<string> {
     return Promise.resolve('');
   }
@@ -287,7 +287,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     amount: string,
     toAddress: string,
     toChainId: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<string> {
     return Promise.resolve('');
   }
@@ -298,7 +298,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     toChainId: string,
     amount: string,
     swapData: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<string> {
     return Promise.resolve('');
   }
@@ -310,7 +310,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     toChainId: string,
     amount: string,
     swapData: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<string> {
     return Promise.resolve('');
   }

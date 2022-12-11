@@ -158,7 +158,7 @@ export const ID_TO_CHAIN_ID = (id: string): ChainId => {
 
 export const SUPPORTED_CHAIN_LIST = [
   MAP_TEST_CHAIN,
-  NEAR_TEST_CHAIN,
+  // NEAR_TEST_CHAIN,
   BSC_TEST_CHAIN,
   POLYGON_TEST_CHAIN,
 ];

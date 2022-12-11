@@ -12,7 +12,6 @@ import {
   ID_TO_CHAIN_ID,
   IS_EVM,
   IS_NEAR,
-  MOS_CONTRACT_ADDRESS_SET,
 } from '../constants';
 
 const abi = ethers.utils.defaultAbiCoder;
@@ -21,8 +20,6 @@ export async function assembleButterRouterParamFromRoute(
   routes: ButterCrossChainRoute,
   amount: string,
   fromChainId: string,
-  toChainId: string,
-  toAddress: string,
   targetChainTokenOut: BaseCurrency
 ): Promise<ButterRouterParam> {
   const targetSwapData = await assembleTargetSwapDataFromRoute(
@@ -31,27 +28,29 @@ export async function assembleButterRouterParamFromRoute(
   );
   const tokenIn = routes.srcChain[0]!.tokenIn;
   const tokenOut = routes.srcChain[0]!.tokenOut;
-
+  const butterCoreAddress =
+    BUTTER_CORE_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
   const coreSwapData = await assembleSrcSwapDataFromRoute(
     routes,
     tokenIn.address,
     tokenOut.address,
-    fromChainId
+    butterCoreAddress
   );
 
+  const toChainId = targetChainTokenOut.chainId;
   return <ButterRouterParam>{
     coreSwapData: coreSwapData,
     targetSwapData: targetSwapData,
     amount: amount,
     toChainId: toChainId,
-    toAddress: toAddress,
+    toAddress: butterCoreAddress,
   };
 }
 export async function assembleSrcSwapDataFromRoute(
   route: ButterCrossChainRoute,
   tokenIn: string,
   tokenOut: string,
-  fromChainId: string
+  toAddress: string
 ): Promise<ButterCoreParam> {
   const srcRoute: ButterSwapRoute[] = route.srcChain;
 
@@ -87,8 +86,6 @@ export async function assembleSrcSwapDataFromRoute(
   address[2]  inputOutAddre;  // 0 -input  1- Out
 }
      **/
-    const butterCoreAddress =
-      BUTTER_CORE_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
 
     const coreParamAbi = [
       'uint256',
@@ -103,9 +100,9 @@ export async function assembleSrcSwapDataFromRoute(
       abi.encode(coreParamAbi, [
         amountIn,
         amountOut,
-        abi.encode(['address[]'], tokenAddressArr),
-        butterCoreAddress,
-        (Date.now() + 1000).toString(),
+        abi.encode(['address[]'], [tokenAddressArr]),
+        toAddress,
+        (Math.floor(Date.now() / 1000) + 1000).toString(),
         tokenIn,
         tokenOut,
       ])
@@ -148,18 +145,18 @@ export async function assembleEVMSwapDataFromRoute(
   let swapParamArr: any[] = [];
 
   const targetRoute: ButterSwapRoute[] = route.targetChain;
+
   for (let swapRoute of targetRoute) {
+    swapRoute.amountIn = ethers.utils
+      .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
+      .toString();
+    swapRoute.amountOut = ethers.utils
+      .parseUnits(swapRoute.amountOut, swapRoute.tokenIn.decimals)
+      .toString();
     let swapParam = [];
-    swapParam.push(
-      ethers.utils
-        .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
-        .toString()
-    );
-    swapParam.push(
-      ethers.utils
-        .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
-        .toString()
-    );
+    swapParam.push(swapRoute.amountIn);
+    swapParam.push(swapRoute.amountOut);
+
     let tokenAddressArr = [];
     for (let i = 0; i < swapRoute.path.length; i++) {
       const butterPath: ButterPath = swapRoute.path[i]!;
@@ -186,5 +183,33 @@ export async function assembleEVMSwapDataFromRoute(
 export function assembleCrossChainRouteFromJson(
   jsonStr: string
 ): ButterCrossChainRoute {
-  return JSON.parse(jsonStr) as ButterCrossChainRoute;
+  let route: ButterCrossChainRoute = JSON.parse(
+    jsonStr
+  ) as ButterCrossChainRoute;
+
+  for (let swapRoute of route.srcChain) {
+    swapRoute.amountIn = ethers.utils
+      .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
+      .toString();
+    swapRoute.amountOut = ethers.utils
+      .parseUnits(swapRoute.amountOut, swapRoute.tokenIn.decimals)
+      .toString();
+  }
+  for (let swapRoute of route.mapChain) {
+    swapRoute.amountIn = ethers.utils
+      .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
+      .toString();
+    swapRoute.amountOut = ethers.utils
+      .parseUnits(swapRoute.amountOut, swapRoute.tokenIn.decimals)
+      .toString();
+  }
+  for (let swapRoute of route.targetChain) {
+    swapRoute.amountIn = ethers.utils
+      .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
+      .toString();
+    swapRoute.amountOut = ethers.utils
+      .parseUnits(swapRoute.amountOut, swapRoute.tokenIn.decimals)
+      .toString();
+  }
+  return route;
 }

@@ -19,7 +19,7 @@ import {
 } from '../../utils/responseUtil';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
-import { TransferOutOptions } from '../../types';
+import { TransactionOptions } from '../../types';
 import { ButterProviderType } from '../../types/paramTypes';
 import { PromiEvent } from 'web3-core';
 
@@ -62,7 +62,7 @@ export class RelayOmnichainService implements IMapOmnichainService {
     amount: string,
     toAddress: string,
     toChainId: string,
-    options: TransferOutOptions
+    options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
     let txHash;
     if (this.contract instanceof EthersContract) {
@@ -103,7 +103,7 @@ export class RelayOmnichainService implements IMapOmnichainService {
     toAddress: string,
     toChainId: string,
     amount: string,
-    options: TransferOutOptions
+    options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
     let txHash;
     if (this.contract instanceof EthersContract) {
@@ -143,7 +143,7 @@ export class RelayOmnichainService implements IMapOmnichainService {
     toAddress: string,
     toChainId: string,
     swapData: string,
-    options: TransferOutOptions
+    options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
     let txHash: string;
     if (this.contract instanceof EthersContract) {
@@ -187,7 +187,7 @@ export class RelayOmnichainService implements IMapOmnichainService {
     toChainId: string,
     amount: string,
     swapData: string,
-    options: TransferOutOptions
+    options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
     let txHash: string;
     if (this.contract instanceof EthersContract) {

@@ -23,7 +23,7 @@ export type SwapRequestParam = {
   toAddress: string;
   toToken: BaseCurrency;
   amountIn: string;
-  swapRoute: ButterCrossChainRoute;
+  swapRouteStr: string;
   options: SwapOptions;
 };
 
@@ -96,7 +96,7 @@ export class NearNetworkConfig {
   }
 }
 
-export type TransferOutOptions = {
+export type TransactionOptions = {
   gas?: string;
 };
 

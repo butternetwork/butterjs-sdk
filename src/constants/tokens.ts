@@ -232,7 +232,7 @@ export const BSC_TEST_WBNB = new Token(
 );
 
 /** polygon test **/
-export const MATIC_TEST_NATIVE = new EVMNativeCoin(
+export const POLYGON_TEST_NATIVE = new EVMNativeCoin(
   ChainId.POLYGON_TEST,
   18,
   'MATIC',

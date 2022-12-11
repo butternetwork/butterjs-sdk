@@ -1,4 +1,4 @@
-import { TransferOutOptions } from '../../types/requestTypes';
+import { TransactionOptions } from '../../types/requestTypes';
 import { ButterTransactionResponse } from '../../types/responseTypes';
 import BN from 'bn.js';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
@@ -14,7 +14,7 @@ export interface IMapOmnichainService {
    * @param amount amount in minimal unit
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
-   * @param options see {@link TransferOutOptions} for more detail
+   * @param options see {@link TransactionOptions} for more detail
    */
   doTransferOutToken(
     fromAddress: string,
@@ -22,7 +22,7 @@ export interface IMapOmnichainService {
     amount: string,
     toAddress: string,
     toChainId: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<ButterTransactionResponse>;
 
   /**
@@ -31,14 +31,14 @@ export interface IMapOmnichainService {
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
-   * @param options see {@link TransferOutOptions} for more detail
+   * @param options see {@link TransactionOptions} for more detail
    */
   doTransferOutNative(
     fromAddress: string,
     toAddress: string,
     toChainId: string,
     amount: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<ButterTransactionResponse>;
 
   /**
@@ -49,7 +49,7 @@ export interface IMapOmnichainService {
    * @param toAddress target chain receiving address
    * @param toChainId target chain id
    * @param swapData
-   * @param options see {@link TransferOutOptions} for more detail
+   * @param options see {@link TransactionOptions} for more detail
    */
   doSwapOutToken(
     fromAddress: string,
@@ -58,7 +58,7 @@ export interface IMapOmnichainService {
     toAddress: string,
     toChainId: string,
     swapData: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<ButterTransactionResponse>;
 
   /**
@@ -68,7 +68,7 @@ export interface IMapOmnichainService {
    * @param toChainId target chain id
    * @param amount amount to bridge in minimal unit
    * @param swapData
-   * @param options see {@link TransferOutOptions} for more detail
+   * @param options see {@link TransactionOptions} for more detail
    */
   doSwapOutNative(
     fromAddress: string,
@@ -76,7 +76,7 @@ export interface IMapOmnichainService {
     toChainId: string,
     amount: string,
     swapData: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<ButterTransactionResponse>;
 
   gasEstimateTransferOutToken(
@@ -85,7 +85,7 @@ export interface IMapOmnichainService {
     amount: string,
     toAddress: string,
     toChainId: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<string>;
 
   gasEstimateTransferOutNative(
@@ -93,7 +93,7 @@ export interface IMapOmnichainService {
     toAddress: string,
     toChainId: string,
     amount: string,
-    options?: TransferOutOptions
+    options?: TransactionOptions
   ): Promise<string>;
 
   gasEstimateSwapOutToken(

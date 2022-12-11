@@ -1,17 +1,35 @@
-import { ChainId, IS_EVM, IS_NEAR } from '../../constants';
+import {
+  BUTTER_ROUTER_ADDRESS_SET,
+  ChainId,
+  ID_TO_CHAIN_ID,
+  IS_EVM,
+  IS_NEAR,
+} from '../../constants';
 import {
   getHexAddress,
   validateAndParseAddressByChainId,
   verifyNearAccountId,
 } from '../../utils';
-import { BridgeRequestParam, SwapRequestParam } from '../../types';
+import {
+  BridgeRequestParam,
+  ButterCrossChainRoute,
+  ButterRouterParam,
+  SwapRequestParam,
+} from '../../types';
 import { IMapOmnichainService } from '../../libs/interfaces/IMapOmnichainService';
 import { createMOSInstance } from '../../libs/utils/mosUtils';
+import BUTTER_ROUTER_METADATA from '../../abis/ButterRouter.json';
+
 import {
   ButterTransactionResponse,
   NearAccountState,
 } from '../../types/responseTypes';
-import { assembleTargetSwapDataFromRoute } from '../../utils/requestUtils';
+import {
+  assembleButterRouterParamFromRoute,
+  assembleCrossChainRouteFromJson,
+  assembleTargetSwapDataFromRoute,
+} from '../../utils/requestUtils';
+import { ButterRouter } from '../../libs/butter-router/ButterRouter';
 
 export class ButterSwap {
   /**
@@ -29,11 +47,12 @@ export class ButterSwap {
     toAddress,
     toToken,
     amountIn,
-    swapRoute,
+    swapRouteStr,
     options,
   }: SwapRequestParam): Promise<ButterTransactionResponse> {
-    // check validity of toAddress according to toChainId
     const toChainId = toToken.chainId;
+    const fromChainId = fromToken.chainId;
+    // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
     if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
@@ -48,18 +67,8 @@ export class ButterSwap {
       throw new Error(`Network config must be provided for NEAR blockchain`);
     }
 
-    const swapData: string = await assembleTargetSwapDataFromRoute(
-      swapRoute,
-      toToken
-    );
-
-    // create mos instance base on src token chainId.
-    const mos: IMapOmnichainService = createMOSInstance(
-      fromToken.chainId,
-      options
-    );
-
     let result: ButterTransactionResponse;
+
     // convert near address to hex
     if (IS_NEAR(toChainId)) {
       const accountState: NearAccountState = await verifyNearAccountId(
@@ -71,6 +80,50 @@ export class ButterSwap {
       }
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
+
+    // assemble cross-chain swap route
+    const route: ButterCrossChainRoute =
+      assembleCrossChainRouteFromJson(swapRouteStr);
+    const swapData: string = await assembleTargetSwapDataFromRoute(
+      route,
+      toToken
+    );
+
+    // check if source chain needs to do agg-swap
+    if (route.srcChain.length != 0 && route.srcChain[0]!.path.length != 0) {
+      const routerParam: ButterRouterParam =
+        await assembleButterRouterParamFromRoute(
+          route,
+          amountIn,
+          fromChainId,
+          toToken
+        );
+      const butterRouter: ButterRouter = new ButterRouter(
+        BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+        BUTTER_ROUTER_METADATA.abi,
+        options.signerOrProvider!
+      );
+      console.log('call router from address', fromAddress);
+      result = await butterRouter.entrance(
+        fromAddress,
+        routerParam.coreSwapData,
+        routerParam.targetSwapData,
+        routerParam.amount,
+        routerParam.toChainId,
+        routerParam.toAddress,
+        {
+          gas: options.gas,
+        }
+      );
+
+      return result;
+    }
+
+    // create mos instance base on src token chainId.
+    const mos: IMapOmnichainService = createMOSInstance(
+      fromToken.chainId,
+      options
+    );
 
     if (fromToken.isNative) {
       // if input token is Native coin, call transferOutNative method
@@ -107,45 +160,72 @@ export class ButterSwap {
     toAddress,
     toToken,
     amountIn,
-    swapRoute,
+    swapRouteStr,
     options,
   }: SwapRequestParam): Promise<string> {
-    // check validity of toAddress according to toChainId
-    // toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     const toChainId = toToken.chainId;
-
+    const fromChainId = fromToken.chainId;
+    // check validity of toAddress according to toChainId
+    toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
     if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
       throw new Error(`Provider must be provided`);
     }
+    // if src chain is near chain, near network provider must be provided
+    if (
+      ChainId.NEAR_TESTNET == fromToken.chainId &&
+      options.nearProvider == undefined
+    ) {
+      throw new Error(`Network config must be provided for NEAR blockchain`);
+    }
 
-    // near doesn't provide gas estimation yet
+    // assemble cross-chain swap route
+    const route: ButterCrossChainRoute =
+      assembleCrossChainRouteFromJson(swapRouteStr);
+    const swapData: string = await assembleTargetSwapDataFromRoute(
+      route,
+      toToken
+    );
 
-    // create mos instance base on src token chainId.
+    let gas;
+
+    // check if source chain needs to do agg-swap
+    if (route.srcChain.length != 0 && route.srcChain[0]!.path.length != 0) {
+      const routerParam: ButterRouterParam =
+        await assembleButterRouterParamFromRoute(
+          route,
+          amountIn,
+          fromChainId,
+          toToken
+        );
+      const butterRouter: ButterRouter = new ButterRouter(
+        BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+        BUTTER_ROUTER_METADATA.abi,
+        options.signerOrProvider!
+      );
+      console.log('call router from address', fromAddress);
+      gas = await butterRouter.gasEstimateEntrance(
+        fromAddress,
+        routerParam.coreSwapData,
+        routerParam.targetSwapData,
+        routerParam.amount,
+        routerParam.toChainId,
+        routerParam.toAddress
+      );
+
+      return gas;
+    }
+
+    // if no swap, direct call mos swap method
     const mos: IMapOmnichainService = createMOSInstance(
       fromToken.chainId,
       options
     );
 
-    const swapData: string = await assembleTargetSwapDataFromRoute(
-      swapRoute,
-      toToken
-    );
-
     if (IS_NEAR(toChainId)) {
-      // no need to check address validity for gas estimation
-      // const accountState: NearAccountState = await verifyNearAccountId(
-      //   toAddress,
-      //   toChainId
-      // );
-      // if (!accountState.isValid) {
-      //   throw new Error(accountState.errMsg);
-      // }
-
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
 
-    let gas;
     // if input token is Native coin, call transferOutNative method
     if (fromToken.isNative) {
       gas = await mos.gasEstimateSwapOutNative(
