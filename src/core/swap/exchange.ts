@@ -104,7 +104,8 @@ export class ButterSwap {
           route,
           amountIn,
           fromChainId,
-          toToken
+          toToken,
+          toAddress
         );
       const butterRouter: ButterRouter = new ButterRouter(
         BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
@@ -174,6 +175,7 @@ export class ButterSwap {
   }: SwapRequestParam): Promise<string> {
     const toChainId = toToken.chainId;
     const fromChainId = fromToken.chainId;
+
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
@@ -208,14 +210,14 @@ export class ButterSwap {
           route,
           amountIn,
           fromChainId,
-          toToken
+          toToken,
+          toAddress
         );
       const butterRouter: ButterRouter = new ButterRouter(
         BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
         BUTTER_ROUTER_METADATA.abi,
         options.signerOrProvider!
       );
-
       gas = await butterRouter.gasEstimateEntrance(
         fromAddress,
         routerParam.coreSwapData,

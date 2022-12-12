@@ -23,7 +23,8 @@ export async function assembleButterRouterParamFromRoute(
   routes: ButterCrossChainRoute,
   amount: string,
   fromChainId: string,
-  targetChainTokenOut: BaseCurrency
+  targetChainTokenOut: BaseCurrency,
+  toAddress: string
 ): Promise<ButterRouterParam> {
   const targetSwapData = await assembleTargetSwapDataFromRoute(
     routes,
@@ -46,7 +47,7 @@ export async function assembleButterRouterParamFromRoute(
     targetSwapData: targetSwapData,
     amount: amount,
     toChainId: toChainId,
-    toAddress: butterRouterAddress,
+    toAddress: toAddress,
   };
 }
 export async function assembleSrcSwapDataFromRoute(

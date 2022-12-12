@@ -138,11 +138,12 @@ async function demo() {
 
   let signer;
 
-  const fromToken = BSC_TEST_NATIVE;
+  const fromToken = BSC_TEST_USDC;
   const toToken = POLYGON_TEST_NATIVE;
+  const amount = ethers.utils.parseEther('10').toString();
+
   const fromChainId = fromToken.chainId;
   const toChainId = toToken.chainId;
-  const amount = ethers.utils.parseEther('1').toString();
 
   if (fromChainId === POLYGON_TEST_CHAIN.chainId) {
     signer = maticSinger;
@@ -158,7 +159,6 @@ async function demo() {
   };
   let routeStr = '';
   // get best route
-  console.log('amount', ethers.utils.formatUnits(amount, fromToken.decimals));
   const requestUrl =
     `http://54.255.196.147:9009/router/best_route?fromChainId=${fromChainId}&toChainId=${toChainId}&amountIn=` +
     `${ethers.utils.formatUnits(amount, fromToken.decimals)}&` +
@@ -178,13 +178,15 @@ async function demo() {
     await getSwapFee(fromToken, toChainId, amount, routeStr, provider)
   );
 
-  // await approveToken(
-  //   signer,
-  //   fromToken,
-  //   '100',
-  //   BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
-  //   true
-  // );
+  if (!fromToken.isNative) {
+    await approveToken(
+      signer,
+      fromToken,
+      '100',
+      MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+      true
+    );
+  }
 
   console.log('approved');
 
