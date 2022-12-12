@@ -1,7 +1,7 @@
 import { constants, Contract, ContractTransaction, Signer } from 'ethers';
 import { BigNumber } from '@ethersproject/bignumber';
 import { ERC20_ABI, ERC20Contract } from '../abis/ERC20ABI';
-import { Token } from '../entities';
+import { BaseCurrency, Token } from '../entities';
 
 /**
  * get contract allowance for token
@@ -65,7 +65,7 @@ export async function getApprovedAmount(
 
 export async function approveToken(
   signer: Signer,
-  token: Token,
+  token: BaseCurrency,
   amount: string,
   approvalAddress: string,
   unlimitedAmount = false
