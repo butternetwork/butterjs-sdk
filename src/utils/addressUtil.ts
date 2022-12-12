@@ -90,14 +90,6 @@ export function hexToDecimalArray(address: string, chainId: string): number[] {
   return ret;
 }
 
-export function decimalArrayToHex(decimals: number[]): string {
-  let ret = '';
-  for (let i = 0; i < decimals.length; i++) {
-    ret += String.fromCharCode(decimals[i]!);
-  }
-  return ret;
-}
-
 export function getHexAddress(
   address: string,
   chainId: string,
@@ -114,7 +106,7 @@ export function getHexAddress(
 
 /**
  * @param input
- * @param hexLength
+ * @param isAddress
  */
 export function asciiToHex(input: string, isAddress: boolean): string {
   let hexArr = [];

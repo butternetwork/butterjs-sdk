@@ -222,7 +222,6 @@ async function addChainTypeToNear(chainId: number, chainType: string) {
   } catch (e) {
     console.log(e);
   }
-  console.log(outcome!);
 }
 async function ethToNear() {}
 main()

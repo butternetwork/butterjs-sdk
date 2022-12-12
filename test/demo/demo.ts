@@ -12,6 +12,10 @@ import {
   POLYGON_MAINNET_USDC,
   POLYGON_TEST_CHAIN,
   SUPPORTED_CHAIN_LIST,
+  BSC_TEST_BMOS,
+  POLYGON_TEST_BMOS,
+  NEAR_TEST_CHAIN,
+  NEAR_TEST_MOST,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
@@ -101,21 +105,25 @@ console.log(
 
 async function demo() {
   console.log('start demo');
-
   const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
-  const fromChainId = ChainId.POLYGON_TEST;
-  const toChainId = ChainId.BSC_TEST;
+  let signer;
 
-  const fromToken = POLYGON_TEST_MOST;
-
+  const fromToken = NEAR_TEST_MOST;
+  const toToken = POLYGON_TEST_MOST;
+  const fromChainId = fromToken.chainId;
+  const toChainId = toToken.chainId;
   const amount = ethers.utils.parseEther('1').toString();
 
-  // const provider: ButterJsonRpcProvider = {
-  //   url: 'https://testnet-rpc.maplabs.io',
-  //   chainId: 212,
-  // };
+  if (fromChainId === POLYGON_TEST_CHAIN.chainId) {
+    signer = maticSinger;
+  } else if (fromChainId === BSC_TEST_CHAIN.chainId) {
+    signer = bscSigner;
+  } else if (fromChainId === NEAR_TEST_CHAIN.chainId) {
+  } else {
+    throw new Error('from chain not supported');
+  }
 
   const provider: ButterJsonRpcProvider = {
     url: 'https://testnet-rpc.maplabs.io',
@@ -131,41 +139,41 @@ async function demo() {
   console.log('token candidates', tokenCandidates);
 
   // 1. 获取费用信息
-  const fee: ButterFee = await getBridgeFee(
-    fromToken,
-    toChainId,
-    amount,
-    provider
-  );
-  console.log('bridge fee', fee);
+  // const fee: ButterFee = await getBridgeFee(
+  //   fromToken,
+  //   toChainId,
+  //   amount,
+  //   provider
+  // );
+  // console.log('bridge fee', fee);
 
   // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
-  const balance: VaultBalance = await getVaultBalance(
-    fromChainId,
-    fromToken,
-    toChainId,
-    provider
-  );
-  console.log('vault balance', balance);
+  // const balance: VaultBalance = await getVaultBalance(
+  //   fromChainId,
+  //   fromToken,
+  //   toChainId,
+  //   provider
+  // );
+  // console.log('vault balance', balance);
 
   // 3. Bridge(先estimate gas)
-  console.log('gas estimate');
+  // console.log('gas estimate');
   const bridge: ButterBridge = new ButterBridge();
-  const request: BridgeRequestParam = {
-    fromAddress: fromAddress,
-    fromToken: fromToken,
-    fromChainId: fromChainId,
-    toChainId: toChainId,
-    toAddress: toAddress,
-    amount: amount,
-    options: { signerOrProvider: maticSinger },
-  };
-  const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
+  // const request: BridgeRequestParam = {
+  //   fromAddress: fromAddress,
+  //   fromToken: fromToken,
+  //   fromChainId: fromChainId,
+  //   toChainId: toChainId,
+  //   toAddress: toAddress,
+  //   amount: amount,
+  //   options: { signerOrProvider: signer },
+  // };
+  // const estimatedGas: string = await bridge.gasEstimateBridgeToken(request);
 
-  console.log('gas', estimatedGas);
-  const adjustedGas = Math.floor(
-    Number.parseFloat(estimatedGas) * 1.2
-  ).toString();
+  // console.log('gas', estimatedGas);
+  // const adjustedGas = Math.floor(
+  //   Number.parseFloat(estimatedGas) * 1.2
+  // ).toString();
 
   // 3. Bridge(真正的Bridge)
   const bridgeRequest: BridgeRequestParam = {
@@ -177,9 +185,9 @@ async function demo() {
     amount: amount,
     options: {
       nearProvider: nearConfig,
-      signerOrProvider: maticSinger,
+      signerOrProvider: signer,
       // gas: '100000000000000',
-      gas: adjustedGas,
+      // gas: adjustedGas,
     },
   };
 

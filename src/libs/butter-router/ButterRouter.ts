@@ -32,7 +32,6 @@ export class ButterRouter {
       signerOrProvider instanceof Signer ||
       signerOrProvider instanceof Provider
     ) {
-      console.log('router address', contractAddress);
       this.contract = new ethers.Contract(
         contractAddress,
         abi,

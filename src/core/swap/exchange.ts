@@ -86,7 +86,8 @@ export class ButterSwap {
       assembleCrossChainRouteFromJson(swapRouteStr);
     const swapData: string = await assembleTargetSwapDataFromRoute(
       route,
-      toToken
+      toToken,
+      toAddress
     );
 
     // check if source chain needs to do agg-swap
@@ -183,7 +184,8 @@ export class ButterSwap {
       assembleCrossChainRouteFromJson(swapRouteStr);
     const swapData: string = await assembleTargetSwapDataFromRoute(
       route,
-      toToken
+      toToken,
+      toAddress
     );
 
     let gas;

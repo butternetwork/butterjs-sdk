@@ -96,7 +96,6 @@ export async function getBridgeFee(
 
     const feeAmountInMappingToken = _getFeeAmount(relayChainAmount, feeRate);
     const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
-    console.log('fee amount in mapping token', feeAmountBN.toString());
     const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
     feeRate.lowest = BigNumber.from(feeRate.lowest).mul(ratio).toString();
     feeRate.highest = BigNumber.from(feeRate.highest).mul(ratio).toString();
@@ -423,7 +422,6 @@ export async function isTokenMintable(
       method_name: GET_MCS_TOKENS,
       args_base64: 'e30=',
     });
-    console.log('token address', tokenAddress);
     const mosTokenSet = JSON.parse(asciiToString(response.result));
     for (let i = 0; i < mosTokenSet.length; i++) {
       if (

@@ -85,7 +85,6 @@ export async function addTokenPair({
     if (srcToken.isNative) {
       await nearMOS.addNativeToChain(targetToken.chainId);
     } else {
-      console.log('not near native,', targetToken.chainId);
       await nearMOS.addFungibleTokenToChain(
         srcToken.address,
         targetToken.chainId

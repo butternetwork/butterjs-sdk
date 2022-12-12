@@ -49,7 +49,7 @@ import { ButterJsonRpcProvider } from '../../src/types/paramTypes';
 import {
   assembleButterRouterParamFromRoute,
   assembleCrossChainRouteFromJson,
-  assembleTargetSwapDataFromRoute,
+  assembleNearSwapMsgFromRoute,
 } from '../../src/utils/requestUtils';
 import { ButterSwap } from '../../src/core/swap/exchange';
 import { BaseCurrency } from '../../src/entities';
@@ -172,7 +172,14 @@ async function demo() {
   await axios.get(requestUrl).then(function (response) {
     routeStr = JSON.stringify(response.data);
   });
-  console.log('hex', asciiToHex('wrap.testnetXabc.testnet', false));
+  console.log(
+    'near swap msg',
+    assembleNearSwapMsgFromRoute(
+      assembleCrossChainRouteFromJson(routeStr),
+      toToken,
+      toAddress
+    )
+  );
   console.log(
     'swap fee',
     await getSwapFee(fromToken, toChainId, amount, routeStr, provider)

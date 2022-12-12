@@ -14,6 +14,7 @@ import {
   IS_NEAR,
   MAP_TEST_USDC,
 } from '../constants';
+import { asciiToHex, hexToDecimalArray } from './addressUtil';
 
 const abi = ethers.utils.defaultAbiCoder;
 
@@ -115,12 +116,17 @@ export async function assembleSrcSwapDataFromRoute(
 }
 export async function assembleTargetSwapDataFromRoute(
   routes: ButterCrossChainRoute,
-  targetChainTokenOut: BaseCurrency
+  targetChainTokenOut: BaseCurrency,
+  toAddress?: string
 ): Promise<string> {
   if (IS_EVM(targetChainTokenOut.chainId)) {
     return await assembleEVMSwapDataFromRoute(routes, targetChainTokenOut);
   } else if (IS_NEAR(targetChainTokenOut.chainId)) {
-    return '0x00';
+    return await assembleNearSwapMsgFromRoute(
+      routes,
+      targetChainTokenOut,
+      toAddress!
+    );
   } else {
     throw new Error(`chainId ${targetChainTokenOut.chainId} not supported`);
   }
@@ -167,9 +173,7 @@ export async function assembleEVMSwapDataFromRoute(
   swapData.push(swapParamArr);
   swapData.push(targetChainTokenOut.address);
   swapData.push(MAP_TEST_USDC.address);
-  // TOFIX
-  // swapData.push(mapTargetTokenAddress);
-  console.log(swapData);
+  swapData.push(mapTargetTokenAddress);
   return abi.encode(swapDataAbi, swapData);
 }
 
@@ -185,10 +189,10 @@ export function assembleCrossChainRouteFromJson(
       .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
       .toString();
     // TOFIX
-    // swapRoute.amountOut = ethers.utils
-    //     .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
-    //     .toString();
-    swapRoute.amountOut = '0';
+    swapRoute.amountOut = ethers.utils
+      .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
+      .toString();
+    // swapRoute.amountOut = '0';
   }
   for (let swapRoute of route.mapChain) {
     swapRoute.amountIn = ethers.utils
@@ -202,11 +206,89 @@ export function assembleCrossChainRouteFromJson(
     swapRoute.amountIn = ethers.utils
       .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
       .toString();
-    // TOFIX
-    // swapRoute.amountOut = ethers.utils
-    //     .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
-    //     .toString();
-    swapRoute.amountOut = '0';
+    swapRoute.amountOut = ethers.utils
+      .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
+      .toString();
+    // swapRoute.amountOut = '0';
   }
   return route;
+}
+
+export function assembleNearSwapMsgFromRoute(
+  routes: ButterCrossChainRoute,
+  targetChainTokenOut: BaseCurrency,
+  toAddress: string
+): string {
+  const toChainId = targetChainTokenOut.chainId;
+  // assemble near source swap
+  let srcSwap = assembleNearSwapParamArrayFromRoutes(routes.srcChain);
+
+  const targetSwapData: any = {
+    target_token: targetChainTokenOut.address,
+    map_target_token: routes.mapChain[0]!.tokenOut.address,
+  };
+
+  targetSwapData.swap_param = assembleNearVersionTargetSwapParamArrayFromRoutes(
+    routes.targetChain
+  );
+
+  const swapInfo = {
+    src_swap: srcSwap,
+    dst_swap: targetSwapData,
+  };
+
+  let msg = {
+    type: 'Swap',
+    to: toAddress,
+    to_chain: toChainId,
+    swap_info: swapInfo,
+  };
+  return JSON.stringify(msg);
+}
+
+export function assembleNearSwapParamArrayFromRoutes(
+  routes: ButterSwapRoute[]
+): any[] {
+  let swapParamArray: any[] = [];
+  for (let route of routes) {
+    for (let i = 0; i < route.path.length; i++) {
+      const path = route.path[i]!;
+      swapParamArray.push({
+        amount_in: '0',
+        min_amount_out: i === route.path.length - 1 ? route.amountOut : '0',
+        path: asciiToHex(
+          path.tokenIn.address + 'X' + path.tokenOut.address,
+          false
+        ),
+        router_index: path.poolId,
+      });
+    }
+  }
+
+  return swapParamArray;
+}
+
+export function assembleNearVersionTargetSwapParamArrayFromRoutes(
+  routes: ButterSwapRoute[]
+): any[] {
+  let swapParamArray: any[] = [];
+  for (let route of routes) {
+    let swapParam: any = {};
+    swapParam.amount_in = route.amountIn;
+    swapParam.min_amount_out = route.amountOut;
+    swapParam.router_index = '0';
+    let tokenArr: string[] = [];
+    for (let i = 0; i < route.path.length; i++) {
+      const path: ButterPath = route.path[i]!;
+      if (i == 0) {
+        tokenArr.push(path.tokenIn.address);
+        tokenArr.push(path.tokenOut.address);
+      } else {
+        tokenArr.push(path.tokenOut.address);
+      }
+    }
+    swapParam.path = abi.encode(['address[]'], [tokenArr]);
+    swapParamArray.push(swapParam);
+  }
+  return swapParamArray;
 }

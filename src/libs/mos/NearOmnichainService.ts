@@ -1,36 +1,31 @@
-import {
-  Account,
-  connect,
-  ConnectedWalletAccount,
-  KeyPair,
-  Near,
-} from 'near-api-js';
+import { Account, connect, ConnectedWalletAccount, Near } from 'near-api-js';
 import {
   NearNetworkConfig,
   TransactionOptions,
 } from '../../types/requestTypes';
 import { MOS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
-import { ChainId, ID_TO_CHAIN_ID } from '../../constants/chains';
+import { ChainId } from '../../constants/chains';
 import {
   ADD_MCS_TOKEN_TO_CHAIN,
   ADD_NATIVE_TO_CHAIN,
+  FT_TRANSFER_CALL,
   TRANSFER_OUT_NATIVE,
   TRANSFER_OUT_TOKEN,
+  VALID_MCS_TOKEN_OUT,
 } from '../../constants/near_method_names';
 import BN from 'bn.js';
-import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
+import {
+  ChangeFunctionCallOptions,
+  FunctionCallOptions,
+  ViewFunctionCallOptions,
+} from 'near-api-js/lib/account';
 import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import { hexToDecimalArray } from '../../utils';
-import {
-  ButterTransactionReceipt,
-  ButterTransactionResponse,
-} from '../../types/responseTypes';
-import {
-  adaptNearReceipt,
-  assembleNearTransactionResponse,
-} from '../../utils/responseUtil';
+import { ButterTransactionResponse } from '../../types/responseTypes';
+import { assembleNearTransactionResponse } from '../../utils/responseUtil';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 import { NearProviderType } from '../../types/paramTypes';
+
 export class NearOmnichainService implements IMapOmnichainService {
   provider: NearProviderType;
 
@@ -66,7 +61,7 @@ export class NearOmnichainService implements IMapOmnichainService {
       mosAccountId =
         this.provider.networkId === 'testnet'
           ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-          : '';
+          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
 
       // prep near connection
       const near: Near = await connect(this.provider);
@@ -76,7 +71,7 @@ export class NearOmnichainService implements IMapOmnichainService {
       mosAccountId =
         this.provider._networkId === 'testnet'
           ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-          : '';
+          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
       account = this.provider.account();
     }
     try {
@@ -85,25 +80,58 @@ export class NearOmnichainService implements IMapOmnichainService {
         toAddress,
         toChainId
       );
+
+      // check if token is mintable
+      const isMintable: boolean = await this._checkMintable(
+        mosAccountId,
+        tokenAddress,
+        toChainId,
+        account
+      );
+
+      let nearTransferOutOptions: ChangeFunctionCallOptions;
       // contract call option
-      const nearCallOptions: ChangeFunctionCallOptions = {
-        contractId: mosAccountId,
-        methodName: TRANSFER_OUT_TOKEN,
-        args: {
-          token: tokenAddress,
+      if (isMintable) {
+        nearTransferOutOptions = {
+          contractId: mosAccountId,
+          methodName: TRANSFER_OUT_TOKEN,
+          args: {
+            token: tokenAddress,
+            to: decimalArrayAddress,
+            amount: amount,
+            to_chain: toChainId,
+          },
+          attachedDeposit: new BN(1, 10),
+        };
+      } else {
+        const msg = {
+          type: 'Transfer',
           to: decimalArrayAddress,
-          amount: amount,
           to_chain: toChainId,
-        },
-        attachedDeposit: new BN(1, 10),
-      };
+        };
+
+        console.log('msg', JSON.stringify(msg));
+        nearTransferOutOptions = {
+          contractId: tokenAddress,
+          methodName: FT_TRANSFER_CALL,
+          args: {
+            receiver_id: mosAccountId,
+            amount: amount,
+            msg: JSON.stringify(msg),
+          },
+          attachedDeposit: new BN(1, 10),
+        };
+      }
 
       // manual input gas if necessary
       if (options.gas != undefined) {
-        nearCallOptions.gas = new BN(options.gas, 10);
+        nearTransferOutOptions.gas = new BN(options.gas, 10);
+      } else {
+        nearTransferOutOptions.gas = new BN('300000000000000', 10);
       }
       const executionOutcome: FinalExecutionOutcome =
-        await this._doNearFunctionCall(account, nearCallOptions);
+        await this._doNearFunctionCall(account, nearTransferOutOptions);
+
       return assembleNearTransactionResponse(executionOutcome);
     } catch (error) {
       throw error;
@@ -131,14 +159,14 @@ export class NearOmnichainService implements IMapOmnichainService {
       mosAccountId =
         this.provider.networkId === 'testnet'
           ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-          : '';
+          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
 
       const near: Near = await connect(this.provider);
       account = await near.account(this.provider.fromAccount);
     } else {
       mosAccountId = this.provider.getAccountId().endsWith('testnet')
         ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-        : '';
+        : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
       account = this.provider.account();
     }
     try {
@@ -173,12 +201,56 @@ export class NearOmnichainService implements IMapOmnichainService {
     amount: string,
     toAddress: string,
     toChainId: string,
-    swapData: string,
+    msg: string,
     options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
-    return <ButterTransactionResponse>{
-      hash: 'executionOutcome.transaction.hash',
-    };
+    let mosAccountId: string;
+    let account: Account | ConnectedWalletAccount;
+    if (this.provider instanceof NearNetworkConfig) {
+      // get mos contract address
+      mosAccountId =
+        this.provider.networkId === 'testnet'
+          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
+
+      // prep near connection
+      const near: Near = await connect(this.provider);
+      account = await near.account(this.provider.fromAccount);
+    } else {
+      // this.provider._networkId;
+      mosAccountId =
+        this.provider._networkId === 'testnet'
+          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
+      account = this.provider.account();
+    }
+    try {
+      // the receiving address on Near need be in the format of number array as input
+
+      const nearTransferOutOptions: FunctionCallOptions = {
+        contractId: tokenAddress,
+        methodName: FT_TRANSFER_CALL,
+        args: {
+          receiver_id: mosAccountId,
+          amount: amount,
+          msg: msg,
+        },
+        attachedDeposit: new BN(1, 10),
+      };
+
+      // manual input gas if necessary
+      if (options.gas != undefined) {
+        nearTransferOutOptions.gas = new BN(options.gas, 10);
+      } else {
+        nearTransferOutOptions.gas = new BN('300000000000000', 10);
+      }
+      const executionOutcome: FinalExecutionOutcome =
+        await this._doNearFunctionCall(account, nearTransferOutOptions);
+
+      return assembleNearTransactionResponse(executionOutcome);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async doSwapOutNative(
@@ -203,7 +275,7 @@ export class NearOmnichainService implements IMapOmnichainService {
       const mosAccountId: string =
         this.provider.networkId === 'testnet'
           ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-          : '';
+          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
 
       const near: Near = await connect(this.provider);
       const account = await near.account(this.provider.fromAccount);
@@ -224,7 +296,7 @@ export class NearOmnichainService implements IMapOmnichainService {
       const mosAccountId: string =
         this.provider.networkId === 'testnet'
           ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-          : '';
+          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
 
       const near: Near = await connect(this.provider);
       const account = await near.account(this.provider.fromAccount);
@@ -261,6 +333,19 @@ export class NearOmnichainService implements IMapOmnichainService {
     return outcome!;
   }
 
+  private async _doNearViewFunctionCall(
+    account: Account | ConnectedWalletAccount,
+    options: ViewFunctionCallOptions
+  ) {
+    let result;
+    try {
+      result = await account.viewFunctionV2(options);
+    } catch (e) {
+      console.log(e);
+    }
+    return result;
+  }
+
   doDepositOutToken(
     tokenAddress: string,
     from: string,
@@ -268,7 +353,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     amount: string,
     options?: TransactionOptions
   ): Promise<string> {
-    return Promise.resolve('');
+    return Promise.resolve('not implemented');
   }
 
   gasEstimateTransferOutNative(
@@ -278,7 +363,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     amount: string,
     options?: TransactionOptions
   ): Promise<string> {
-    return Promise.resolve('');
+    return Promise.resolve('not supported');
   }
 
   gasEstimateTransferOutToken(
@@ -289,7 +374,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     toChainId: string,
     options?: TransactionOptions
   ): Promise<string> {
-    return Promise.resolve('');
+    return Promise.resolve('not supported');
   }
 
   gasEstimateSwapOutNative(
@@ -300,7 +385,7 @@ export class NearOmnichainService implements IMapOmnichainService {
     swapData: string,
     options?: TransactionOptions
   ): Promise<string> {
-    return Promise.resolve('');
+    return Promise.resolve('not supported');
   }
 
   gasEstimateSwapOutToken(
@@ -312,7 +397,27 @@ export class NearOmnichainService implements IMapOmnichainService {
     swapData: string,
     options?: TransactionOptions
   ): Promise<string> {
-    return Promise.resolve('');
+    return Promise.resolve('not supported');
+  }
+
+  private async _checkMintable(
+    mosAccountId: string,
+    tokenAddress: string,
+    toChainId: string,
+    account: Account | ConnectedWalletAccount
+  ): Promise<boolean> {
+    const nearCheckMintableOptions: ViewFunctionCallOptions = {
+      contractId: mosAccountId,
+      methodName: VALID_MCS_TOKEN_OUT,
+      args: {
+        token: tokenAddress,
+        to_chain: toChainId,
+      },
+    };
+    return await this._doNearViewFunctionCall(
+      account,
+      nearCheckMintableOptions
+    );
   }
 
   async addFungibleTokenToChain(
@@ -323,7 +428,7 @@ export class NearOmnichainService implements IMapOmnichainService {
       const mosAccountId: string =
         this.provider.networkId === 'testnet'
           ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-          : '';
+          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
 
       const near: Near = await connect(this.provider);
       const account = await near.account(this.provider.fromAccount);
