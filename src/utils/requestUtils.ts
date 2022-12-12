@@ -143,15 +143,9 @@ export async function assembleEVMSwapDataFromRoute(
   const targetRoute: ButterSwapRoute[] = route.targetChain;
 
   for (let swapRoute of targetRoute) {
-    swapRoute.amountIn = ethers.utils
-      .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
-      .toString();
-    swapRoute.amountOut = ethers.utils
-      .parseUnits(swapRoute.amountOut, swapRoute.tokenIn.decimals)
-      .toString();
     let swapParam = [];
     swapParam.push(swapRoute.amountIn);
-    swapParam.push(swapRoute.amountOut);
+    swapParam.push('0');
 
     let tokenAddressArr = [];
     for (let i = 0; i < swapRoute.path.length; i++) {
@@ -172,7 +166,7 @@ export async function assembleEVMSwapDataFromRoute(
   swapData.push(swapParamArr);
   swapData.push(targetChainTokenOut.address);
   swapData.push(mapTargetTokenAddress);
-  // console.log(swapData);
+  console.log(swapData);
   return abi.encode(swapDataAbi, swapData);
 }
 

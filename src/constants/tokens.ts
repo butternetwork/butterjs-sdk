@@ -67,7 +67,7 @@ export const POLYGON_MAINNET_WMATIC = new Token(
 );
 export const MAP_MAINNET_USDC = new Token(
   ChainId.MAP_MAINNET,
-  '0x9f722b2cb30093f766221fd0d37964949ed66918',
+  '0x424D3bcdC96F42aC919F276D7D4f6C94f24e0703',
   18,
   'USDC',
   'MAP USDC',

@@ -173,7 +173,9 @@ export async function getSwapFee(
 
     const feeAmountInMappingToken = _getFeeAmount(relayChainAmount, feeRate);
     const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
-    const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
+    const ratio = BigNumber.from(totalAmountOut).div(
+      BigNumber.from(relayChainAmount)
+    );
     feeRate.lowest = BigNumber.from(feeRate.lowest).mul(ratio).toString();
     feeRate.highest = BigNumber.from(feeRate.highest).mul(ratio).toString();
     feeAmount = feeAmountBN.mul(ratio).toString();
@@ -466,7 +468,6 @@ export async function getDistributeRate(
 
 function _getFeeAmount(amount: string, feeRate: ButterFeeRate): string {
   const feeAmount = BigNumber.from(amount).mul(feeRate.rate).div(10000);
-
   if (feeAmount.gt(feeRate.highest)) {
     return feeRate.highest.toString();
   } else if (feeAmount.lt(feeRate.lowest)) {

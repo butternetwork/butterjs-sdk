@@ -55,6 +55,7 @@ import { ButterSwap } from '../../src/core/swap/exchange';
 import { BaseCurrency } from '../../src/entities';
 import { approveToken } from '../../src/libs/allowance';
 import axios from 'axios';
+import { asciiToHex } from '../../src/utils';
 
 require('dotenv/config');
 
@@ -137,8 +138,8 @@ async function demo() {
 
   let signer;
 
-  const fromToken = POLYGON_TEST_USDC;
-  const toToken = BSC_TEST_BMOS;
+  const fromToken = BSC_TEST_BMOS;
+  const toToken = POLYGON_TEST_BMOS;
   const fromChainId = fromToken.chainId;
   const toChainId = toToken.chainId;
   const amount = ethers.utils.parseEther('1').toString();
@@ -171,7 +172,7 @@ async function demo() {
   await axios.get(requestUrl).then(function (response) {
     routeStr = JSON.stringify(response.data);
   });
-
+  console.log('hex', asciiToHex('wrap.testnetXabc.testnet', false));
   console.log(
     'swap fee',
     await getSwapFee(fromToken, toChainId, amount, routeStr, provider)
@@ -184,6 +185,7 @@ async function demo() {
     BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
     true
   );
+
   console.log('approved');
 
   // gas estimation
