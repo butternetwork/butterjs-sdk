@@ -152,7 +152,7 @@ export const MAP_TEST_NEAR = new Token(
 
 export const MAP_TEST_USDC = new Token(
   ChainId.MAP_TEST,
-  '0x6Ac66dCBE1680aAC446B28BE5371Be869B5059cF',
+  '0x424D3bcdC96F42aC919F276D7D4f6C94f24e0703',
   18,
   'USDC',
   'USDC Circle',

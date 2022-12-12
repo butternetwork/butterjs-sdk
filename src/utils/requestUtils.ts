@@ -12,6 +12,7 @@ import {
   ID_TO_CHAIN_ID,
   IS_EVM,
   IS_NEAR,
+  MAP_TEST_USDC,
 } from '../constants';
 
 const abi = ethers.utils.defaultAbiCoder;
@@ -165,7 +166,9 @@ export async function assembleEVMSwapDataFromRoute(
   }
   swapData.push(swapParamArr);
   swapData.push(targetChainTokenOut.address);
-  swapData.push(mapTargetTokenAddress);
+  swapData.push(MAP_TEST_USDC.address);
+  // TOFIX
+  // swapData.push(mapTargetTokenAddress);
   console.log(swapData);
   return abi.encode(swapDataAbi, swapData);
 }
@@ -181,9 +184,11 @@ export function assembleCrossChainRouteFromJson(
     swapRoute.amountIn = ethers.utils
       .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
       .toString();
-    swapRoute.amountOut = ethers.utils
-      .parseUnits(swapRoute.amountOut, swapRoute.tokenIn.decimals)
-      .toString();
+    // TOFIX
+    // swapRoute.amountOut = ethers.utils
+    //     .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
+    //     .toString();
+    swapRoute.amountOut = '0';
   }
   for (let swapRoute of route.mapChain) {
     swapRoute.amountIn = ethers.utils
@@ -197,9 +202,11 @@ export function assembleCrossChainRouteFromJson(
     swapRoute.amountIn = ethers.utils
       .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
       .toString();
-    swapRoute.amountOut = ethers.utils
-      .parseUnits(swapRoute.amountOut, swapRoute.tokenIn.decimals)
-      .toString();
+    // TOFIX
+    // swapRoute.amountOut = ethers.utils
+    //     .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
+    //     .toString();
+    swapRoute.amountOut = '0';
   }
   return route;
 }
