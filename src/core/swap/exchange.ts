@@ -30,6 +30,7 @@ import {
   assembleTargetSwapDataFromRoute,
 } from '../../utils/requestUtils';
 import { ButterRouter } from '../../libs/butter-router/ButterRouter';
+import { DEFAULT_SLIPPAGE } from '../../constants/constants';
 
 export class ButterSwap {
   /**
@@ -48,6 +49,7 @@ export class ButterSwap {
     toToken,
     amountIn,
     swapRouteStr,
+    slippage,
     options,
   }: SwapRequestParam): Promise<ButterTransactionResponse> {
     const toChainId = toToken.chainId;
@@ -82,8 +84,13 @@ export class ButterSwap {
     }
 
     // assemble cross-chain swap route
-    const route: ButterCrossChainRoute =
-      assembleCrossChainRouteFromJson(swapRouteStr);
+    if (slippage === undefined) {
+      slippage = DEFAULT_SLIPPAGE;
+    }
+    const route: ButterCrossChainRoute = assembleCrossChainRouteFromJson(
+      swapRouteStr,
+      slippage
+    );
     const swapData: string = await assembleTargetSwapDataFromRoute(
       route,
       toToken,
@@ -111,6 +118,7 @@ export class ButterSwap {
         routerParam.amount,
         routerParam.toChainId,
         routerParam.toAddress,
+        fromToken.isNative,
         {
           gas: options.gas,
         }
@@ -161,6 +169,7 @@ export class ButterSwap {
     toToken,
     amountIn,
     swapRouteStr,
+    slippage,
     options,
   }: SwapRequestParam): Promise<string> {
     const toChainId = toToken.chainId;
@@ -180,8 +189,10 @@ export class ButterSwap {
     }
 
     // assemble cross-chain swap route
-    const route: ButterCrossChainRoute =
-      assembleCrossChainRouteFromJson(swapRouteStr);
+    const route: ButterCrossChainRoute = assembleCrossChainRouteFromJson(
+      swapRouteStr,
+      DEFAULT_SLIPPAGE
+    );
     const swapData: string = await assembleTargetSwapDataFromRoute(
       route,
       toToken,
@@ -204,13 +215,15 @@ export class ButterSwap {
         BUTTER_ROUTER_METADATA.abi,
         options.signerOrProvider!
       );
+
       gas = await butterRouter.gasEstimateEntrance(
         fromAddress,
         routerParam.coreSwapData,
         routerParam.targetSwapData,
         routerParam.amount,
         routerParam.toChainId,
-        routerParam.toAddress
+        routerParam.toAddress,
+        fromToken.isNative
       );
 
       return gas;

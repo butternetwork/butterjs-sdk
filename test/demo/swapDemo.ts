@@ -138,8 +138,8 @@ async function demo() {
 
   let signer;
 
-  const fromToken = BSC_TEST_BMOS;
-  const toToken = POLYGON_TEST_BMOS;
+  const fromToken = BSC_TEST_NATIVE;
+  const toToken = POLYGON_TEST_NATIVE;
   const fromChainId = fromToken.chainId;
   const toChainId = toToken.chainId;
   const amount = ethers.utils.parseEther('1').toString();
@@ -172,26 +172,19 @@ async function demo() {
   await axios.get(requestUrl).then(function (response) {
     routeStr = JSON.stringify(response.data);
   });
-  console.log(
-    'near swap msg',
-    assembleNearSwapMsgFromRoute(
-      assembleCrossChainRouteFromJson(routeStr),
-      toToken,
-      toAddress
-    )
-  );
+
   console.log(
     'swap fee',
     await getSwapFee(fromToken, toChainId, amount, routeStr, provider)
   );
 
-  await approveToken(
-    signer,
-    fromToken,
-    '100',
-    BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
-    true
-  );
+  // await approveToken(
+  //   signer,
+  //   fromToken,
+  //   '100',
+  //   BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+  //   true
+  // );
 
   console.log('approved');
 

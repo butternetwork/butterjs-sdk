@@ -51,6 +51,7 @@ export class ButterRouter {
    * @param amount amount in minimal unit
    * @param toChain
    * @param targetToAddress
+   * @param isNative
    * @param options
    */
   async entrance(
@@ -60,29 +61,41 @@ export class ButterRouter {
     amount: string,
     toChain: string,
     targetToAddress: string,
+    isNative: boolean,
     options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
     let txHash: string;
     if (this.contract instanceof EthersContract) {
+      let ethersOptions: any = {
+        gasLimit: options.gas,
+      };
+      if (isNative) {
+        ethersOptions.value = amount;
+      }
       const entranceTx: ContractTransaction = await this.contract.entrance(
         coreParam,
         targetSwapData,
         amount,
         toChain,
         targetToAddress,
-        { gasLimit: options.gas }
+        ethersOptions
       );
       txHash = entranceTx.hash;
       return assembleEVMTransactionResponse(txHash!, this.provider);
       // receipt = await entranceTx.wait();
     } else {
+      let web3JSOptions: any = {
+        from: fromAddress,
+        gas: Number.parseInt(options.gas!.toString()),
+      };
+
+      if (isNative) {
+        web3JSOptions.value = amount;
+      }
       const promiReceipt: PromiEvent<Web3TransactionReceipt> =
         this.contract.methods
           .entrance(coreParam, targetSwapData, amount, toChain, targetToAddress)
-          .send({
-            from: fromAddress,
-            gas: Number.parseInt(options.gas!.toString()),
-          });
+          .send(web3JSOptions);
       return <ButterTransactionResponse>{
         promiReceipt: promiReceipt,
       };
@@ -95,7 +108,8 @@ export class ButterRouter {
     targetSwapData: string,
     amount: string,
     toChain: string,
-    targetToAddress: string
+    targetToAddress: string,
+    isNative: boolean
   ): Promise<string> {
     // gas estimation
     let estimatedGas = '';
@@ -111,13 +125,19 @@ export class ButterRouter {
         targetSwapData,
         amount,
         toChain,
-        targetToAddress
+        targetToAddress,
+        {
+          value: isNative ? amount : undefined,
+        }
       );
       estimatedGas = gas.toString();
     } else {
       const gas = await this.contract.methods
         .entrance(coreParam, targetSwapData, amount, toChain, targetToAddress)
-        .estimateGas({ from: fromAddress });
+        .estimateGas({
+          from: fromAddress,
+          value: isNative ? amount : undefined,
+        });
       estimatedGas = gas.toString();
     }
     return estimatedGas;

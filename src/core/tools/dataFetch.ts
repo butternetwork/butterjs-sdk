@@ -37,6 +37,7 @@ import TokenRegisterMetadata from '../../abis/TokenRegister.json';
 import { RelayOmnichainService } from '../../libs/mos/RelayOmnichainService';
 import { ButterSwapRoute } from '../../types';
 import { assembleCrossChainRouteFromJson } from '../../utils/requestUtils';
+import { DEFAULT_SLIPPAGE } from '../../constants/constants';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -114,7 +115,7 @@ export async function getSwapFee(
   routeStr: string,
   mapRpcProvider: ButterJsonRpcProvider
 ): Promise<ButterFee> {
-  const routes = assembleCrossChainRouteFromJson(routeStr);
+  const routes = assembleCrossChainRouteFromJson(routeStr, DEFAULT_SLIPPAGE);
   const srcRoute = routes.srcChain;
 
   if (srcRoute.length === 0 || srcRoute[0]!.path.length === 0) {

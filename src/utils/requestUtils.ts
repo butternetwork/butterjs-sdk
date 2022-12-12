@@ -15,6 +15,7 @@ import {
   MAP_TEST_USDC,
 } from '../constants';
 import { asciiToHex, hexToDecimalArray } from './addressUtil';
+import { NEAR_TOKEN_SEPARATOR } from '../constants/constants';
 
 const abi = ethers.utils.defaultAbiCoder;
 
@@ -172,13 +173,13 @@ export async function assembleEVMSwapDataFromRoute(
   }
   swapData.push(swapParamArr);
   swapData.push(targetChainTokenOut.address);
-  swapData.push(MAP_TEST_USDC.address);
   swapData.push(mapTargetTokenAddress);
   return abi.encode(swapDataAbi, swapData);
 }
 
 export function assembleCrossChainRouteFromJson(
-  jsonStr: string
+  jsonStr: string,
+  slippage: number
 ): ButterCrossChainRoute {
   let route: ButterCrossChainRoute = JSON.parse(
     jsonStr
@@ -188,9 +189,10 @@ export function assembleCrossChainRouteFromJson(
     swapRoute.amountIn = ethers.utils
       .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
       .toString();
-    // TOFIX
     swapRoute.amountOut = ethers.utils
       .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
+      .mul(10000 - slippage)
+      .div(10000)
       .toString();
     // swapRoute.amountOut = '0';
   }
@@ -208,6 +210,8 @@ export function assembleCrossChainRouteFromJson(
       .toString();
     swapRoute.amountOut = ethers.utils
       .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
+      .mul(10000 - slippage)
+      .div(10000)
       .toString();
     // swapRoute.amountOut = '0';
   }
@@ -257,7 +261,7 @@ export function assembleNearSwapParamArrayFromRoutes(
         amount_in: '0',
         min_amount_out: i === route.path.length - 1 ? route.amountOut : '0',
         path: asciiToHex(
-          path.tokenIn.address + 'X' + path.tokenOut.address,
+          path.tokenIn.address + NEAR_TOKEN_SEPARATOR + path.tokenOut.address,
           false
         ),
         router_index: path.poolId,
