@@ -72,6 +72,7 @@ export class NearNetworkConfig {
 
 export type TransferOutOptions = {
   gas?: string;
+  gasPrice?: string;
 };
 
 export type FeeRate = {

@@ -68,7 +68,13 @@ export class EVMOmnichainService implements IMapOmnichainService {
           toAddress,
           amount,
           toChainId,
-          { gasLimit: options.gas }
+          {
+            gasLimit: options.gas,
+            gasPrice:
+              options.gasPrice === undefined
+                ? await this.provider.getGasPrice()
+                : options.gasPrice,
+          }
         );
       txHash = transferOutTx.hash;
       return assembleEVMTransactionResponse(txHash!, this.provider);
@@ -80,6 +86,10 @@ export class EVMOmnichainService implements IMapOmnichainService {
           .send({
             from: fromAddress,
             gas: Number.parseInt(options.gas!.toString()),
+            gasPrice:
+              options.gasPrice === undefined
+                ? await this.provider.getGasPrice()
+                : options.gasPrice,
           });
       return <ButterTransactionResponse>{
         promiReceipt: promiReceipt,

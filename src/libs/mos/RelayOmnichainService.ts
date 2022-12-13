@@ -82,6 +82,10 @@ export class RelayOmnichainService implements IMapOmnichainService {
           .send({
             from: fromAddress,
             gas: options.gas,
+            gasPrice:
+              options.gasPrice === undefined
+                ? await this.provider.getGasPrice()
+                : options.gasPrice,
           });
       return <ButterTransactionResponse>{
         promiReceipt: promiReceipt,

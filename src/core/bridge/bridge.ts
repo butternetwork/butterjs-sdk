@@ -74,6 +74,7 @@ export class ButterBridge {
         amount,
         {
           gas: options.gas,
+          gasPrice: options.gasPrice,
         }
       );
     } else {
@@ -85,6 +86,7 @@ export class ButterBridge {
         toChainId.toString(),
         {
           gas: options.gas,
+          gasPrice: options.gasPrice,
         }
       );
     }
