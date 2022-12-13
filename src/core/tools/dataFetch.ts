@@ -97,10 +97,15 @@ export async function getBridgeFee(
 
     const feeAmountInMappingToken = _getFeeAmount(relayChainAmount, feeRate);
     const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
-    const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
-    feeRate.lowest = BigNumber.from(feeRate.lowest).mul(ratio).toString();
-    feeRate.highest = BigNumber.from(feeRate.highest).mul(ratio).toString();
-    feeAmount = feeAmountBN.mul(ratio).toString();
+    feeRate.lowest = BigNumber.from(feeRate.lowest)
+      .mul(amount)
+      .div(relayChainAmount)
+      .toString();
+    feeRate.highest = BigNumber.from(feeRate.highest)
+      .mul(amount)
+      .div(relayChainAmount)
+      .toString();
+    feeAmount = feeAmountBN.mul(amount).div(relayChainAmount).toString();
   }
   return Promise.resolve({
     feeToken: srcToken,
@@ -174,12 +179,18 @@ export async function getSwapFee(
 
     const feeAmountInMappingToken = _getFeeAmount(relayChainAmount, feeRate);
     const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
-    const ratio = BigNumber.from(totalAmountOut).div(
-      BigNumber.from(relayChainAmount)
-    );
-    feeRate.lowest = BigNumber.from(feeRate.lowest).mul(ratio).toString();
-    feeRate.highest = BigNumber.from(feeRate.highest).mul(ratio).toString();
-    feeAmount = feeAmountBN.mul(ratio).toString();
+    feeRate.lowest = BigNumber.from(feeRate.lowest)
+      .mul(totalAmountOut)
+      .div(relayChainAmount)
+      .toString();
+    feeRate.highest = BigNumber.from(feeRate.highest)
+      .mul(totalAmountOut)
+      .div(relayChainAmount)
+      .toString();
+    feeAmount = feeAmountBN
+      .mul(totalAmountOut)
+      .div(relayChainAmount)
+      .toString();
   }
   return Promise.resolve({
     feeToken: getTokenByAddressAndChainId(tokenOut.address, srcToken.chainId),
