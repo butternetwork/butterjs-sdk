@@ -5,10 +5,12 @@ import { BridgeRequestParam, NearNetworkConfig } from '../../src/types';
 import {
   BSC_TEST_CHAIN,
   ChainId,
+  ID_TO_CHAIN_ID,
   MAP_MAINNET_CHAIN,
   MAP_TEST_CHAIN,
   MAP_TEST_MOST,
   MATIC_TEST_MOST,
+  MOS_CONTRACT_ADDRESS_SET,
   POLYGON_MAINNET_USDC,
   POLYGON_TEST_CHAIN,
   SUPPORTED_CHAIN_LIST,
@@ -28,6 +30,7 @@ import {
 import { ButterBridge } from '../../src';
 import Web3 from 'web3';
 import { ButterJsonRpcProvider } from '../../src/types/paramTypes';
+import { approveToken } from '../../src/libs/allowance';
 require('dotenv/config');
 
 // web3.js config
@@ -101,7 +104,6 @@ console.log(
 
 async function demo() {
   console.log('start demo');
-
   const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 

@@ -6,12 +6,11 @@ import {
   BSC_MAINNET_CHAIN,
   ChainId,
   MAP_MAINNET_CHAIN,
-  MAP_TEST_MOST,
-  MATIC_TEST_MOST,
   POLYGON_MAINNET_USDC,
   POLYGON_MAINNET_CHAIN,
-  SUPPORTED_CHAIN_LIST,
   SUPPORTED_CHAIN_LIST_MAINNET,
+  MOS_CONTRACT_ADDRESS_SET,
+  BSC_MAINNET_USDC,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
@@ -28,6 +27,7 @@ import {
 import { ButterBridge } from '../../src';
 import Web3 from 'web3';
 import { ButterJsonRpcProvider } from '../../src/types/paramTypes';
+import { approveToken } from '../../src/libs/allowance';
 require('dotenv/config');
 
 // web3.js config
@@ -36,7 +36,7 @@ const web3 = new Web3(
   // 'https://rpc.ankr.com/bsc_testnet_chapel/9a12629301614050e76136dcaf9627f5ef215f86fb1185d908f9d232b8530ef7'
 );
 const account = web3.eth.accounts.privateKeyToAccount(
-  '0x' + process.env.EVM_PRIVATE_KEY
+  '0x' + process.env.EVM_MAINNET
 );
 
 web3.eth.accounts.wallet.add(account);
@@ -64,17 +64,14 @@ const maticProvider = new ethers.providers.JsonRpcProvider(
   Number.parseInt(POLYGON_MAINNET_CHAIN.chainId)
 );
 
-const bscSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, bscProvider);
-const maticSinger = new ethers.Wallet(
-  process.env.EVM_PRIVATE_KEY!,
-  maticProvider
-);
+const bscSigner = new ethers.Wallet(process.env.EVM_MAINNET!, bscProvider);
+const maticSinger = new ethers.Wallet(process.env.EVM_MAINNET!, maticProvider);
 
 const mapProvider = new ethers.providers.JsonRpcProvider(
   MAP_MAINNET_CHAIN.rpc,
   Number.parseInt(MAP_MAINNET_CHAIN.chainId)
 );
-const mapSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, mapProvider);
+const mapSigner = new ethers.Wallet(process.env.EVM_MAINNET!, mapProvider);
 
 /** 支持的链 {@link ChainId} 调试中仅支持MAP测试网，BSC测试，和Near测试网**/
 console.log('supported chain', SUPPORTED_CHAIN_LIST_MAINNET);
@@ -183,11 +180,11 @@ async function demo() {
     },
   };
 
-  const response: ButterTransactionResponse = await bridge.bridgeToken(
-    bridgeRequest
-  );
-  const receipt: ButterTransactionReceipt = await response.wait!();
-  console.log('receipt', receipt);
+  // const response: ButterTransactionResponse = await bridge.bridgeToken(
+  //   bridgeRequest
+  // );
+  // const receipt: ButterTransactionReceipt = await response.wait!();
+  // console.log('receipt', receipt);
 }
 
 demo()

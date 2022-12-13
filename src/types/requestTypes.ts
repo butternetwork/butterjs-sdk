@@ -31,12 +31,14 @@ export type SwapOptions = {
   nearConfig?: NearNetworkConfig; // mandatory when src chain is near
   useAggregator?: boolean; // whether Butter's Smart Router Aggregator or not
   gas?: string;
+  gasPrice?: string;
 };
 
 export type BridgeOptions = {
   signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider or Web3.js Eth info
   nearProvider?: NearProviderType; // mandatory when src chain is near
   gas?: string;
+  gasPrice?: string;
 };
 
 export type AddTokenPairParam = {

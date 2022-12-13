@@ -35,7 +35,7 @@ export async function readAllowance(
  * @param contractAddress spender address
  * @param amount amount to approved in minimal unit
  */
-function doApprove(
+async function doApprove(
   signer: Signer,
   tokenAddress: string,
   contractAddress: string,
@@ -43,7 +43,10 @@ function doApprove(
 ): Promise<ContractTransaction> {
   const erc20 = new Contract(tokenAddress, ERC20_ABI, signer) as ERC20Contract;
 
-  return erc20.approve(contractAddress, amount, { gasLimit: 3000000 });
+  return erc20.approve(contractAddress, amount, {
+    gasLimit: 3000000,
+    gasPrice: await signer.getGasPrice(),
+  });
 }
 
 export async function getApprovedAmount(
@@ -80,7 +83,7 @@ export async function approveToken(
     token.address,
     approvalAddress
   );
-
+  console.log('approved amount', approvedAmount);
   if (approvedAmount.gte(BigNumber.from(amount.toString()))) {
     console.log('already approved');
     return;
