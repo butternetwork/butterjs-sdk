@@ -1,12 +1,17 @@
 import { BaseCurrency } from '../entities';
 import {
+  BSC_MAINNET_NATIVE,
   BSC_MAINNET_USDC,
+  BSC_MAINNET_WBNB,
   BSC_TEST_MAP,
   BSC_TEST_MOST,
   BSC_TEST_NATIVE,
   BSC_TEST_WBNB,
   ChainId,
   IS_NEAR,
+  MAP_MAINNET_NATIVE,
+  MAP_MAINNET_USDC,
+  MAP_MAINNET_WMAP,
   MAP_TEST_BNB,
   MAP_TEST_MOST,
   MAP_TEST_NATIVE,
@@ -15,12 +20,16 @@ import {
   MATIC_TEST_MAP,
   MATIC_TEST_MOST,
   MATIC_TEST_WMATIC,
+  NEAR_MAINNET_NATIVE,
   NEAR_MAINNET_USDC,
+  NEAR_MAINNET_WNEAR,
   NEAR_TEST_MAP,
   NEAR_TEST_MOST,
   NEAR_TEST_NATIVE,
   NEAR_TEST_WNEAR,
+  POLYGON_MAINNET_NATIVE,
   POLYGON_MAINNET_USDC,
+  POLYGON_MAINNET_WMATIC,
 } from '../constants';
 import { getHexAddress } from './addressUtil';
 
@@ -85,6 +94,18 @@ export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
 /** Chain Id to all available tokens */
 export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
   switch (id) {
+    case ChainId.MAP_MAINNET:
+      return [MAP_MAINNET_NATIVE, MAP_MAINNET_WMAP, MAP_MAINNET_USDC];
+    case ChainId.BSC_MAINNET:
+      return [BSC_MAINNET_USDC, BSC_MAINNET_WBNB, BSC_MAINNET_NATIVE];
+    case ChainId.POLYGON_MAINNET:
+      return [
+        POLYGON_MAINNET_USDC,
+        POLYGON_MAINNET_WMATIC,
+        POLYGON_MAINNET_NATIVE,
+      ];
+    case ChainId.NEAR_MAINNET:
+      return [NEAR_MAINNET_USDC, NEAR_MAINNET_WNEAR, NEAR_MAINNET_NATIVE];
     case ChainId.MAP_TEST:
       return [
         MAP_TEST_MOST,
@@ -106,6 +127,7 @@ export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
         MATIC_TEST_MAP,
         MAP_TEST_NATIVE,
       ];
+
     default:
       throw new Error(`Unknown chain id: ${id}`);
   }

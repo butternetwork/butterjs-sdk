@@ -50,7 +50,6 @@ export async function getBridgeFee(
   rpcProvider: ButterJsonRpcProvider
 ): Promise<ButterFee> {
   const chainId: string = rpcProvider.chainId.toString();
-
   const mapChainId: string = rpcProvider.chainId.toString();
   const mapProvider = new ethers.providers.JsonRpcProvider(
     rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
@@ -88,17 +87,22 @@ export async function getBridgeFee(
       mapTokenAddress,
       targetChain
     );
-    feeRate.lowest = tokenFeeRate.lowest;
-    feeRate.highest = tokenFeeRate.highest;
+    feeRate.lowest = tokenFeeRate.lowest.toString();
+    feeRate.highest = tokenFeeRate.highest.toString();
     feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
 
     const feeAmountInMappingToken = _getFeeAmount(relayChainAmount, feeRate);
     const feeAmountBN = BigNumber.from(feeAmountInMappingToken);
-    console.log('fee amount in mapping token', feeAmountBN.toString());
-    const ratio = BigNumber.from(amount).div(BigNumber.from(relayChainAmount));
-    feeRate.lowest = BigNumber.from(feeRate.lowest).mul(ratio).toString();
-    feeRate.highest = BigNumber.from(feeRate.highest).mul(ratio).toString();
-    feeAmount = feeAmountBN.mul(ratio).toString();
+
+    feeRate.lowest = BigNumber.from(feeRate.lowest)
+      .mul(amount)
+      .div(relayChainAmount)
+      .toString();
+    feeRate.highest = BigNumber.from(feeRate.highest)
+      .mul(amount)
+      .div(relayChainAmount)
+      .toString();
+    feeAmount = feeAmountBN.mul(amount).div(relayChainAmount).toString();
   }
   return Promise.resolve({
     feeToken: srcToken,
@@ -140,6 +144,7 @@ export async function getVaultBalance(
   const mapTokenAddress = IS_MAP(fromChainId)
     ? fromToken.address
     : await tokenRegister.getRelayChainToken(fromChainId.toString(), fromToken);
+
   const vaultAddress = await tokenRegister.getVaultToken(mapTokenAddress);
 
   if (vaultAddress === ZERO_ADDRESS) {
@@ -343,7 +348,6 @@ export async function isTokenMintable(
       method_name: GET_MCS_TOKENS,
       args_base64: 'e30=',
     });
-    console.log('token address', tokenAddress);
     const mosTokenSet = JSON.parse(asciiToString(response.result));
     for (let i = 0; i < mosTokenSet.length; i++) {
       if (
@@ -389,7 +393,6 @@ export async function getDistributeRate(
 
 function _getFeeAmount(amount: string, feeRate: ButterFeeRate): string {
   const feeAmount = BigNumber.from(amount).mul(feeRate.rate).div(10000);
-
   if (feeAmount.gt(feeRate.highest)) {
     return feeRate.highest.toString();
   } else if (feeAmount.lt(feeRate.lowest)) {
