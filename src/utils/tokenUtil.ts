@@ -63,7 +63,7 @@ export function getTokenByAddressAndChainId(
 export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
   switch (id) {
     case ChainId.MAP_MAINNET:
-      return [];
+      return [MAP_MAINNET_USDC];
     case ChainId.BSC_MAINNET:
       return [BSC_MAINNET_USDC];
     case ChainId.POLYGON_MAINNET:
