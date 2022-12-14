@@ -122,7 +122,7 @@ export class NearOmnichainService implements IMapOmnichainService {
           contractId: tokenAddress,
           methodName: FT_TRANSFER_CALL,
           args: {
-            receiver_id: tokenAddress,
+            receiver_id: mosAccountId,
             amount: amount,
             msg: JSON.stringify(msg),
           },
