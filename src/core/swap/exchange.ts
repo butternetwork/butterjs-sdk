@@ -135,7 +135,12 @@ export class ButterSwap {
     }
 
     if (IS_NEAR(fromChainId)) {
-      swapData = assembleNearSwapMsgFromRoute(route, toToken, toAddress);
+      swapData = assembleNearSwapMsgFromRoute(
+        route,
+        fromToken,
+        toToken,
+        toAddress
+      );
     }
     // create mos instance base on src token chainId.
     const mos: IMapOmnichainService = createMOSInstance(

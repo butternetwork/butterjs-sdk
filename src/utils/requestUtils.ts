@@ -285,6 +285,7 @@ export function assembleNearSwapDataFromRoute(
 
 export function assembleNearSwapMsgFromRoute(
   routes: ButterCrossChainRoute,
+  fromToken: BaseCurrency,
   targetChainTokenOut: BaseCurrency,
   toAddress: string
 ): string {
@@ -305,6 +306,10 @@ export function assembleNearSwapMsgFromRoute(
     src_swap: srcSwap,
     dst_swap: targetSwapData,
   };
+
+  if (fromToken.isNative) {
+    return JSON.stringify(swapInfo);
+  }
 
   let msg = {
     type: 'Swap',

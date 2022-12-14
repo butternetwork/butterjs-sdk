@@ -9,6 +9,7 @@ import {
   ADD_MCS_TOKEN_TO_CHAIN,
   ADD_NATIVE_TO_CHAIN,
   FT_TRANSFER_CALL,
+  SWAP_OUT_NATIVE,
   TRANSFER_OUT_NATIVE,
   TRANSFER_OUT_TOKEN,
   VALID_MCS_TOKEN_OUT,
@@ -255,12 +256,50 @@ export class NearOmnichainService implements IMapOmnichainService {
     toAddress: string,
     toChainId: string,
     amount: string,
-    swapData: string,
+    swapInfo: string,
     options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
-    return <ButterTransactionResponse>{
-      hash: 'executionOutcome.transaction.hash',
-    };
+    let mosAccountId: string;
+    let account: Account | ConnectedWalletAccount;
+    if (this.provider instanceof NearNetworkConfig) {
+      mosAccountId =
+        this.provider.networkId === 'testnet'
+          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
+
+      const near: Near = await connect(this.provider);
+      account = await near.account(this.provider.fromAccount);
+    } else {
+      mosAccountId = this.provider.getAccountId().endsWith('testnet')
+        ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+        : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
+      account = this.provider.account();
+    }
+    try {
+      const decimalArrayAddress: number[] = hexToDecimalArray(
+        toAddress,
+        toChainId
+      );
+      const nearCallOptions: ChangeFunctionCallOptions = {
+        contractId: mosAccountId,
+        methodName: SWAP_OUT_NATIVE,
+        args: {
+          to: decimalArrayAddress,
+          to_chain: Number.parseInt(toChainId),
+          swap_info: swapInfo,
+        },
+        attachedDeposit: new BN(amount, 10),
+      };
+      if (options.gas != undefined) {
+        nearCallOptions.gas = new BN(options.gas, 10);
+      }
+
+      const executionOutcome: FinalExecutionOutcome =
+        await this._doNearFunctionCall(account, nearCallOptions);
+      return assembleNearTransactionResponse(executionOutcome);
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
