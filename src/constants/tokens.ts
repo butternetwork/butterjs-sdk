@@ -67,7 +67,7 @@ export const MAP_MAINNET_USDC = new Token(
   '0x9f722b2cb30093f766221fd0d37964949ed66918',
   18,
   'USDC',
-  'MAP USDC',
+  'MAPO USDC',
   'https://files.maplabs.io/bridge/usdc.png'
 );
 

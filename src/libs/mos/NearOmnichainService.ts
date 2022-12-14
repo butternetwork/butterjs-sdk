@@ -151,7 +151,7 @@ export class NearOmnichainService implements IMapOmnichainService {
         methodName: TRANSFER_OUT_NATIVE,
         args: {
           to: decimalArrayAddress,
-          to_chain: Number.parseInt(toChainId),
+          to_chain: toChainId,
         },
         attachedDeposit: new BN(amount, 10),
       };
