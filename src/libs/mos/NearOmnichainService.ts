@@ -285,8 +285,8 @@ export class NearOmnichainService implements IMapOmnichainService {
         methodName: SWAP_OUT_NATIVE,
         args: {
           to: decimalArrayAddress,
-          to_chain: Number.parseInt(toChainId),
-          swap_info: swapInfo,
+          to_chain: toChainId,
+          swap_info: JSON.parse(swapInfo),
         },
         attachedDeposit: new BN(amount, 10),
       };
