@@ -118,12 +118,12 @@ console.log('convert', asciiToHex('mos.map007.testnet', false));
 async function demo() {
   console.log('start demo');
   const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
-  const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
+  const toAddress = 'xyli.testnet';
 
   let signer;
 
-  const fromToken = NEAR_TEST_NATIVE;
-  const toToken = POLYGON_TEST_USDC;
+  const fromToken = BSC_TEST_BMOS;
+  const toToken = NEAR_TEST_NATIVE;
   const amount = ethers.utils.parseUnits('1', fromToken.decimals).toString();
 
   const fromChainId = fromToken.chainId;
@@ -158,7 +158,7 @@ async function demo() {
   // await axios.get(requestUrl).then(function (response) {
   //   routeStr = JSON.stringify(response.data);
   // });
-  routeStr = nearToMaticUSDCRouteStr;
+  routeStr = bscBmosToWnear;
 
   console.log(
     'swap fee',
@@ -205,7 +205,7 @@ async function demo() {
     swapRouteStr: routeStr,
     options: {
       signerOrProvider: signer,
-      gas: '300000000000000',
+      gas: estimatedGas,
       nearProvider: nearConfig,
     },
   };
