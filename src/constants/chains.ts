@@ -126,6 +126,8 @@ export const ID_TO_NEAR_NETWORK = (id: string): string => {
   switch (id) {
     case ChainId.NEAR_TESTNET:
       return 'testnet';
+    case ChainId.NEAR_MAINNET:
+      return 'mainnet';
     default:
       throw new Error(`Unknown chain id when querying near network: ${id}`);
   }
