@@ -16,9 +16,13 @@ import {
   ADD_NATIVE_TO_CHAIN,
   TRANSFER_OUT_NATIVE,
   TRANSFER_OUT_TOKEN,
+  VALID_MCS_TOKEN_OUT,
 } from '../../constants/near_method_names';
 import BN from 'bn.js';
-import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
+import {
+  ChangeFunctionCallOptions,
+  ViewFunctionCallOptions,
+} from 'near-api-js/lib/account';
 import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import { hexToDecimalArray } from '../../utils';
 import {
@@ -291,5 +295,25 @@ export class NearOmnichainService implements IMapOmnichainService {
       const executionOutcome: FinalExecutionOutcome =
         await this._doNearFunctionCall(account, nearCallOptions);
     }
+  }
+
+  private async _checkMintable(
+    mosAccountId: string,
+    tokenAddress: string,
+    toChainId: string,
+    account: Account | ConnectedWalletAccount
+  ): Promise<boolean> {
+    const nearCheckMintableOptions: ViewFunctionCallOptions = {
+      contractId: mosAccountId,
+      methodName: VALID_MCS_TOKEN_OUT,
+      args: {
+        token: tokenAddress,
+        to_chain: toChainId,
+      },
+    };
+    return await this._doNearViewFunctionCall(
+      account,
+      nearCheckMintableOptions
+    );
   }
 }
