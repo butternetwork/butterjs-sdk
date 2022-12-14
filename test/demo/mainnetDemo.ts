@@ -47,10 +47,10 @@ const keyStore: InMemoryKeyStore = new keyStores.InMemoryKeyStore();
 const keyPair: KeyPair = KeyPair.fromString(process.env.NEAR_PRIVATE_KEY!);
 keyStore.setKey('testnet', 'xyli.testnet', keyPair);
 const nearConfig = new NearNetworkConfig(
-  'xyli.testnet',
+  'xyli.near',
   keyStore,
   'https://rpc.near.org',
-  'testnet'
+  'mainnet'
 );
 
 // signer and providers

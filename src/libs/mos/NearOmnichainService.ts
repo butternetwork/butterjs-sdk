@@ -114,9 +114,9 @@ export class NearOmnichainService implements IMapOmnichainService {
       } else {
         // contract call option
         const msg = {
-          type: 'Transfer',
+          msg_type: 0,
+          to: decimalArrayAddress,
           to_chain: toChainId,
-          to: toAddress,
         };
         nearCallOptions = {
           contractId: tokenAddress,
