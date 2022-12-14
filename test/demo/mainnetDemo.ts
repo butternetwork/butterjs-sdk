@@ -103,11 +103,11 @@ async function demo() {
   const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
-  const fromToken = POLYGON_MAINNET_USDC;
-  const toChainId = ChainId.BSC_MAINNET;
+  const fromToken = BSC_MAINNET_USDC;
+  const toChainId = POLYGON_MAINNET_USDC.chainId;
   const fromChainId = fromToken.chainId;
 
-  const amount = ethers.utils.parseUnits('1', 6).toString();
+  const amount = ethers.utils.parseUnits('1', fromToken.decimals).toString();
 
   // const provider: ButterJsonRpcProvider = {
   //   url: 'https://testnet-rpc.maplabs.io',
@@ -119,6 +119,14 @@ async function demo() {
     chainId: parseInt(MAP_MAINNET_CHAIN.chainId),
   };
 
+  // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
+  const balance: VaultBalance = await getVaultBalance(
+    fromChainId,
+    fromToken,
+    toChainId,
+    provider
+  );
+  console.log('vault balance', balance);
   // 获取token 从bsc链可以bridge到near链的token列表
   const tokenCandidates = await getTokenCandidates(
     fromChainId,
@@ -135,15 +143,6 @@ async function demo() {
     provider
   );
   console.log('bridge fee', fee);
-
-  // 2. 获取目标链的vault余额， 如果用户提供的数额大于余额应提示用户
-  const balance: VaultBalance = await getVaultBalance(
-    fromChainId,
-    fromToken,
-    toChainId,
-    provider
-  );
-  console.log('vault balance', balance);
 
   // 3. Bridge(先estimate gas)
   console.log('gas estimate');
