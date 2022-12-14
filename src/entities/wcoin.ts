@@ -33,7 +33,6 @@ export const WCOIN = (id: string): Token => {
       return BSC_TEST_WBNB;
     case ChainId.NEAR_TESTNET:
       return NEAR_TEST_WNEAR;
-      return MAP_TEST_WMAP;
     case ChainId.POLYGON_TEST:
       return POLYGON_TEST_WMATIC;
     default:

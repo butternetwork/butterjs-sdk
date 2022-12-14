@@ -43,8 +43,6 @@ export function getTokenByAddressAndChainId(
   const allToken: BaseCurrency[] = ID_TO_ALL_TOKEN(chainId);
   console.log('aalll', allToken);
   for (let i = 0; i < allToken.length; i++) {
-    console.log('hex', getHexAddress(allToken[i]!.address, chainId, false));
-    console.log('tokenAddress', tokenAddress);
     if (
       getHexAddress(allToken[i]!.address, chainId, false).toLowerCase() ===
       tokenAddress.toLowerCase()

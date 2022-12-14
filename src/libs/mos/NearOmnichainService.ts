@@ -290,7 +290,7 @@ export class NearOmnichainService implements IMapOmnichainService {
         attachedDeposit: new BN(amount, 10),
       };
       if (options.gas != undefined) {
-        nearCallOptions.gas = new BN(options.gas, 10);
+        nearCallOptions.gas = new BN('300000000000000', 10);
       }
 
       const executionOutcome: FinalExecutionOutcome =

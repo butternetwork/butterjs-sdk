@@ -189,9 +189,6 @@ export class ButterSwap {
   }: SwapRequestParam): Promise<string> {
     const toChainId = toToken.chainId;
     const fromChainId = fromToken.chainId;
-    if (IS_NEAR(fromChainId)) {
-      return 'not supported near estimate';
-    }
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
@@ -212,6 +209,15 @@ export class ButterSwap {
       DEFAULT_SLIPPAGE
     );
     let swapData = '';
+    // if (IS_NEAR(fromChainId)) {
+    //   swapData = assembleNearSwapMsgFromRoute(
+    //     route,
+    //     fromToken,
+    //     toToken,
+    //     toAddress
+    //   );
+    //   return 'not supported near estimate';
+    // }
     if (IS_EVM(fromChainId)) {
       swapData = await assembleTargetSwapDataFromRoute(route, toToken);
     }

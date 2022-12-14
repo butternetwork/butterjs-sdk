@@ -160,7 +160,7 @@ export async function assembleEVMSwapDataFromRoute(
   for (let swapRoute of targetRoute) {
     let swapParam = [];
     swapParam.push(swapRoute.amountIn);
-    swapParam.push('0');
+    swapParam.push(swapRoute.amountOut);
     const toChainId = swapRoute.chainId;
 
     let tokenAddressArr = [];
@@ -179,6 +179,7 @@ export async function assembleEVMSwapDataFromRoute(
         );
       }
     }
+
     // console.log('tokenAddressArr', tokenAddressArr);
     swapParam.push(abi.encode(['address[]'], [tokenAddressArr]));
     const routerIndex = '0';
@@ -188,6 +189,8 @@ export async function assembleEVMSwapDataFromRoute(
   swapData.push(swapParamArr);
   swapData.push(targetChainTokenOut.address);
   swapData.push(mapTargetTokenAddress);
+  console.log('swap Data', swapData);
+  console.log('swap Data encoded', abi.encode(swapDataAbi, swapData));
   return abi.encode(swapDataAbi, swapData);
 }
 
@@ -278,7 +281,14 @@ export function assembleNearSwapDataFromRoute(
     swapParamArr.push(swapParam);
   }
   swapData.push(swapParamArr);
-  swapData.push(asciiToHex(targetChainTokenOut.address, false));
+  swapData.push(
+    asciiToHex(
+      targetChainTokenOut.isNative
+        ? targetChainTokenOut.wrapped.address
+        : targetChainTokenOut.address,
+      false
+    )
+  );
   swapData.push(mapTargetTokenAddress);
   return abi.encode(swapDataAbi, swapData);
 }
@@ -306,6 +316,8 @@ export function assembleNearSwapMsgFromRoute(
     src_swap: srcSwap,
     dst_swap: targetSwapData,
   };
+
+  console.log('dst_swap', targetSwapData);
 
   if (fromToken.isNative) {
     return JSON.stringify(swapInfo);
@@ -355,10 +367,10 @@ export function assembleNearVersionTargetSwapParamArrayFromRoutes(
     for (let i = 0; i < route.path.length; i++) {
       const path: ButterPath = route.path[i]!;
       if (i == 0) {
-        tokenArr.push(asciiToHex(path.tokenIn.address, false));
-        tokenArr.push(asciiToHex(path.tokenOut.address, false));
+        tokenArr.push(path.tokenIn.address);
+        tokenArr.push(path.tokenOut.address);
       } else {
-        tokenArr.push(asciiToHex(path.tokenOut.address, false));
+        tokenArr.push(path.tokenOut.address);
       }
     }
     swapParam.path = abi.encode(['address[]'], [tokenArr]);
