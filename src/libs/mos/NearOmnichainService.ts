@@ -14,6 +14,7 @@ import { ChainId, ID_TO_CHAIN_ID } from '../../constants/chains';
 import {
   ADD_MCS_TOKEN_TO_CHAIN,
   ADD_NATIVE_TO_CHAIN,
+  FT_TRANSFER_CALL,
   TRANSFER_OUT_NATIVE,
   TRANSFER_OUT_TOKEN,
   VALID_MCS_TOKEN_OUT,
@@ -89,18 +90,45 @@ export class NearOmnichainService implements IMapOmnichainService {
         toAddress,
         toChainId
       );
-      // contract call option
-      const nearCallOptions: ChangeFunctionCallOptions = {
-        contractId: mosAccountId,
-        methodName: TRANSFER_OUT_TOKEN,
-        args: {
-          token: tokenAddress,
-          to: decimalArrayAddress,
-          amount: amount,
+
+      let nearCallOptions: ChangeFunctionCallOptions;
+      if (
+        await this._checkMintable(
+          mosAccountId,
+          tokenAddress,
+          toChainId,
+          account
+        )
+      ) {
+        nearCallOptions = {
+          contractId: mosAccountId,
+          methodName: TRANSFER_OUT_TOKEN,
+          args: {
+            token: tokenAddress,
+            to: decimalArrayAddress,
+            amount: amount,
+            to_chain: toChainId,
+          },
+          attachedDeposit: new BN(1, 10),
+        };
+      } else {
+        // contract call option
+        const msg = {
+          type: 'Transfer',
           to_chain: toChainId,
-        },
-        attachedDeposit: new BN(1, 10),
-      };
+          to: toAddress,
+        };
+        nearCallOptions = {
+          contractId: tokenAddress,
+          methodName: FT_TRANSFER_CALL,
+          args: {
+            receiver_id: tokenAddress,
+            amount: amount,
+            msg: msg,
+          },
+          attachedDeposit: new BN(1, 10),
+        };
+      }
 
       // manual input gas if necessary
       if (options.gas != undefined) {
@@ -295,6 +323,18 @@ export class NearOmnichainService implements IMapOmnichainService {
       const executionOutcome: FinalExecutionOutcome =
         await this._doNearFunctionCall(account, nearCallOptions);
     }
+  }
+  private async _doNearViewFunctionCall(
+    account: Account | ConnectedWalletAccount,
+    options: ViewFunctionCallOptions
+  ) {
+    let result;
+    try {
+      result = await account.viewFunctionV2(options);
+    } catch (e) {
+      console.log(e);
+    }
+    return result;
   }
 
   private async _checkMintable(
