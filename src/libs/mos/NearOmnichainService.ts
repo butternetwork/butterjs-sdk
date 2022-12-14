@@ -124,7 +124,7 @@ export class NearOmnichainService implements IMapOmnichainService {
           args: {
             receiver_id: tokenAddress,
             amount: amount,
-            msg: msg,
+            msg: JSON.stringify(msg),
           },
           attachedDeposit: new BN(1, 10),
         };

@@ -11,6 +11,7 @@ import {
   SUPPORTED_CHAIN_LIST_MAINNET,
   MOS_CONTRACT_ADDRESS_SET,
   BSC_MAINNET_USDC,
+  NEAR_MAINNET_CHAIN,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
@@ -28,6 +29,7 @@ import { ButterBridge } from '../../src';
 import Web3 from 'web3';
 import { ButterJsonRpcProvider } from '../../src/types/paramTypes';
 import { approveToken } from '../../src/libs/allowance';
+import { verifyNearAccountId } from '../../src/utils';
 require('dotenv/config');
 
 // web3.js config
@@ -99,7 +101,10 @@ console.log(
 
 async function demo() {
   console.log('start demo');
-
+  console.log(
+    'verify account!',
+    await verifyNearAccountId('xyli.near', NEAR_MAINNET_CHAIN.chainId)
+  );
   const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
