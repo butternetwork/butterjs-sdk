@@ -111,7 +111,6 @@ export class NearOmnichainService implements IMapOmnichainService {
           to_chain: toChainId,
         };
 
-        console.log('msg', JSON.stringify(msg));
         nearTransferOutOptions = {
           contractId: tokenAddress,
           methodName: FT_TRANSFER_CALL,
