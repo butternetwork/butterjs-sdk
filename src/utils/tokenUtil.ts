@@ -27,6 +27,7 @@ import {
   POLYGON_TEST_USDC,
   POLYGON_TEST_NATIVE,
   MAP_TEST_USDC,
+  NEAR_TEST_USDC,
 } from '../constants';
 import { getHexAddress } from './addressUtil';
 
@@ -40,7 +41,10 @@ export function getTokenByAddressAndChainId(
   chainId: string
 ): BaseCurrency {
   const allToken: BaseCurrency[] = ID_TO_ALL_TOKEN(chainId);
+  console.log('aalll', allToken);
   for (let i = 0; i < allToken.length; i++) {
+    console.log('hex', getHexAddress(allToken[i]!.address, chainId, false));
+    console.log('tokenAddress', tokenAddress);
     if (
       getHexAddress(allToken[i]!.address, chainId, false).toLowerCase() ===
       tokenAddress.toLowerCase()
@@ -94,7 +98,13 @@ export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
     case ChainId.ETH_PRIV:
       return [];
     case ChainId.NEAR_TESTNET:
-      return [NEAR_TEST_MOST, NEAR_TEST_MAP, NEAR_TEST_WNEAR, NEAR_TEST_NATIVE];
+      return [
+        NEAR_TEST_MOST,
+        NEAR_TEST_MAP,
+        NEAR_TEST_WNEAR,
+        NEAR_TEST_NATIVE,
+        NEAR_TEST_USDC,
+      ];
     case ChainId.BSC_TEST:
       return [
         BSC_TEST_MOST,

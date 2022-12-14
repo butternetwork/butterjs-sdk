@@ -14,7 +14,7 @@ import {
   IS_NEAR,
   MAP_TEST_USDC,
 } from '../constants';
-import { asciiToHex, hexToDecimalArray } from './addressUtil';
+import { asciiToHex, getHexAddress, hexToDecimalArray } from './addressUtil';
 import { NEAR_TOKEN_SEPARATOR } from '../constants/constants';
 
 const abi = ethers.utils.defaultAbiCoder;
@@ -124,46 +124,59 @@ export async function assembleTargetSwapDataFromRoute(
   if (IS_EVM(targetChainTokenOut.chainId)) {
     return await assembleEVMSwapDataFromRoute(routes, targetChainTokenOut);
   } else if (IS_NEAR(targetChainTokenOut.chainId)) {
-    return await assembleNearSwapMsgFromRoute(
-      routes,
-      targetChainTokenOut,
-      toAddress!
-    );
+    return assembleNearSwapDataFromRoute(routes, targetChainTokenOut);
   } else {
     throw new Error(`chainId ${targetChainTokenOut.chainId} not supported`);
   }
 }
 
+const swapDataAbi = [
+  'tuple(uint256, uint256, bytes, uint64)[]',
+  'bytes',
+  'address',
+];
+
 export async function assembleEVMSwapDataFromRoute(
   route: ButterCrossChainRoute,
   targetChainTokenOut: BaseCurrency
 ): Promise<string> {
-  const swapDataAbi = [
-    'tuple(uint256, uint256, bytes, uint64)[]',
-    'bytes',
-    'address',
-  ];
-
   const mapRoute = route.mapChain;
   const mapTargetTokenAddress = mapRoute[0]!.tokenOut.address;
   let swapData = [];
   let swapParamArr: any[] = [];
 
   const targetRoute: ButterSwapRoute[] = route.targetChain;
-
+  if (
+    targetRoute === undefined ||
+    targetRoute.length === 0 ||
+    targetRoute[0]!.path === undefined ||
+    targetRoute[0]!.path.length === 0
+  ) {
+    swapData.push([]);
+    swapData.push(targetChainTokenOut.address);
+    swapData.push(mapTargetTokenAddress);
+    return abi.encode(swapDataAbi, swapData);
+  }
   for (let swapRoute of targetRoute) {
     let swapParam = [];
     swapParam.push(swapRoute.amountIn);
     swapParam.push('0');
+    const toChainId = swapRoute.chainId;
 
     let tokenAddressArr = [];
     for (let i = 0; i < swapRoute.path.length; i++) {
       const butterPath: ButterPath = swapRoute.path[i]!;
       if (i == 0) {
-        tokenAddressArr.push(butterPath.tokenIn.address);
-        tokenAddressArr.push(butterPath.tokenOut.address);
+        tokenAddressArr.push(
+          getHexAddress(butterPath.tokenIn.address, toChainId, false)
+        );
+        tokenAddressArr.push(
+          getHexAddress(butterPath.tokenOut.address, toChainId, false)
+        );
       } else {
-        tokenAddressArr.push(butterPath.tokenOut.address);
+        tokenAddressArr.push(
+          getHexAddress(butterPath.tokenOut.address, toChainId, false)
+        );
       }
     }
     // console.log('tokenAddressArr', tokenAddressArr);
@@ -186,16 +199,17 @@ export function assembleCrossChainRouteFromJson(
     jsonStr
   ) as ButterCrossChainRoute;
 
-  for (let swapRoute of route.srcChain) {
-    swapRoute.amountIn = ethers.utils
-      .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
-      .toString();
-    swapRoute.amountOut = ethers.utils
-      .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
-      .mul(10000 - slippage)
-      .div(10000)
-      .toString();
-    // swapRoute.amountOut = '0';
+  if (route.srcChain != undefined) {
+    for (let swapRoute of route.srcChain) {
+      swapRoute.amountIn = ethers.utils
+        .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
+        .toString();
+      swapRoute.amountOut = ethers.utils
+        .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
+        .mul(10000 - slippage)
+        .div(10000)
+        .toString();
+    }
   }
   for (let swapRoute of route.mapChain) {
     swapRoute.amountIn = ethers.utils
@@ -205,18 +219,68 @@ export function assembleCrossChainRouteFromJson(
       .parseUnits(swapRoute.amountOut, swapRoute.tokenIn.decimals)
       .toString();
   }
-  for (let swapRoute of route.targetChain) {
-    swapRoute.amountIn = ethers.utils
-      .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
-      .toString();
-    swapRoute.amountOut = ethers.utils
-      .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
-      .mul(10000 - slippage)
-      .div(10000)
-      .toString();
-    // swapRoute.amountOut = '0';
+  if (route.targetChain != undefined) {
+    for (let swapRoute of route.targetChain) {
+      swapRoute.amountIn = ethers.utils
+        .parseUnits(swapRoute.amountIn, swapRoute.tokenIn.decimals)
+        .toString();
+      swapRoute.amountOut = ethers.utils
+        .parseUnits(swapRoute.amountOut, swapRoute.tokenOut.decimals)
+        .mul(10000 - slippage)
+        .div(10000)
+        .toString();
+      // swapRoute.amountOut = '0';
+    }
   }
   return route;
+}
+
+export function assembleNearSwapDataFromRoute(
+  routes: ButterCrossChainRoute,
+  targetChainTokenOut: BaseCurrency
+) {
+  const mapRoute = routes.mapChain;
+  const mapTargetTokenAddress = mapRoute[0]!.tokenOut.address;
+  let swapData = [];
+  let swapParamArr: any[] = [];
+
+  const targetRoute: ButterSwapRoute[] = routes.targetChain;
+  if (
+    targetRoute === undefined ||
+    targetRoute.length === 0 ||
+    targetRoute[0]!.path === undefined ||
+    targetRoute[0]!.path.length === 0
+  ) {
+    swapData.push([]);
+    swapData.push(targetChainTokenOut.address);
+    swapData.push(mapTargetTokenAddress);
+    return abi.encode(swapDataAbi, swapData);
+  }
+
+  for (let swapRoute of targetRoute) {
+    let swapParam = [];
+    for (let i = 0; i < swapRoute.path.length; i++) {
+      const butterPath: ButterPath = swapRoute.path[i]!;
+      const path =
+        butterPath.tokenIn.address +
+        NEAR_TOKEN_SEPARATOR +
+        butterPath.tokenOut.address;
+      const amountIn = 0;
+      const minAmountOut =
+        i === swapRoute.path.length - 1 ? swapRoute.amountOut : '0';
+      const routerIndex = butterPath.id;
+
+      swapParam.push(amountIn);
+      swapParam.push(minAmountOut);
+      swapParam.push(asciiToHex(path, false));
+      swapParam.push(routerIndex);
+    }
+    swapParamArr.push(swapParam);
+  }
+  swapData.push(swapParamArr);
+  swapData.push(asciiToHex(targetChainTokenOut.address, false));
+  swapData.push(mapTargetTokenAddress);
+  return abi.encode(swapDataAbi, swapData);
 }
 
 export function assembleNearSwapMsgFromRoute(
@@ -265,7 +329,7 @@ export function assembleNearSwapParamArrayFromRoutes(
           path.tokenIn.address + NEAR_TOKEN_SEPARATOR + path.tokenOut.address,
           false
         ),
-        router_index: path.poolId,
+        router_index: path.id,
       });
     }
   }
@@ -286,10 +350,10 @@ export function assembleNearVersionTargetSwapParamArrayFromRoutes(
     for (let i = 0; i < route.path.length; i++) {
       const path: ButterPath = route.path[i]!;
       if (i == 0) {
-        tokenArr.push(path.tokenIn.address);
-        tokenArr.push(path.tokenOut.address);
+        tokenArr.push(asciiToHex(path.tokenIn.address, false));
+        tokenArr.push(asciiToHex(path.tokenOut.address, false));
       } else {
-        tokenArr.push(path.tokenOut.address);
+        tokenArr.push(asciiToHex(path.tokenOut.address, false));
       }
     }
     swapParam.path = abi.encode(['address[]'], [tokenArr]);

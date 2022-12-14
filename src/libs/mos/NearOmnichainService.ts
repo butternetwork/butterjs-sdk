@@ -239,11 +239,8 @@ export class NearOmnichainService implements IMapOmnichainService {
       };
 
       // manual input gas if necessary
-      if (options.gas != undefined) {
-        nearTransferOutOptions.gas = new BN(options.gas, 10);
-      } else {
-        nearTransferOutOptions.gas = new BN('300000000000000', 10);
-      }
+      nearTransferOutOptions.gas = new BN('300000000000000', 10);
+
       const executionOutcome: FinalExecutionOutcome =
         await this._doNearFunctionCall(account, nearTransferOutOptions);
 

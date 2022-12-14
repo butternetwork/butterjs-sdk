@@ -20,7 +20,7 @@ import { BigNumber, ethers } from 'ethers';
 import { getTokenByAddressAndChainId } from '../../utils/tokenUtil';
 import { ButterJsonRpcProvider } from '../../types/paramTypes';
 import { ID_TO_SUPPORTED_TOKEN } from '../../utils/tokenUtil';
-import { asciiToString, getHexAddress } from '../../utils';
+import { asciiToHex, asciiToString, getHexAddress } from '../../utils';
 import { VaultToken } from '../../libs/VaultToken';
 import { EVMOmnichainService } from '../../libs/mos/EVMOmnichainService';
 import MOS_RELAY_METADATA from '../../abis/MAPOmnichainServiceRelay.json';
@@ -193,7 +193,14 @@ export async function getSwapFee(
       .toString();
   }
   return Promise.resolve({
-    feeToken: getTokenByAddressAndChainId(tokenOut.address, srcToken.chainId),
+    feeToken: getTokenByAddressAndChainId(
+      getHexAddress(
+        tokenOut.address,
+        srcToken.chainId,
+        !IS_NEAR(srcToken.chainId)
+      ),
+      srcToken.chainId
+    ),
     feeRate: feeRate,
     amount: feeAmount.toString(),
   });

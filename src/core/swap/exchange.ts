@@ -27,6 +27,8 @@ import {
 import {
   assembleButterRouterParamFromRoute,
   assembleCrossChainRouteFromJson,
+  assembleEVMSwapDataFromRoute,
+  assembleNearSwapMsgFromRoute,
   assembleTargetSwapDataFromRoute,
 } from '../../utils/requestUtils';
 import { ButterRouter } from '../../libs/butter-router/ButterRouter';
@@ -82,7 +84,7 @@ export class ButterSwap {
       }
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
-
+    console.log('toaddress', toAddress);
     // assemble cross-chain swap route
     if (slippage === undefined) {
       slippage = DEFAULT_SLIPPAGE;
@@ -91,14 +93,17 @@ export class ButterSwap {
       swapRouteStr,
       slippage
     );
-    const swapData: string = await assembleTargetSwapDataFromRoute(
-      route,
-      toToken,
-      toAddress
-    );
 
+    let swapData = '';
+    if (IS_EVM(fromChainId)) {
+      swapData = await assembleTargetSwapDataFromRoute(route, toToken);
+    }
     // check if source chain needs to do agg-swap
-    if (route.srcChain.length != 0 && route.srcChain[0]!.path.length != 0) {
+    if (
+      route.srcChain.length != 0 &&
+      route.srcChain[0]!.path.length != 0 &&
+      !IS_NEAR(fromChainId)
+    ) {
       const routerParam: ButterRouterParam =
         await assembleButterRouterParamFromRoute(
           route,
@@ -112,6 +117,7 @@ export class ButterSwap {
         BUTTER_ROUTER_METADATA.abi,
         options.signerOrProvider!
       );
+
       result = await butterRouter.entrance(
         fromAddress,
         routerParam.coreSwapData,
@@ -128,6 +134,9 @@ export class ButterSwap {
       return result;
     }
 
+    if (IS_NEAR(fromChainId)) {
+      swapData = assembleNearSwapMsgFromRoute(route, toToken, toAddress);
+    }
     // create mos instance base on src token chainId.
     const mos: IMapOmnichainService = createMOSInstance(
       fromToken.chainId,
@@ -175,7 +184,9 @@ export class ButterSwap {
   }: SwapRequestParam): Promise<string> {
     const toChainId = toToken.chainId;
     const fromChainId = fromToken.chainId;
-
+    if (IS_NEAR(fromChainId)) {
+      return 'not supported near estimate';
+    }
     // check validity of toAddress according to toChainId
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
@@ -195,16 +206,22 @@ export class ButterSwap {
       swapRouteStr,
       DEFAULT_SLIPPAGE
     );
-    const swapData: string = await assembleTargetSwapDataFromRoute(
-      route,
-      toToken,
-      toAddress
-    );
+    let swapData = '';
+    if (IS_EVM(fromChainId)) {
+      swapData = await assembleTargetSwapDataFromRoute(route, toToken);
+    }
 
+    if (IS_NEAR(toChainId)) {
+      toAddress = getHexAddress(toAddress, toChainId, false);
+    }
     let gas;
 
     // check if source chain needs to do agg-swap
-    if (route.srcChain.length != 0 && route.srcChain[0]!.path.length != 0) {
+    if (
+      route.srcChain.length != 0 &&
+      route.srcChain[0]!.path.length != 0 &&
+      !IS_NEAR(fromChainId)
+    ) {
       const routerParam: ButterRouterParam =
         await assembleButterRouterParamFromRoute(
           route,

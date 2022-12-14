@@ -34,16 +34,12 @@ const mapProvider = new ethers.providers.JsonRpcProvider(
   'https://testnet-rpc.maplabs.io',
   212
 );
-const mapSigner = new ethers.Wallet(
-  'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
-  mapProvider
-);
+const mapSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, mapProvider);
 // const ethProvider = new ethers.providers.JsonRpcProvider(
 //   'http://18.138.248.113:8545',
 //   34434
 // );
 // const ethSigner = new ethers.Wallet(
-//   'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
 //   ethProvider
 // );
 
@@ -51,10 +47,7 @@ const bscProvider = new ethers.providers.JsonRpcProvider(
   BSC_TEST_CHAIN.rpc,
   BSC_TEST_CHAIN.chainId
 );
-const bscSigner = new ethers.Wallet(
-  'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
-  bscProvider
-);
+const bscSigner = new ethers.Wallet('', bscProvider);
 const keyStore: InMemoryKeyStore = new keyStores.InMemoryKeyStore();
 const keyPair: KeyPair = KeyPair.fromString(
   'ed25519:3V1ZUMUD3pZkKyEFJFHpev32WVipYb7HFu6YhnHrGZMw1bArtcBBzB11W9ouFuB3cd11hZL2miXZnX1N36pgywgU'

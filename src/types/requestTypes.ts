@@ -45,7 +45,7 @@ export interface ButterSwapRoute {
 }
 
 export interface ButterPath {
-  poolId: string;
+  id: string;
   tokenIn: PathToken;
   tokenOut: PathToken;
 }

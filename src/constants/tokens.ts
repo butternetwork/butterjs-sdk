@@ -143,10 +143,10 @@ export const MAP_TEST_WMAP = new Token(
 
 export const MAP_TEST_NEAR = new Token(
   ChainId.MAP_TEST,
-  '0x9a5a085F5ffF09e922149426CbF6892F7df1dF79',
+  '0xf1b33B4aB498e17C82bA903e5256533cBf51e1Fd',
   18,
-  'NEAR',
-  'MAPO NEAR',
+  'Butter Near',
+  'bNear',
   'https://cryptologos.cc/logos/near-protocol-near-logo.png'
 );
 
@@ -290,7 +290,7 @@ export const NEAR_TEST_NATIVE = new NearNativeCoin(ChainId.NEAR_TESTNET);
 
 export const NEAR_TEST_USDC = new Token(
   ChainId.NEAR_TESTNET,
-  'dev-1668420264923-33906828202995',
+  'usdc.map007.testnet',
   6,
   'USDC',
   'USD Circle',

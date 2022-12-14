@@ -16,7 +16,7 @@ export const MOS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.BSC_TEST]: '0x8A6aaDf40fB100f4a27c9ADA1B0F0d90eC91F35C',
   [ChainId.MAP_TEST]: '0x9D8ECF3aa8a93be0bb026fAd7529d9Be8F5849B9',
   [ChainId.POLYGON_TEST]: '0xA179d181cF855258Bc26a8623E1CE7a2e3fD3606',
-  [ChainId.NEAR_TESTNET]: 'mos2.mfac.maplabs.testnet',
+  [ChainId.NEAR_TESTNET]: 'mos.map007.testnet',
 };
 
 /**
