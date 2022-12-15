@@ -34,6 +34,7 @@ import {
   NEAR_TEST_NATIVE,
   NEAR_TEST_CHAIN,
   NEAR_TEST_USDC,
+  IS_NEAR,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
@@ -120,13 +121,13 @@ console.log('convert', asciiToHex('mos.map007.testnet', false));
 async function demo() {
   console.log('start demo');
 
-  const fromAddress = 'xyli.testnet';
+  const fromAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
   const toAddress = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
 
   let signer;
 
-  const fromToken = NEAR_TEST_NATIVE;
-  const toToken = POLYGON_TEST_BMOS;
+  const fromToken = BSC_TEST_USDC;
+  const toToken = POLYGON_TEST_USDC;
   const amount = ethers.utils.parseUnits('1', fromToken.decimals).toString();
 
   const fromChainId = fromToken.chainId;
@@ -163,7 +164,7 @@ async function demo() {
   await axios.get(requestUrl).then(function (response) {
     routeStr = JSON.stringify(response.data);
   });
-  // routeStr = bscBmosToWnear;
+
   console.log(
     'swap fee',
     await getSwapFee(fromToken, toChainId, amount, routeStr, provider)
@@ -173,11 +174,14 @@ async function demo() {
 
   // 当源链路径的path为空，授权这个地址
   const mosAddress = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
-  // if (!fromToken.isNative) {
-  //   await approveToken(signer, fromToken, amount, mosAddress, true);
-  // }
-
-  console.log('approved');
+  if (!fromToken.isNative && !IS_NEAR(fromToken.chainId)) {
+    let approvalAddress =
+      JSON.parse(routeStr).srcChain.path === undefined ||
+      JSON.parse(routeStr).srcChain.path.length === 0
+        ? mosAddress
+        : routerAddress;
+    await approveToken(signer, fromToken, amount, approvalAddress, true);
+  }
 
   // gas estimation
   const swap: ButterSwap = new ButterSwap();
