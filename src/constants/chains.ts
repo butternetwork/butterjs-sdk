@@ -57,7 +57,7 @@ export const BSC_MAINNET_CHAIN = new Chain(
   'https://bsc-dataseed1.defibit.io/',
   'https://bscscan.com/',
   'https://files.maplabs.io/bridge/bsc.png',
-  'BSC'
+  'BNB'
 );
 
 export const POLYGON_MAINNET_CHAIN = new Chain(
