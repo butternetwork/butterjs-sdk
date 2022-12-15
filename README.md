@@ -642,31 +642,6 @@ CrossChainSwapRoute: {
   },
 }
 ```
-### swap
-do cross-chain swap
-```typescript
-async function omniSwap({
-    ... // too long... omitted for simplicity
-}: CrossChainSwapRoute) // the input is what we get after invoking getBestRoute
-```
-##### Example: swap 100 ethers on Ethereum Mainnet for at least 43200 nears on Near network
-```typescript
-const swapRouteRequest: SwapRouteRequestParam = {
-    fromToken: ETH_MAINNET, 
-    toToken: NEAR_MAINNET,
-    amountIn: "100000000000000000000", // 100 ehter
-    amountOutMin: "432000000000000000000000000000", // 43200 near
-    options: {
-        signerOrProvider,
-        userAggregator: true,
-    }
-}
-
-const bestRoute: CrossChainSwapRoute = getBestRoute(swapRouteRequest);
-
-const result = await omniSwap(bestRoute);
-```
-<a name="omnipayment"></a>
 ## Omnichain Payment(Still Under Development) 
 Pay whatever crypto users want, merchant will always get their desired token.
 ### getPaymentInfo
