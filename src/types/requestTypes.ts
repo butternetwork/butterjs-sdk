@@ -17,15 +17,6 @@ export type BridgeRequestParam = {
   options: BridgeOptions;
 };
 
-export type SwapRequestParam = {
-  fromToken: BaseCurrency;
-  toToken: BaseCurrency;
-  amountIn: string;
-  amountOutMin: string;
-  tradeType: number; // 0 for EXACT_IN, 1 for EXACT_OUT
-  options: SwapOptions;
-};
-
 export type SwapOptions = {
   signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider infor or Web3.js Eth info
   nearConfig?: NearNetworkConfig; // mandatory when src chain is near

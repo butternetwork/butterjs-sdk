@@ -41,18 +41,18 @@ import { RelayOmnichainService } from '../../libs/mos/RelayOmnichainService';
  * @param srcToken
  * @param targetChain
  * @param amount
- * @param rpcProvider use default rpcProvider when not specified
+ * @param mapRpcProvider
  */
 export async function getBridgeFee(
   srcToken: BaseCurrency,
   targetChain: string,
   amount: string,
-  rpcProvider: ButterJsonRpcProvider
+  mapRpcProvider: ButterJsonRpcProvider
 ): Promise<ButterFee> {
-  const chainId: string = rpcProvider.chainId.toString();
-  const mapChainId: string = rpcProvider.chainId.toString();
+  const chainId: string = mapRpcProvider.chainId.toString();
+  const mapChainId: string = mapRpcProvider.chainId.toString();
   const mapProvider = new ethers.providers.JsonRpcProvider(
-    rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
+    mapRpcProvider.url ? mapRpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
   );
   const tokenRegister = new TokenRegister(
     TOKEN_REGISTER_ADDRESS_SET[chainId]!,
@@ -116,7 +116,7 @@ export async function getBridgeFee(
  * @param fromChainId
  * @param fromToken
  * @param toChainId
- * @param rpcProvider
+ * @param mapRpcProvider
  */
 export async function getVaultBalance(
   fromChainId: string,
