@@ -53,7 +53,7 @@ export const MAP_MAINNET_CHAIN = new Chain(
 
 export const BSC_MAINNET_CHAIN = new Chain(
   ChainId.BSC_MAINNET,
-  'BSC Mainnet',
+  'BNB Chain Mainnet',
   'https://bsc-dataseed1.defibit.io/',
   'https://bscscan.com/',
   'https://files.maplabs.io/bridge/bsc.png',
