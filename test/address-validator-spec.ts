@@ -31,7 +31,7 @@ describe('Address Validator', () => {
     // });
 
     it('should be valid address', async () => {
-      const address = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
+      const address = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
       expect(validateAndParseAddressByChainId(address, ChainId.MAP_TEST)).toBe(
         address
       );

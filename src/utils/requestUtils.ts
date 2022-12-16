@@ -190,7 +190,6 @@ export async function assembleEVMSwapDataFromRoute(
   swapData.push(targetChainTokenOut.address);
   swapData.push(mapTargetTokenAddress);
   console.log('swap Data', swapData);
-  console.log('swap Data encoded', abi.encode(swapDataAbi, swapData));
   return abi.encode(swapDataAbi, swapData);
 }
 

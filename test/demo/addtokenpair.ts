@@ -62,7 +62,7 @@ const nearConfig: NearNetworkConfig = {
 };
 const oneEther = ethers.utils.parseEther('1').toString();
 const oneNear = utils.format.parseNearAmount('1')!;
-const to = '0x8c9b3cAf7DedD3003f53312779c1b92ba1625D94';
+const to = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
 
 async function main() {
   // await addChainTypeToNear(97, 'EvmChain');

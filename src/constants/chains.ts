@@ -44,20 +44,20 @@ export const ID_TO_DEFAULT_RPC_URL = (id: string): string => {
 };
 export const MAP_MAINNET_CHAIN = new Chain(
   ChainId.MAP_MAINNET,
-  'MAP Mainnet',
+  'MAPO Mainnet',
   'https://poc3-rpc.maplabs.io/',
   'https://makalu.mapscan.io/',
   'https://files.maplabs.io/bridge/map.png',
-  'MAP'
+  'MAPO'
 );
 
 export const BSC_MAINNET_CHAIN = new Chain(
   ChainId.BSC_MAINNET,
-  'BSC Mainnet',
+  'BNB Chain Mainnet',
   'https://bsc-dataseed1.defibit.io/',
   'https://bscscan.com/',
   'https://files.maplabs.io/bridge/bsc.png',
-  'BSC'
+  'BNB'
 );
 
 export const POLYGON_MAINNET_CHAIN = new Chain(
@@ -80,19 +80,19 @@ export const NEAR_MAINNET_CHAIN = new Chain(
 
 export const MAP_TEST_CHAIN = new Chain(
   ChainId.MAP_TEST,
-  'MAP Testnet',
+  'MAPO Testnet',
   'https://testnet-rpc.maplabs.io',
   'http://18.139.224.21:9001/',
   'https://files.maplabs.io/bridge/map.png',
-  'MAP'
+  'MAPO'
 );
 export const BSC_TEST_CHAIN = new Chain(
   ChainId.BSC_TEST,
-  'BSC Testnet',
+  'BNB Chain Testnet',
   'https://data-seed-prebsc-2-s2.binance.org:8545',
   'https://testnet.bscscan.com/',
   'https://files.maplabs.io/bridge/bsc.png',
-  'BSC'
+  'BNB'
 );
 
 export const POLYGON_TEST_CHAIN = new Chain(

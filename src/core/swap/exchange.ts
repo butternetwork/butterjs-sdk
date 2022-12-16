@@ -44,7 +44,7 @@ export class ButterSwap {
    * @param options of bridging, check {@link SwapOptions} for more details
    * @return ButterTransactionResponse
    */
-  async swap({
+  async omnichainSwap({
     fromAddress,
     fromToken,
     toAddress,
@@ -84,7 +84,6 @@ export class ButterSwap {
       }
       toAddress = getHexAddress(toAddress, toChainId, false);
     }
-    console.log('toaddress', toAddress);
     // assemble cross-chain swap route
     if (slippage === undefined) {
       slippage = DEFAULT_SLIPPAGE;
