@@ -117,6 +117,7 @@ async function demo() {
     'swap fee',
     await getSwapFee(fromToken, toChainId, amount, routeStr, provider)
   );
+
   // 当源链路径的path不为空，授权这个地址
   const routerAddress = BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
 
