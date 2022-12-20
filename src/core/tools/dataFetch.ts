@@ -245,8 +245,10 @@ export async function getVaultBalance(
   }
   const vaultToken = new VaultToken(vaultAddress, provider);
 
-  const tokenBalance = await vaultToken.getVaultBalance(toChainId.toString());
+  let tokenBalance = await vaultToken.getVaultBalance(toChainId.toString());
+
   let toChainTokenAddress = mapTokenAddress;
+
   if (!IS_MAP(toChainId)) {
     toChainTokenAddress = await tokenRegister.getToChainToken(
       mapTokenAddress,
@@ -258,7 +260,18 @@ export async function getVaultBalance(
         'Internal Error: Cannot find corresponding target token on target chain'
       );
     }
+
+    const mapToken = getTokenByAddressAndChainId(mapTokenAddress, mapChainId);
+    const toChainToken = getTokenByAddressAndChainId(
+      toChainTokenAddress,
+      toChainId
+    );
+    tokenBalance = BigNumber.from(tokenBalance)
+      .mul(ethers.utils.parseUnits('1', toChainToken.decimals))
+      .div(ethers.utils.parseUnits('1', mapToken.decimals))
+      .toString();
   }
+
   return Promise.resolve({
     token: getTokenByAddressAndChainId(toChainTokenAddress, toChainId),
     balance: tokenBalance.toString(),
