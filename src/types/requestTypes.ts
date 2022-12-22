@@ -14,7 +14,7 @@ export type BridgeRequestParam = {
   toChainId: string;
   toAddress: string;
   amount: string;
-  options: BridgeOptions;
+  options: ButterTransactionOption;
 };
 
 export type SwapRequestParam = {
@@ -25,7 +25,7 @@ export type SwapRequestParam = {
   amountIn: string; // in wei
   swapRouteStr: string;
   slippage?: number; // in bps
-  options: SwapOptions;
+  options: ButterTransactionOption;
 };
 
 export interface ButterCrossChainRoute {
@@ -56,10 +56,11 @@ export interface PathToken {
   symbol?: string;
 }
 
-export type SwapOptions = {
+export type ButterTransactionOption = {
   signerOrProvider?: Signer | Provider | Eth; // When source chain is EVM provide Ethers.js Signer/Provider or Web3.js Eth info
   nearProvider?: NearProviderType; // mandatory when src chain is near
   gas?: string;
+  gasPrice?: string;
 };
 
 export type BridgeOptions = {

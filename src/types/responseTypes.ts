@@ -49,6 +49,7 @@ export type NearAccountState = {
   state?: AccountView;
   errMsg?: string;
 };
+
 export interface VaultBalance {
   token: BaseCurrency; // vault token
   balance: string; // amount in minimal uint
