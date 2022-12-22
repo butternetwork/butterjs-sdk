@@ -110,7 +110,7 @@ const mapRpcProvider = {
 // get the fees for bridging one ether from Ethereum Mainnet to Binance Smart Chain
 const fee: ButterFee = await getBridgeFee(
     BSC_MAINNET_USDC, // srcToken
-    ChainId.BSC_MAINNET, // targetChain
+    ChainId.POLYGON_MAINNET, // targetChain
     '1000000000000000000', // amount in minimum unit, here is 3 usdc
     mapRpcProvider
 )
