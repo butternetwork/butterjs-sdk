@@ -17,7 +17,7 @@ import {
   POLYGON_TEST_MOST,
   POLYGON_MAINNET_USDC,
   POLYGON_TEST_CHAIN,
-  SUPPORTED_CHAIN_LIST,
+  SUPPORTED_CHAIN_LIST_TESTNET,
   POLYGON_TEST_BMOS,
   POLYGON_TEST_USDC,
   BSC_TEST_MOST,
@@ -74,9 +74,9 @@ async function demo() {
 
   const fromAddress = 'xyli.testnet';
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
-  const fromToken = POLYGON_TEST_USDC;
-  const toToken = BSC_TEST_USDC;
-  const inputAmount = '999';
+  const fromToken = BSC_TEST_NATIVE;
+  const toToken = POLYGON_TEST_NATIVE;
+  const inputAmount = '1';
 
   let signer;
   const fromChainId = fromToken.chainId;

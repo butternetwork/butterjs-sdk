@@ -22,7 +22,7 @@ export type SwapRequestParam = {
   fromToken: BaseCurrency;
   toAddress: string;
   toToken: BaseCurrency;
-  amountIn: string; // in wei
+  amountIn: string; // in minimal uint
   swapRouteStr: string;
   slippage?: number; // in bps
   options: ButterTransactionOption;

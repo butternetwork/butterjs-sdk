@@ -107,13 +107,23 @@ export async function getBridgeFee(
       .toString();
     feeAmount = feeAmountBN.mul(amount).div(relayChainAmount).toString();
   }
+  const distribution = await getDistributeRate(mapChainId);
   return Promise.resolve({
     feeToken: srcToken,
     feeRate: feeRate,
     amount: feeAmount.toString(),
+    feeDistribution: distribution,
   });
 }
 
+/**
+ * get fee for cross-chain exchange
+ * @param srcToken source token
+ * @param targetChain target chain id
+ * @param amount amount in minimal uint
+ * @param routeStr cross-chain route in string format
+ * @param mapRpcProvider map relay chain rpc provider
+ */
 export async function getSwapFee(
   srcToken: BaseCurrency,
   targetChain: string,
@@ -193,6 +203,9 @@ export async function getSwapFee(
       .div(relayChainAmount)
       .toString();
   }
+  const distribution = await getDistributeRate(mapChainId);
+  console.log('11123123123123213123');
+  console.log('distribution', distribution);
   return Promise.resolve({
     feeToken: getTokenByAddressAndChainId(
       getHexAddress(
@@ -204,6 +217,7 @@ export async function getSwapFee(
     ),
     feeRate: feeRate,
     amount: feeAmount.toString(),
+    feeDistribution: distribution,
   });
 }
 /**
@@ -489,12 +503,14 @@ export async function getDistributeRate(
     MOS_RELAY_METADATA.abi,
     rpcProvider
   );
-  const relayerRate = await mos.distributeRate(0);
-  const lpRate = await mos.distributeRate(1);
+  const lpRate = await mos.distributeRate(0);
+  const relayerRate = await mos.distributeRate(1);
+  const protocolRate = await mos.distributeRate(2);
+  console.log('relay', relayerRate);
   return Promise.resolve({
     relayer: relayerRate.rate.div(100).toString(),
     lp: lpRate.rate.div(100).toString(),
-    protocol: '0',
+    protocol: protocolRate.rate.div(100).toString(),
   });
 }
 

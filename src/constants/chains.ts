@@ -156,7 +156,7 @@ export const ID_TO_CHAIN_ID = (id: string): ChainId => {
   }
 };
 
-export const SUPPORTED_CHAIN_LIST = [
+export const SUPPORTED_CHAIN_LIST_TESTNET = [
   MAP_TEST_CHAIN,
   // NEAR_TEST_CHAIN,
   BSC_TEST_CHAIN,
