@@ -55,3 +55,9 @@ export interface VaultBalance {
   balance: string; // amount in minimal uint
   isMintable: boolean; // is token mintable, if it is, then there is no need to show balance
 }
+
+export type RouteResponse = {
+  data?: string;
+  msg: string;
+  status: number;
+};

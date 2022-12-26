@@ -47,6 +47,7 @@ import {
   ButterFee,
   ButterTransactionReceipt,
   ButterTransactionResponse,
+  RouteResponse,
   VaultBalance,
 } from '../../src/types/responseTypes';
 import { ButterBridge } from '../../src';
@@ -68,6 +69,7 @@ import {
   nearConfig,
   provider,
 } from './config';
+import { getBestRoute } from '../../src/core/router/ButterSmartRouter';
 
 async function demo() {
   console.log('start demo');
@@ -76,7 +78,7 @@ async function demo() {
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
   const fromToken = BSC_TEST_NATIVE;
   const toToken = POLYGON_TEST_NATIVE;
-  const inputAmount = '1';
+  const inputAmount = '10';
 
   let signer;
   const fromChainId = fromToken.chainId;
@@ -97,22 +99,13 @@ async function demo() {
     .parseUnits(inputAmount, fromToken.decimals)
     .toString();
 
-  let routeStr = '';
-  // get best route
-  const requestUrl =
-    `http://54.255.196.147:9009/router/best_route?fromChainId=${fromChainId}&toChainId=${toChainId}&amountIn=` +
-    `${ethers.utils.formatUnits(amount, fromToken.decimals)}&` +
-    `tokenInAddress=${fromToken.address}&` +
-    `tokenInDecimal=${fromToken.decimals}&` +
-    `tokenInSymbol=${fromToken.symbol}&` +
-    `tokenOutAddress=${toToken.address}&` +
-    `tokenOutDecimal=${toToken.decimals}&` +
-    `tokenOutSymbol=${toToken.symbol}`;
-  console.log(requestUrl);
-  await axios.get(requestUrl).then(function (response) {
-    routeStr = JSON.stringify(response.data);
-  });
-
+  const routeResponse: RouteResponse = await getBestRoute(
+    fromToken,
+    toToken,
+    amount
+  );
+  console.log('routeResponse', routeResponse);
+  const routeStr = JSON.stringify(routeResponse.data);
   console.log(
     'vault balance',
     await getVaultBalance(fromChainId, fromToken, toChainId, provider)
