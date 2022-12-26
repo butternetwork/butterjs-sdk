@@ -49,8 +49,15 @@ export type NearAccountState = {
   state?: AccountView;
   errMsg?: string;
 };
+
 export interface VaultBalance {
   token: BaseCurrency; // vault token
   balance: string; // amount in minimal uint
   isMintable: boolean; // is token mintable, if it is, then there is no need to show balance
 }
+
+export type RouteResponse = {
+  data?: string; // json string
+  msg: string;
+  status: number;
+};

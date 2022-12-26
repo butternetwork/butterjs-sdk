@@ -11,7 +11,7 @@ import {
   POLYGON_TEST_MOST,
   POLYGON_MAINNET_USDC,
   POLYGON_TEST_CHAIN,
-  SUPPORTED_CHAIN_LIST,
+  SUPPORTED_CHAIN_LIST_TESTNET,
   BSC_TEST_BMOS,
   POLYGON_TEST_BMOS,
   NEAR_TEST_CHAIN,
@@ -80,7 +80,7 @@ const mapProvider = new ethers.providers.JsonRpcProvider(
 const mapSigner = new ethers.Wallet(process.env.EVM_PRIVATE_KEY!, mapProvider);
 
 /** 支持的链 {@link ChainId} 调试中仅支持MAP测试网，BSC测试，和Near测试网**/
-console.log('supported chain', SUPPORTED_CHAIN_LIST);
+console.log('supported chain', SUPPORTED_CHAIN_LIST_TESTNET);
 /** 支持的token {@link supported_token.ts} **/
 console.log(
   'supported token by chainId',

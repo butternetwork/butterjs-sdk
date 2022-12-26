@@ -5,7 +5,7 @@ import {
   BridgeRequestParam,
   ButterCrossChainRoute,
   NearNetworkConfig,
-  SwapOptions,
+  ButterTransactionOption,
   SwapRequestParam,
 } from '../../src/types';
 import {
@@ -17,7 +17,7 @@ import {
   POLYGON_TEST_MOST,
   POLYGON_MAINNET_USDC,
   POLYGON_TEST_CHAIN,
-  SUPPORTED_CHAIN_LIST,
+  SUPPORTED_CHAIN_LIST_TESTNET,
   POLYGON_TEST_BMOS,
   POLYGON_TEST_USDC,
   BSC_TEST_MOST,
@@ -47,6 +47,7 @@ import {
   ButterFee,
   ButterTransactionReceipt,
   ButterTransactionResponse,
+  RouteResponse,
   VaultBalance,
 } from '../../src/types/responseTypes';
 import { ButterBridge } from '../../src';
@@ -68,14 +69,15 @@ import {
   nearConfig,
   provider,
 } from './config';
+import { ButterSmartRouter } from '../../src/core/router/ButterSmartRouter';
 
 async function demo() {
   console.log('start demo');
 
   const fromAddress = 'xyli.testnet';
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
-  const fromToken = BSC_TEST_USDC;
-  const toToken = POLYGON_TEST_USDC;
+  const fromToken = BSC_TEST_BMOS;
+  const toToken = POLYGON_TEST_BMOS;
   const inputAmount = '1';
 
   let signer;
@@ -96,27 +98,14 @@ async function demo() {
   const amount = ethers.utils
     .parseUnits(inputAmount, fromToken.decimals)
     .toString();
-
-  let routeStr = '';
-  // get best route
-  const requestUrl =
-    `http://54.255.196.147:9009/router/best_route?fromChainId=${fromChainId}&toChainId=${toChainId}&amountIn=` +
-    `${ethers.utils.formatUnits(amount, fromToken.decimals)}&` +
-    `tokenInAddress=${fromToken.address}&` +
-    `tokenInDecimal=${fromToken.decimals}&` +
-    `tokenInSymbol=${fromToken.symbol}&` +
-    `tokenOutAddress=${toToken.address}&` +
-    `tokenOutDecimal=${toToken.decimals}&` +
-    `tokenOutSymbol=${toToken.symbol}`;
-  console.log(requestUrl);
-  await axios.get(requestUrl).then(function (response) {
-    routeStr = JSON.stringify(response.data);
-  });
-
-  console.log(
-    'vault balance',
-    await getVaultBalance(fromChainId, fromToken, toChainId, provider)
+  const router: ButterSmartRouter = new ButterSmartRouter();
+  const routeResponse: RouteResponse = await router.getBestRoute(
+    fromToken,
+    toToken,
+    amount
   );
+  console.log('routeResponse', routeResponse);
+  const routeStr = JSON.stringify(routeResponse.data);
 
   console.log(
     'swap fee',

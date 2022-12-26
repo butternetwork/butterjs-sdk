@@ -26,8 +26,6 @@ export class EVMNativeCoin extends NativeCurrency {
     return weth9;
   }
 
-  private static _etherCache: { [chainId: number]: EVMNativeCoin } = {};
-
   public equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId;
   }
