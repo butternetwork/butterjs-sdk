@@ -69,7 +69,7 @@ import {
   nearConfig,
   provider,
 } from './config';
-import { getBestRoute } from '../../src/core/router/ButterSmartRouter';
+import { ButterSmartRouter } from '../../src/core/router/ButterSmartRouter';
 
 async function demo() {
   console.log('start demo');
@@ -98,8 +98,8 @@ async function demo() {
   const amount = ethers.utils
     .parseUnits(inputAmount, fromToken.decimals)
     .toString();
-
-  const routeResponse: RouteResponse = await getBestRoute(
+  const router: ButterSmartRouter = new ButterSmartRouter();
+  const routeResponse: RouteResponse = await router.getBestRoute(
     fromToken,
     toToken,
     amount
