@@ -76,9 +76,9 @@ async function demo() {
 
   const fromAddress = 'xyli.testnet';
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
-  const fromToken = BSC_TEST_NATIVE;
-  const toToken = POLYGON_TEST_NATIVE;
-  const inputAmount = '10';
+  const fromToken = BSC_TEST_BMOS;
+  const toToken = POLYGON_TEST_BMOS;
+  const inputAmount = '1';
 
   let signer;
   const fromChainId = fromToken.chainId;
@@ -106,10 +106,6 @@ async function demo() {
   );
   console.log('routeResponse', routeResponse);
   const routeStr = JSON.stringify(routeResponse.data);
-  console.log(
-    'vault balance',
-    await getVaultBalance(fromChainId, fromToken, toChainId, provider)
-  );
 
   console.log(
     'swap fee',
