@@ -167,6 +167,32 @@ export const MAP_TEST_BNB = new Token(
   'MAPO BNB',
   'https://files.maplabs.io/bridge/bnb.png'
 );
+/** eth goerli **/
+export const ETH_GOERLI_NATIVE = new EVMNativeCoin(
+  ChainId.ETH_GOERLI,
+  18,
+  'ETH',
+  'Ether',
+  'https://files.maplabs.io/bridge/eth.png'
+);
+
+export const ETH_GOERLI_WETH = new Token(
+  ChainId.ETH_GOERLI,
+  '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
+  18,
+  'wETH',
+  'Wrapped Ether',
+  'https://files.maplabs.io/bridge/eth.png'
+);
+
+export const ETH_GOERLI_USDC = new Token(
+  ChainId.ETH_GOERLI,
+  '0x86CBE739888bFbC0bcA6e2D6106cfC5B3B1F69A5',
+  18,
+  'bUSDC',
+  'Butter USDC',
+  'https://files.maplabs.io/bridge/usdc.png'
+);
 
 /** bsc test **/
 export const BSC_TEST_NATIVE = new EVMNativeCoin(

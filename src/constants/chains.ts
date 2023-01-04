@@ -10,6 +10,7 @@ export enum ChainId {
 
   MAP_TEST = '212',
   ETH_PRIV = '34434',
+  ETH_GOERLI = '5',
   BSC_TEST = '97',
   POLYGON_TEST = '80001',
   NEAR_TESTNET = '5566818579631833089',
@@ -30,6 +31,8 @@ export const ID_TO_DEFAULT_RPC_URL = (id: string): string => {
     // testnet
     case ChainId.MAP_TEST:
       return MAP_TEST_CHAIN.rpc!;
+    case ChainId.ETH_GOERLI:
+      return ETH_GOERLI_CHAIN.rpc!;
     case ChainId.BSC_TEST:
       return BSC_TEST_CHAIN.rpc!;
     case ChainId.POLYGON_TEST:
@@ -104,6 +107,15 @@ export const POLYGON_TEST_CHAIN = new Chain(
   'MATIC'
 );
 
+export const ETH_GOERLI_CHAIN = new Chain(
+  ChainId.ETH_GOERLI,
+  'Ethereum Goerli',
+  'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+  'https://goerli.etherscan.io/',
+  'https://files.mapprotocol.io/bridge/eth.png',
+  'ETH'
+);
+
 export const ETH_PRIV_CHAIN = new Chain(
   ChainId.ETH_PRIV,
   'Ethereum Private',
@@ -143,6 +155,8 @@ export const ID_TO_CHAIN_ID = (id: string): ChainId => {
 
     case ChainId.MAP_TEST:
       return ChainId.MAP_TEST;
+    case ChainId.ETH_GOERLI:
+      return ChainId.ETH_GOERLI;
     case ChainId.BSC_TEST:
       return ChainId.BSC_TEST;
     case ChainId.ETH_PRIV:
@@ -181,6 +195,7 @@ export enum ChainName {
   NEAR_TESTNET = 'near-testnet',
   BSC_TEST = 'bsc-testnet',
   MATIC_TEST = 'matic-mumbai',
+  ETH_GOERLI = 'ethereum-goerli',
 }
 
 export enum NativeCurrencyName {
@@ -222,6 +237,8 @@ export const ID_TO_NETWORK_NAME = (id: string): ChainName => {
 
     case ChainId.MAP_TEST:
       return ChainName.MAP_TEST;
+    case ChainId.ETH_GOERLI:
+      return ChainName.ETH_GOERLI;
     case ChainId.ETH_PRIV:
       return ChainName.ETH_PRIV;
     case ChainId.BSC_TEST:
@@ -383,6 +400,7 @@ export const IS_NEAR = (id: string): boolean => {
     case '421611':
     case '137':
     case ChainId.MAP_TEST:
+    case ChainId.ETH_GOERLI:
     case ChainId.ETH_PRIV:
     case ChainId.BSC_TEST:
     case ChainId.POLYGON_TEST:
@@ -416,6 +434,7 @@ export const IS_EVM = (id: string): boolean => {
     case ChainId.BSC_TEST:
     case ChainId.POLYGON_TEST:
     case ChainId.MAP_TEST:
+    case ChainId.ETH_GOERLI:
     case ChainId.ETH_PRIV:
       return true;
     case ChainId.NEAR_TESTNET:

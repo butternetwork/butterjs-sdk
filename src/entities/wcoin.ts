@@ -10,6 +10,7 @@ import {
   NEAR_MAINNET_WNEAR,
   NEAR_TEST_WNEAR,
   POLYGON_MAINNET_WMATIC,
+  ETH_GOERLI_WETH,
 } from '../constants';
 
 /**
@@ -29,6 +30,8 @@ export const WCOIN = (id: string): Token => {
       return ETH_PRIV_WETH;
     case ChainId.MAP_TEST:
       return MAP_TEST_WMAP;
+    case ChainId.ETH_GOERLI:
+      return ETH_GOERLI_WETH;
     case ChainId.BSC_TEST:
       return BSC_TEST_WBNB;
     case ChainId.NEAR_TESTNET:

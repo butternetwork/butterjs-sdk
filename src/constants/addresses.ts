@@ -13,6 +13,7 @@ export const MOS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.NEAR_MAINNET]: 'mos.mfac.butternetwork.near',
 
   [ChainId.ETH_PRIV]: '0x43130059C655314d7ba7eDfb8299d26FbDE726F1',
+  [ChainId.ETH_GOERLI]: '0xaE194F5d43ccab94C6dEA994Ff19001708d0e2eb',
   [ChainId.BSC_TEST]: '0x8A6aaDf40fB100f4a27c9ADA1B0F0d90eC91F35C',
   [ChainId.MAP_TEST]: '0x9D8ECF3aa8a93be0bb026fAd7529d9Be8F5849B9',
   [ChainId.POLYGON_TEST]: '0xA179d181cF855258Bc26a8623E1CE7a2e3fD3606',
@@ -34,21 +35,11 @@ export const BUTTER_ROUTER_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.NEAR_MAINNET]: '',
 
   [ChainId.ETH_PRIV]: '',
+  [ChainId.ETH_GOERLI]: '0x3c09AF7eb25904Ec62F37540044A48da1a24269A',
   [ChainId.BSC_TEST]: '0x45927EAD0a347c6CbE5A6A092F0253249C282Af5',
   [ChainId.MAP_TEST]: '',
   [ChainId.POLYGON_TEST]: '0xAA7BA6a914112db5Cabce1f4256eb13cC6010abc',
   [ChainId.NEAR_TESTNET]: '',
 };
-export const BUTTER_CORE_ADDRESS_SET: { [chainId in ChainId]: string } = {
-  [ChainId.MAP_MAINNET]: '',
-  [ChainId.BSC_MAINNET]: '',
-  [ChainId.POLYGON_MAINNET]: '',
-  [ChainId.NEAR_MAINNET]: '',
 
-  [ChainId.ETH_PRIV]: '',
-  [ChainId.BSC_TEST]: '0x45927EAD0a347c6CbE5A6A092F0253249C282Af5',
-  [ChainId.MAP_TEST]: '',
-  [ChainId.POLYGON_TEST]: '0xAA7BA6a914112db5Cabce1f4256eb13cC6010abc',
-  [ChainId.NEAR_TESTNET]: '',
-};
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
