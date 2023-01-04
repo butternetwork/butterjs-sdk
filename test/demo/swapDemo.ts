@@ -76,9 +76,9 @@ async function demo() {
 
   const fromAddress = 'xyli.testnet';
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
-  const fromToken = BSC_TEST_BMOS;
-  const toToken = POLYGON_TEST_BMOS;
-  const inputAmount = '1';
+  const fromToken = BSC_TEST_USDC;
+  const toToken = POLYGON_TEST_USDC;
+  const inputAmount = '2';
 
   let signer;
   const fromChainId = fromToken.chainId;
@@ -117,6 +117,7 @@ async function demo() {
 
   // 当源链路径的path为空，授权这个地址
   const mosAddress = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)];
+
   if (!fromToken.isNative && !IS_NEAR(fromToken.chainId)) {
     let approvalAddress =
       JSON.parse(routeStr).srcChain === undefined ||
