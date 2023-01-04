@@ -4,6 +4,7 @@ import { KeyPair, keyStores } from 'near-api-js';
 import { NearNetworkConfig } from '../../src/types';
 import {
   BSC_TEST_CHAIN,
+  ETH_GOERLI_CHAIN,
   MAP_TEST_CHAIN,
   NEAR_TEST_CHAIN,
   POLYGON_TEST_CHAIN,
@@ -48,6 +49,11 @@ export const maticProvider = new ethers.providers.JsonRpcProvider(
   Number.parseInt(POLYGON_TEST_CHAIN.chainId)
 );
 
+export const goerliProvider = new ethers.providers.JsonRpcProvider(
+  ETH_GOERLI_CHAIN.rpc,
+  Number.parseInt(ETH_GOERLI_CHAIN.chainId)
+);
+
 export const mapProvider = new ethers.providers.JsonRpcProvider(
   MAP_TEST_CHAIN.rpc,
   Number.parseInt(MAP_TEST_CHAIN.chainId)
@@ -64,6 +70,11 @@ export const maticSinger = new ethers.Wallet(
 export const mapSigner = new ethers.Wallet(
   process.env.EVM_PRIVATE_KEY!,
   mapProvider
+);
+
+export const goerliSigner = new ethers.Wallet(
+  process.env.EVM_PRIVATE_KEY!,
+  goerliProvider
 );
 
 export const provider: ButterJsonRpcProvider = {

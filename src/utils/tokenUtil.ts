@@ -75,7 +75,7 @@ export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
     case ChainId.ETH_PRIV:
       return [];
     case ChainId.NEAR_TESTNET:
-      return [NEAR_TEST_MOST, NEAR_TEST_MAP, NEAR_TEST_NATIVE];
+      return [NEAR_TEST_USDC, NEAR_TEST_NATIVE];
     case ChainId.BSC_TEST:
       return [BSC_TEST_USDC, BSC_TEST_BMOS, BSC_TEST_NATIVE];
     case ChainId.POLYGON_TEST:
