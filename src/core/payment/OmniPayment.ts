@@ -36,6 +36,7 @@ import {
 import { ButterRouter } from '../../libs/butter-router/ButterRouter';
 import { DEFAULT_SLIPPAGE } from '../../constants/constants';
 import { BaseCurrency } from '../../entities';
+import { isGreaterThanRequiredAmount } from '../../utils/routeUtil';
 
 export class OmniPayment {
   /**
@@ -94,6 +95,17 @@ export class OmniPayment {
       swapRouteStr,
       DEFAULT_SLIPPAGE
     );
+
+    // check if target route amount out reach the required amount
+    if (
+      !isGreaterThanRequiredAmount(
+        route.targetChain,
+        requiredToken,
+        requiredAmount
+      )
+    ) {
+      throw new Error('does not reach required amount');
+    }
 
     let swapData = '';
     if (IS_EVM(fromChainId)) {
