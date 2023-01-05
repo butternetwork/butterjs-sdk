@@ -59,5 +59,6 @@ export interface VaultBalance {
 export type RouteResponse = {
   data?: string; // json string
   msg: string;
+  code?: number;
   status: number;
 };

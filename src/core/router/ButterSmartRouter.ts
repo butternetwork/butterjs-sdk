@@ -1,4 +1,4 @@
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import axios from 'axios';
 import { BUTTER_SMART_ROUTER_URL } from '../../constants/constants';
 import { BaseCurrency } from '../../entities';
@@ -31,13 +31,29 @@ export class ButterSmartRouter {
         if (data.hasOwnProperty('status') && data.hasOwnProperty('error')) {
           routeResponse = {
             status: 200,
-            msg: 'insufficient liquidity',
+            code: 10001,
+            msg: 'Insufficient Liquidity',
           };
+        } else if (data.hasOwnProperty('mapChain')) {
+          const mapAmountOut = data['mapChain'][0]['amountOut'];
+          if (parseFloat(mapAmountOut) <= 0) {
+            routeResponse = {
+              status: 200,
+              code: 10002,
+              msg: 'Input Amount Less Than Fee',
+            };
+          } else {
+            routeResponse = {
+              data: response.data,
+              status: response.status,
+              code: 10000,
+              msg: response.statusText,
+            };
+          }
         } else {
           routeResponse = {
-            data: response.data,
-            status: response.status,
-            msg: response.statusText,
+            status: 500,
+            msg: 'Internal Server Error',
           };
         }
       });
@@ -47,7 +63,6 @@ export class ButterSmartRouter {
         msg: error.message,
       };
     }
-
     return routeResponse!;
   }
 }
