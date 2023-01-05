@@ -53,6 +53,7 @@ export class ButterSmartRouter {
         } else {
           routeResponse = {
             status: 500,
+            code: 99999,
             msg: 'Internal Server Error',
           };
         }
@@ -60,6 +61,7 @@ export class ButterSmartRouter {
     } catch (error: any) {
       routeResponse = {
         status: 500,
+        code: 99999,
         msg: error.message,
       };
     }
