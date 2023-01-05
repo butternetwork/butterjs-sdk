@@ -44,6 +44,7 @@ import {
   getVaultBalance,
   getTokenCandidates,
   getSwapFee,
+  getEstimateAmountInFromRequiredAmount,
 } from '../../src/core/tools/dataFetch';
 import {
   ButterFee,
@@ -59,7 +60,7 @@ import {
   assembleButterRouterParamFromRoute,
   assembleCrossChainRouteFromJson,
 } from '../../src/utils/requestUtils';
-import { ButterSwap } from '../../src/core/swap/exchange';
+import { ButterSwap } from '../../src/core/swap/ButterSwap';
 import { BaseCurrency } from '../../src/entities';
 import { approveToken } from '../../src/libs/allowance';
 import axios from 'axios';
@@ -76,14 +77,14 @@ import { ButterSmartRouter } from '../../src/core/router/ButterSmartRouter';
 
 async function demo() {
   console.log('start demo');
-  await approveToken(
-    goerliSigner,
-    ETH_GOERLI_USDC,
-    '10000000000000000000000',
-    '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c',
-    true
+  console.log(
+    'estimate amount In',
+    await getEstimateAmountInFromRequiredAmount(
+      BSC_TEST_NATIVE,
+      POLYGON_TEST_USDC,
+      ethers.utils.parseEther('100').toString()
+    )
   );
-  console.log('finish approve');
   const fromAddress = 'xyli.testnet';
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
   const fromToken = BSC_TEST_USDC;

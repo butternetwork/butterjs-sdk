@@ -36,7 +36,7 @@ import { DEFAULT_SLIPPAGE } from '../../constants/constants';
 
 export class ButterSwap {
   /**
-   * The BridgeToken method is used to bridge token from one chain to another.
+   * The omnichainSwap method is used to swap token across different chains.
    * see {@link BridgeRequestParam} for detail
    * @param token source token, aka token that user provide
    * @param toAddress target chain receiving address

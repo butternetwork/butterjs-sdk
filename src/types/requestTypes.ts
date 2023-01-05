@@ -28,6 +28,17 @@ export type SwapRequestParam = {
   options: ButterTransactionOption;
 };
 
+export type PaymentRequestParam = {
+  fromAddress: string;
+  paidToken: BaseCurrency;
+  paidAmount: string; // in minimal uint
+  toAddress: string;
+  requiredToken: BaseCurrency;
+  requiredAmount: string;
+  swapRouteStr: string;
+  options: ButterTransactionOption;
+};
+
 export interface ButterCrossChainRoute {
   srcChain: ButterSwapRoute[];
   mapChain: ButterSwapRoute[];

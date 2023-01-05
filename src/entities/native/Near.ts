@@ -4,6 +4,7 @@ import { NativeCurrency } from '../NativeCurrency';
 import { Token } from '../Token';
 import { ID_TO_CHAIN_ID, ZERO_ADDRESS } from '../../constants';
 import { WCOIN } from '../wcoin';
+import { BaseCurrency } from '../BaseCurrency';
 
 /**
  * Near is the main usage of a 'native' currency, i.e. for Near mainnet and all testnets
@@ -26,7 +27,7 @@ export class NearNativeCoin extends NativeCurrency {
     return wnear;
   }
 
-  public equals(other: Currency): boolean {
+  public equals(other: BaseCurrency): boolean {
     return other.isNative && other.chainId === this.chainId;
   }
 }

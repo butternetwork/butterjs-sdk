@@ -26,7 +26,7 @@ export class EVMNativeCoin extends NativeCurrency {
     return weth9;
   }
 
-  public equals(other: Currency): boolean {
+  public equals(other: BaseCurrency): boolean {
     return other.isNative && other.chainId === this.chainId;
   }
 }

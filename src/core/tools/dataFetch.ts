@@ -13,6 +13,7 @@ import {
   ButterFee,
   ButterFeeDistribution,
   ButterFeeRate,
+  RouteResponse,
   VaultBalance,
 } from '../../types/responseTypes';
 import { TokenRegister } from '../../libs/TokenRegister';
@@ -35,9 +36,14 @@ import {
 import Web3 from 'web3';
 import TokenRegisterMetadata from '../../abis/TokenRegister.json';
 import { RelayOmnichainService } from '../../libs/mos/RelayOmnichainService';
-import { ButterSwapRoute } from '../../types';
+import { ButterCrossChainRoute, ButterSwapRoute } from '../../types';
 import { assembleCrossChainRouteFromJson } from '../../utils/requestUtils';
 import { DEFAULT_SLIPPAGE } from '../../constants/constants';
+import { ButterSmartRouter } from '../router/ButterSmartRouter';
+import {
+  getTotalAmountOut,
+  isGreaterThanRequiredAmount,
+} from '../../utils/routeUtil';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -143,6 +149,7 @@ export async function getSwapFee(
       .add(route.amountOut)
       .toString();
   }
+
   const tokenOut: BaseCurrency = srcRoute[0]!.tokenOut;
 
   const chainId: string = mapRpcProvider.chainId.toString();
@@ -506,7 +513,7 @@ export async function getDistributeRate(
   const lpRate = await mos.distributeRate(0);
   const relayerRate = await mos.distributeRate(1);
   const protocolRate = await mos.distributeRate(2);
-  console.log('relay', relayerRate);
+
   return Promise.resolve({
     relayer: relayerRate.rate.div(100).toString(),
     lp: lpRate.rate.div(100).toString(),
@@ -522,4 +529,62 @@ function _getFeeAmount(amount: string, feeRate: ButterFeeRate): string {
     return feeRate.lowest.toString();
   }
   return feeAmount.toString();
+}
+
+/**
+ * get how many of fromToken is needed to reach the requiredAmount of toToken
+ * @param fromToken
+ * @param toToken
+ * @param requiredAmount
+ */
+export async function getEstimateAmountInFromRequiredAmount(
+  fromToken: BaseCurrency,
+  toToken: BaseCurrency,
+  requiredAmount: string
+): Promise<string> {
+  const router = new ButterSmartRouter();
+
+  // first get an estimated amount of fromToken needed to meet the requiredAmount of toToken
+  const routeResponse: RouteResponse = await router.getBestRoute(
+    toToken,
+    fromToken,
+    requiredAmount
+  );
+  if (routeResponse.data === undefined) {
+    throw new Error(routeResponse.msg);
+  }
+
+  const crossChainRoute: ButterCrossChainRoute =
+    assembleCrossChainRouteFromJson(JSON.stringify(routeResponse.data), 0);
+  let estimatedAmountIn: BigNumber = getTotalAmountOut(
+    crossChainRoute.targetChain,
+    fromToken
+  );
+  estimatedAmountIn = estimatedAmountIn.mul(110).div(100);
+
+  while (true) {
+    estimatedAmountIn = estimatedAmountIn.mul(103).div(100);
+    console.log('try', estimatedAmountIn.toString());
+    const routeResponse: RouteResponse = await router.getBestRoute(
+      fromToken,
+      toToken,
+      estimatedAmountIn.toString()
+    );
+    if (routeResponse.data === undefined) {
+      throw new Error(routeResponse.msg);
+    }
+
+    const crossChainRoute: ButterCrossChainRoute =
+      assembleCrossChainRouteFromJson(JSON.stringify(routeResponse.data), 0);
+    if (
+      isGreaterThanRequiredAmount(
+        crossChainRoute.targetChain,
+        toToken,
+        requiredAmount
+      )
+    ) {
+      break;
+    }
+  }
+  return estimatedAmountIn.toString();
 }
