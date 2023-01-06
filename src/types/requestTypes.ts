@@ -30,11 +30,11 @@ export type SwapRequestParam = {
 
 export type PaymentRequestParam = {
   fromAddress: string;
-  paidToken: BaseCurrency;
+  paidToken: BaseCurrency; // token user paid
   paidAmount: string; // in minimal uint
-  toAddress: string;
-  requiredToken: BaseCurrency;
-  requiredAmount: string;
+  toAddress: string; // seller's receiving address
+  requiredToken: BaseCurrency; // required token by seller
+  requiredAmount: string; // required amount
   swapRouteStr: string;
   options: ButterTransactionOption;
 };

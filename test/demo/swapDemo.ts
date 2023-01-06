@@ -85,9 +85,9 @@ async function demo() {
       ethers.utils.parseEther('100').toString()
     )
   );
-  const fromAddress = 'xyli.testnet';
+  const fromAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
-  const fromToken = BSC_TEST_USDC;
+  const fromToken = ETH_GOERLI_USDC;
   const toToken = POLYGON_TEST_USDC;
   const inputAmount = '2';
 
