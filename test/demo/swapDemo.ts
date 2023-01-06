@@ -37,6 +37,7 @@ import {
   IS_NEAR,
   ETH_GOERLI_CHAIN,
   ETH_GOERLI_USDC,
+  ETH_GOERLI_NATIVE,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
@@ -76,19 +77,12 @@ import { ButterSmartRouter } from '../../src/core/router/ButterSmartRouter';
 
 async function demo() {
   console.log('start demo');
-  await approveToken(
-    goerliSigner,
-    ETH_GOERLI_USDC,
-    '10000000000000000000000',
-    '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c',
-    true
-  );
-  console.log('finish approve');
-  const fromAddress = 'xyli.testnet';
+
+  const fromAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
   const fromToken = BSC_TEST_USDC;
-  const toToken = POLYGON_TEST_USDC;
-  const inputAmount = '2';
+  const toToken = ETH_GOERLI_USDC;
+  const inputAmount = '1';
 
   let signer;
   const fromChainId = fromToken.chainId;

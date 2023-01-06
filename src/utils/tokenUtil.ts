@@ -98,7 +98,7 @@ export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
         MAP_TEST_USDC,
       ];
     case ChainId.ETH_GOERLI:
-      return [ETH_GOERLI_WETH, ETH_GOERLI_NATIVE, ETH_GOERLI_NATIVE];
+      return [ETH_GOERLI_WETH, ETH_GOERLI_USDC, ETH_GOERLI_NATIVE];
     case ChainId.ETH_PRIV:
       return [];
     case ChainId.NEAR_TESTNET:
