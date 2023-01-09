@@ -72,6 +72,8 @@ export class ButterRouter {
       if (isNative) {
         ethersOptions.value = amount;
       }
+      console.log('targetSwapData', targetSwapData);
+      console.log('amount', amount);
       const entranceTx: ContractTransaction = await this.contract.entrance(
         coreParam,
         targetSwapData,
