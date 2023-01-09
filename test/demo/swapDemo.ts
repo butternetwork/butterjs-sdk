@@ -80,9 +80,9 @@ async function demo() {
 
   const fromAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
-  const fromToken = POLYGON_TEST_NATIVE;
+  const fromToken = POLYGON_TEST_USDC;
   const toToken = BSC_TEST_NATIVE;
-  const inputAmount = '0.01';
+  const inputAmount = '1';
 
   let signer;
   const fromChainId = fromToken.chainId;
