@@ -11,6 +11,7 @@ export const BSC_MAINNET_NATIVE = new EVMNativeCoin(
   'BNB',
   'https://files.maplabs.io/bridge/bnb.png'
 );
+
 export const MAP_MAINNET_NATIVE = new EVMNativeCoin(
   ChainId.MAP_MAINNET,
   18,
@@ -96,6 +97,22 @@ export const NEAR_MAINNET_USDC = new Token(
   'USDC',
   'USD Circle',
   'https://files.maplabs.io/bridge/usdc.png'
+);
+
+export const POLYGON_MAINNET_MAP = new Token(
+  ChainId.POLYGON_MAINNET,
+  '',
+  18,
+  'Wrapped MAPO',
+  'https://files.maplabs.io/bridge/map.png'
+);
+
+export const BSC_MAINNET_MAP = new Token(
+  ChainId.BSC_MAINNET,
+  '',
+  18,
+  'Wrapped MAPO',
+  'https://files.maplabs.io/bridge/map.png'
 );
 
 /************************* testnet tokens *************************/
