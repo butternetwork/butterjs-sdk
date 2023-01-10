@@ -16,6 +16,7 @@ import {
 } from '../constants';
 import { asciiToHex, getHexAddress, hexToDecimalArray } from './addressUtil';
 import { NEAR_TOKEN_SEPARATOR } from '../constants/constants';
+import { getRouterIndexByChainIdAndDexName } from './routeUtil';
 
 const abi = ethers.utils.defaultAbiCoder;
 
@@ -63,7 +64,16 @@ export async function assembleSrcSwapDataFromRoute(
   let routerIndexArr: string[] = [];
   for (let swapRoute of srcRoute) {
     amountInArr.push(swapRoute.amountIn);
-    routerIndexArr.push('0');
+
+    const routerIndex = getRouterIndexByChainIdAndDexName(
+      swapRoute.chainId,
+      swapRoute.dexName
+    );
+    if (routerIndex === undefined) {
+      throw new Error('assembleSrcSwapDataFromRoute: routerIndex is undefined');
+    }
+    routerIndexArr.push(routerIndex.toString());
+
     const amountIn = swapRoute.amountIn;
     const amountOut = swapRoute.amountOut;
 
@@ -182,8 +192,16 @@ export async function assembleEVMSwapDataFromRoute(
 
     // console.log('tokenAddressArr', tokenAddressArr);
     swapParam.push(abi.encode(['address[]'], [tokenAddressArr]));
-    const routerIndex = '0';
-    swapParam.push(routerIndex);
+
+    const routerIndex = getRouterIndexByChainIdAndDexName(
+      swapRoute.chainId,
+      swapRoute.dexName
+    );
+    if (routerIndex === undefined) {
+      throw new Error('assembleSrcSwapDataFromRoute: routerIndex is undefined');
+    }
+
+    swapParam.push(routerIndex.toString());
     swapParamArr.push(swapParam);
   }
   swapData.push(swapParamArr);
@@ -361,7 +379,14 @@ export function assembleNearVersionTargetSwapParamArrayFromRoutes(
     let swapParam: any = {};
     swapParam.amount_in = route.amountIn;
     swapParam.min_amount_out = route.amountOut;
-    swapParam.router_index = '0';
+    const routerIndex = getRouterIndexByChainIdAndDexName(
+      route.chainId,
+      route.dexName
+    );
+    if (routerIndex === undefined) {
+      throw new Error('assembleSrcSwapDataFromRoute: routerIndex is undefined');
+    }
+    swapParam.router_index = routerIndex.toString();
     let tokenArr: string[] = [];
     for (let i = 0; i < route.path.length; i++) {
       const path: ButterPath = route.path[i]!;
