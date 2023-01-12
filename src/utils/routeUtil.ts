@@ -16,6 +16,7 @@ import {
   POLYGON_TEST_NATIVE,
   POLYGON_TEST_USDC,
 } from '../constants';
+import { ButterCrossChainRoute } from '../types';
 
 export const ID_TO_ROUTER_MAP = (id: string): Map<string, number> => {
   switch (id) {
@@ -47,4 +48,35 @@ export function getRouterIndexByChainIdAndDexName(
   dexName: string
 ): number | undefined {
   return ID_TO_ROUTER_MAP(chainId).get(dexName);
+}
+
+export function assembleBridgeRoute(routeStr: string): string {
+  let route: any = JSON.parse(routeStr);
+
+  const srcChainLastRoute = route.srcChain[route.srcChain.length - 1];
+  let srcChainTokenOut = srcChainLastRoute.tokenOut;
+
+  const targetChainFirstRoute = route.targetChain[0];
+  let targetChainTokenIn = targetChainFirstRoute.tokenIn;
+
+  const mapChainFirstRoute = route.mapChain[route.mapChain.length - 1];
+  const mapChainLastRoute = route.mapChain[0];
+
+  const mapChainTokenIn = mapChainFirstRoute.tokenIn;
+  const mapChainTokenOut = mapChainLastRoute.tokenOut;
+  let bridgeInfo: any = {};
+
+  bridgeInfo.bridgeIn = {
+    tokenIn: srcChainTokenOut,
+    tokenOut: mapChainTokenIn,
+    amount: srcChainLastRoute.amountOut,
+  };
+
+  bridgeInfo.bridgeOut = {
+    tokenIn: mapChainTokenOut,
+    tokenOut: targetChainTokenIn,
+    amount: targetChainFirstRoute.amountIn,
+  };
+
+  return JSON.stringify(bridgeInfo);
 }

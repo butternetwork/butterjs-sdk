@@ -38,6 +38,12 @@ import {
   ETH_GOERLI_CHAIN,
   ETH_GOERLI_USDC,
   ETH_GOERLI_NATIVE,
+  BSC_MAINNET_USDC,
+  POLYGON_MAINNET_NATIVE,
+  BSC_MAINNET_NATIVE,
+  NEAR_MAINNET_USDC,
+  NEAR_MAINNET_NATIVE,
+  NEAR_MAINNET_WNEAR,
 } from '../../src/constants';
 import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
 import {
@@ -78,15 +84,19 @@ import { ButterSmartRouter } from '../../src/core/router/ButterSmartRouter';
 async function demo() {
   console.log('start demo');
 
-  const fromAddress = 'xyli.testnet';
+  const fromAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
   const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
   const fromToken = BSC_TEST_NATIVE;
-  const toToken = POLYGON_TEST_NATIVE;
+  const toToken = POLYGON_TEST_USDC;
   const inputAmount = '0.8';
 
   let signer;
   const fromChainId = fromToken.chainId;
   const toChainId = toToken.chainId;
+  const amount = ethers.utils
+    .parseUnits(inputAmount, fromToken.decimals)
+    .toString();
+
   if (fromChainId === POLYGON_TEST_CHAIN.chainId) {
     signer = maticSinger;
   } else if (fromChainId === BSC_TEST_CHAIN.chainId) {
@@ -101,9 +111,6 @@ async function demo() {
     throw new Error('chain id not supported' + fromChainId);
   }
 
-  const amount = ethers.utils
-    .parseUnits(inputAmount, fromToken.decimals)
-    .toString();
   const router: ButterSmartRouter = new ButterSmartRouter();
   const routeResponse: RouteResponse = await router.getBestRoute(
     fromToken,

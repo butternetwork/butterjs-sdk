@@ -32,6 +32,8 @@ export interface ButterCrossChainRoute {
   srcChain: ButterSwapRoute[];
   mapChain: ButterSwapRoute[];
   targetChain: ButterSwapRoute[];
+  bridgeIn: any;
+  bridgeOut: any;
 }
 
 export interface ButterSwapRoute {

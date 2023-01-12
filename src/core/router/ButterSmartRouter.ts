@@ -1,8 +1,13 @@
 import { BigNumber, ethers } from 'ethers';
 import axios from 'axios';
-import { BUTTER_SMART_ROUTER_URL } from '../../constants/constants';
+import {
+  BUTTER_SMART_ROUTER_URL,
+  BUTTER_SMART_ROUTER_URL_MAINNET,
+} from '../../constants/constants';
 import { BaseCurrency } from '../../entities';
 import { RouteResponse } from '../../types/responseTypes';
+import { IS_MAINNET } from '../../utils/chainUtil';
+import { assembleBridgeRoute } from '../../utils/routeUtil';
 export class ButterSmartRouter {
   async getBestRoute(
     fromToken: BaseCurrency,
@@ -11,8 +16,17 @@ export class ButterSmartRouter {
   ): Promise<RouteResponse> {
     const fromChainId = fromToken.chainId;
     const toChainId = toToken.chainId;
+    if (IS_MAINNET(fromChainId) != IS_MAINNET(toChainId)) {
+      throw new Error(
+        `getBestRoute: fromToken and toToken not on the same network. From: ${fromChainId}, To: ${toChainId}`
+      );
+    }
+    const smartRouterServerUrl = IS_MAINNET(fromChainId)
+      ? BUTTER_SMART_ROUTER_URL_MAINNET
+      : BUTTER_SMART_ROUTER_URL;
+
     const requestUrl =
-      BUTTER_SMART_ROUTER_URL +
+      smartRouterServerUrl +
       '?' +
       `fromChainId=${fromChainId}&` +
       `toChainId=${toChainId}&` +
