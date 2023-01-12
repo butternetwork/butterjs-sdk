@@ -192,7 +192,7 @@ export class ButterSwap {
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
     if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
-      throw new Error(`Provider must be provided`);
+      throw new Error(`provider must be provided`);
     }
     // if src chain is near chain, near network provider must be provided
     if (

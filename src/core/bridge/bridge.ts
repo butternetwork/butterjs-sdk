@@ -35,7 +35,9 @@ export class ButterBridge {
     toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
     // if src chain is evm chain, signer must be provided
     if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
-      throw new Error(`Signer must be provided for EVM blockchains`);
+      throw new Error(
+        `bridgeToken: Signer must be provided for EVM blockchains`
+      );
     }
 
     // if src chain is near chain, near network provider must be provided
@@ -43,7 +45,9 @@ export class ButterBridge {
       ChainId.NEAR_TESTNET == fromToken.chainId &&
       options.nearProvider == undefined
     ) {
-      throw new Error(`Network config must be provided for NEAR blockchain`);
+      throw new Error(
+        `bridgeToken: Network config must be provided for NEAR blockchain`
+      );
     }
 
     // create mos instance base on src token chainId.
@@ -105,7 +109,7 @@ export class ButterBridge {
 
     // if src chain is evm chain, signer must be provided
     if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
-      throw new Error(`Provider must be provided`);
+      throw new Error(`provider must be provided`);
     }
 
     // near doesn't provide gas estimation yet

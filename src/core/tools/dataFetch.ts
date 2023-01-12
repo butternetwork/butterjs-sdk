@@ -256,7 +256,9 @@ export async function getVaultBalance(
   const vaultAddress = await tokenRegister.getVaultToken(mapTokenAddress);
 
   if (vaultAddress === ZERO_ADDRESS) {
-    throw new Error('vault address not found for token: ' + mapTokenAddress);
+    throw new Error(
+      `getVaultBalance: vault address not found for token: ${mapTokenAddress}`
+    );
   }
   const vaultToken = new VaultToken(vaultAddress, provider);
 

@@ -122,7 +122,7 @@ async function demo() {
     signer = bscSigner;
   } else if (fromChainId === NEAR_TEST_CHAIN.chainId) {
   } else {
-    throw new Error('from chain not supported');
+    throw new Error(`from chain ${fromChainId} not supported`);
   }
 
   const provider: ButterJsonRpcProvider = {

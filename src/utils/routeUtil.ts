@@ -38,7 +38,7 @@ export const ID_TO_ROUTER_MAP = (id: string): Map<string, number> => {
     case ChainId.POLYGON_TEST:
       return new Map<string, number>([['Quickswap', 0]]);
     default:
-      throw new Error(`ID_TO_ROUTER_MAP: Unknown chain id : ${id}`);
+      throw new Error(`ID_TO_ROUTER_MAP: unknown chain id : ${id}`);
   }
 };
 

@@ -15,6 +15,35 @@ export enum ChainId {
   POLYGON_TEST = '80001',
   NEAR_TESTNET = '5566818579631833089',
 }
+/** ID to Chain Object */
+export const ID_TO_CHAIN_OBJ = (id: string): Chain => {
+  switch (id) {
+    // mainnet
+    case ChainId.MAP_MAINNET:
+      return MAP_MAINNET_CHAIN;
+    case ChainId.BSC_MAINNET:
+      return BSC_MAINNET_CHAIN;
+    case ChainId.POLYGON_MAINNET:
+      return POLYGON_MAINNET_CHAIN;
+    case ChainId.NEAR_MAINNET:
+      return NEAR_MAINNET_CHAIN;
+    // testnet
+    case ChainId.MAP_TEST:
+      return MAP_TEST_CHAIN;
+    case ChainId.ETH_GOERLI:
+      return ETH_GOERLI_CHAIN;
+    case ChainId.BSC_TEST:
+      return BSC_TEST_CHAIN;
+    case ChainId.POLYGON_TEST:
+      return POLYGON_TEST_CHAIN;
+    case ChainId.ETH_PRIV:
+      return ETH_PRIV_CHAIN;
+    case ChainId.NEAR_TESTNET:
+      return NEAR_TEST_CHAIN;
+    default:
+      throw new Error(`ID_TO_CHAIN_OBJ: unknown chain id: ${id}`);
+  }
+};
 
 /** ID to JSON RPC URL */
 export const ID_TO_DEFAULT_RPC_URL = (id: string): string => {
@@ -42,7 +71,7 @@ export const ID_TO_DEFAULT_RPC_URL = (id: string): string => {
     case ChainId.NEAR_TESTNET:
       return NEAR_TEST_CHAIN.rpc!;
     default:
-      throw new Error(`Unknown chain id: ${id}`);
+      throw new Error(`ID_TO_DEFAULT_RPC_URL: unknown chain id: ${id}`);
   }
 };
 export const MAP_MAINNET_CHAIN = new Chain(
@@ -139,7 +168,9 @@ export const ID_TO_NEAR_NETWORK = (id: string): string => {
     case ChainId.NEAR_TESTNET:
       return 'testnet';
     default:
-      throw new Error(`Unknown chain id when querying near network: ${id}`);
+      throw new Error(
+        `ID_TO_NEAR_NETWORK: unknown chain id when querying near network: ${id}`
+      );
   }
 };
 export const ID_TO_CHAIN_ID = (id: string): ChainId => {
@@ -166,7 +197,7 @@ export const ID_TO_CHAIN_ID = (id: string): ChainId => {
     case ChainId.POLYGON_TEST:
       return ChainId.POLYGON_TEST;
     default:
-      throw new Error(`Unknown chain id: ${id}`);
+      throw new Error(`ID_TO_CHAIN_ID: unknown chain id: ${id}`);
   }
 };
 
@@ -249,7 +280,7 @@ export const ID_TO_NETWORK_NAME = (id: string): ChainName => {
     case ChainId.NEAR_TESTNET:
       return ChainName.NEAR_TESTNET;
     default:
-      throw new Error(`Unknown chain id: ${id}`);
+      throw new Error(`ID_TO_NETWORK_NAME: unknown chain id: ${id}`);
   }
 };
 export const MAP_NETWORK_NAME_TO_ID = (network: string): ChainId => {
@@ -259,7 +290,9 @@ export const MAP_NETWORK_NAME_TO_ID = (network: string): ChainId => {
     case ChainName.MAP_TEST:
       return ChainId.MAP_TEST;
     default:
-      throw new Error(`Unsupported network name: ${network}`);
+      throw new Error(
+        `MAP_NETWORK_NAME_TO_ID: Unsupported network name: ${network}`
+      );
   }
 };
 
@@ -413,7 +446,7 @@ export const IS_NEAR = (id: string): boolean => {
     case ChainId.NEAR_MAINNET:
       return true;
     default:
-      throw new Error(`Unsupported chain id: ${id}`);
+      throw new Error(`IS_NEAR: Unsupported chain id: ${id}`);
   }
 };
 
@@ -442,6 +475,6 @@ export const IS_EVM = (id: string): boolean => {
     case ChainId.NEAR_MAINNET:
       return false;
     default:
-      throw new Error(`Unknown chain id: ${id}`);
+      throw new Error(`IS_EVM: unknown chain id: ${id}`);
   }
 };

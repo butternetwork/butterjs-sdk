@@ -81,7 +81,7 @@ export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
     case ChainId.POLYGON_TEST:
       return [POLYGON_TEST_USDC, POLYGON_TEST_BMOS, POLYGON_TEST_NATIVE];
     default:
-      throw new Error(`Unknown chain id: ${id}`);
+      throw new Error(`ID_TO_SUPPORTED_TOKEN: unknown chain id: ${id}`);
   }
 };
 
@@ -128,6 +128,6 @@ export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
         MAP_TEST_NATIVE,
       ];
     default:
-      throw new Error(`Unknown chain id: ${id}`);
+      throw new Error(`ID_TO_ALL_TOKEN: unknown chain id: ${id}`);
   }
 };
