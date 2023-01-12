@@ -88,7 +88,7 @@ export const BSC_MAINNET_CHAIN = new Chain(
   'BNB Chain Mainnet',
   'https://bsc-dataseed1.defibit.io/',
   'https://bscscan.com/',
-  'https://files.maplabs.io/bridge/bsc.png',
+  'https://uploads-ssl.webflow.com/62f34c32e8660c273054c17c/62fb88db22514137f2029167_bnb%20logo.png',
   'BNB'
 );
 
@@ -97,7 +97,7 @@ export const POLYGON_MAINNET_CHAIN = new Chain(
   'Polygon Mainnet',
   'https://polygon-rpc.com/',
   'https://polygonscan.com/',
-  'https://files.maplabs.io/bridge/polygon.png',
+  'https://logotyp.us/files/polygon.svg',
   'MATIC'
 );
 
@@ -106,7 +106,7 @@ export const NEAR_MAINNET_CHAIN = new Chain(
   'Near Mainnet',
   'https://rpc.mainnet.near.org',
   'https://explorer.near.org/',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png',
+  'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png',
   'NEAR'
 );
 
@@ -123,7 +123,7 @@ export const BSC_TEST_CHAIN = new Chain(
   'BNB Chain Testnet',
   'https://data-seed-prebsc-2-s2.binance.org:8545',
   'https://testnet.bscscan.com/',
-  'https://files.maplabs.io/bridge/bsc.png',
+  'https://uploads-ssl.webflow.com/62f34c32e8660c273054c17c/62fb88db22514137f2029167_bnb%20logo.png',
   'BNB'
 );
 
@@ -132,7 +132,7 @@ export const POLYGON_TEST_CHAIN = new Chain(
   'Polygon Testnet',
   'https://rpc-mumbai.maticvigil.com/',
   'https://mumbai.polygonscan.com/',
-  'https://files.mapprotocol.io/bridge/polygon.png',
+  'https://logotyp.us/files/polygon.svg',
   'MATIC'
 );
 
@@ -141,7 +141,7 @@ export const ETH_GOERLI_CHAIN = new Chain(
   'Ethereum Goerli',
   'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
   'https://goerli.etherscan.io/',
-  'https://files.mapprotocol.io/bridge/eth.png',
+  'https://w7.pngwing.com/pngs/268/1013/png-transparent-ethereum-eth-hd-logo.png',
   'ETH'
 );
 
@@ -159,7 +159,7 @@ export const NEAR_TEST_CHAIN = new Chain(
   'Near Testnet',
   'https://rpc.testnet.near.org',
   'https://explorer.testnet.near.org/',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png',
+  'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png',
   'NEAR'
 );
 // TODO: return chain info
