@@ -92,7 +92,7 @@ export const NEAR_MAINNET_WNEAR = new Token(
   24,
   'wNear',
   'Wrapped Near',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+  'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
 );
 
 export const NEAR_MAINNET_USDC = new Token(
@@ -147,7 +147,7 @@ export const MAP_TEST_NEAR = new Token(
   18,
   'Butter Near',
   'bNear',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+  'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
 );
 
 export const MAP_TEST_USDC = new Token(
@@ -227,7 +227,7 @@ export const BSC_TEST_NEAR = new Token(
   18,
   'Near',
   'Near',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+  'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
 );
 
 export const BSC_TEST_MOST = new Token(
@@ -347,7 +347,7 @@ export const NEAR_TEST_WNEAR = new Token(
   24,
   'wNear',
   'Wrapped Near',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+  'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
 );
 
 /** eth priv **/
@@ -383,5 +383,5 @@ export const ETH_PRIV_NEAR = new Token(
   18,
   'bNear',
   'Wrapped Near Token',
-  'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+  'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
 );

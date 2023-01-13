@@ -97,7 +97,7 @@ export const POLYGON_MAINNET_CHAIN = new Chain(
   'Polygon Mainnet',
   'https://polygon-rpc.com/',
   'https://polygonscan.com/',
-  'https://logotyp.us/files/polygon.svg',
+  'https://cryptologos.cc/logos/polygon-matic-logo.png',
   'MATIC'
 );
 
@@ -106,7 +106,7 @@ export const NEAR_MAINNET_CHAIN = new Chain(
   'Near Mainnet',
   'https://rpc.mainnet.near.org',
   'https://explorer.near.org/',
-  'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png',
   'NEAR'
 );
 
@@ -132,7 +132,7 @@ export const POLYGON_TEST_CHAIN = new Chain(
   'Polygon Testnet',
   'https://rpc-mumbai.maticvigil.com/',
   'https://mumbai.polygonscan.com/',
-  'https://logotyp.us/files/polygon.svg',
+  'https://cryptologos.cc/logos/polygon-matic-logo.png',
   'MATIC'
 );
 
@@ -141,7 +141,7 @@ export const ETH_GOERLI_CHAIN = new Chain(
   'Ethereum Goerli',
   'https://goerli.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
   'https://goerli.etherscan.io/',
-  'https://w7.pngwing.com/pngs/268/1013/png-transparent-ethereum-eth-hd-logo.png',
+  'https://d33wubrfki0l68.cloudfront.net/3b8b93913fd51cacac56256a98ec42612c9c262a/b1261/static/a183661dd70e0e5c70689a0ec95ef0ba/13c43/eth-diamond-purple.png',
   'ETH'
 );
 
@@ -159,7 +159,7 @@ export const NEAR_TEST_CHAIN = new Chain(
   'Near Testnet',
   'https://rpc.testnet.near.org',
   'https://explorer.testnet.near.org/',
-  'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png',
+  'https://cryptologos.cc/logos/near-protocol-near-logo.png',
   'NEAR'
 );
 // TODO: return chain info
