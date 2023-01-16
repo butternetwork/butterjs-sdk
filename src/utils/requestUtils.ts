@@ -265,6 +265,7 @@ export function assembleNearSwapDataFromRoute(
   let swapParamArr: any[] = [];
 
   const targetRoute: ButterSwapRoute[] = routes.targetChain;
+  console.log('targetRoute', targetRoute);
   if (
     targetRoute === undefined ||
     targetRoute.length === 0 ||
@@ -272,7 +273,7 @@ export function assembleNearSwapDataFromRoute(
     targetRoute[0]!.path.length === 0
   ) {
     swapData.push([]);
-    swapData.push(targetChainTokenOut.address);
+    swapData.push(asciiToHex(targetChainTokenOut.address, false));
     swapData.push(mapTargetTokenAddress);
     return abi.encode(swapDataAbi, swapData);
   }
