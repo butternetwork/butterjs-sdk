@@ -121,7 +121,7 @@ export const MAP_TEST_CHAIN = new Chain(
 export const BSC_TEST_CHAIN = new Chain(
   ChainId.BSC_TEST,
   'BNB Chain Testnet',
-  'https://data-seed-prebsc-2-s2.binance.org:8545',
+  'https://rpc.ankr.com/bsc_testnet_chapel/9a12629301614050e76136dcaf9627f5ef215f86fb1185d908f9d232b8530ef7',
   'https://testnet.bscscan.com/',
   'https://uploads-ssl.webflow.com/62f34c32e8660c273054c17c/62fb88db22514137f2029167_bnb%20logo.png',
   'BNB'

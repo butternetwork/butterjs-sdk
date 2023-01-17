@@ -80,16 +80,16 @@ import {
   provider,
 } from './config';
 import { ButterSmartRouter } from '../../src/core/router/ButterSmartRouter';
+import { validateAndParseAddressByChainId } from '../../src/utils';
 
 async function demo() {
   console.log('start demo');
 
   const fromAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
   const toAddress = 'xyli.testnet';
-  const fromToken = ETH_GOERLI_USDC;
+  const fromToken = BSC_TEST_NATIVE;
   const toToken = NEAR_TEST_USDC;
-  const inputAmount = '2';
-
+  const inputAmount = '0.01';
   let signer;
   const fromChainId = fromToken.chainId;
   const toChainId = toToken.chainId;
