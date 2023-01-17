@@ -265,7 +265,6 @@ export function assembleNearSwapDataFromRoute(
   let swapParamArr: any[] = [];
 
   const targetRoute: ButterSwapRoute[] = routes.targetChain;
-  console.log('targetRoute', targetRoute);
   if (
     targetRoute === undefined ||
     targetRoute.length === 0 ||

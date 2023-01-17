@@ -134,9 +134,14 @@ export async function getSwapFee(
   const routes = assembleCrossChainRouteFromJson(routeStr, DEFAULT_SLIPPAGE);
   const srcRoute = routes.srcChain;
 
-  if (srcRoute.length === 0 || srcRoute[0]!.path.length === 0) {
+  if (
+    srcRoute === undefined ||
+    srcRoute.length === 0 ||
+    srcRoute[0]!.path.length === 0
+  ) {
     return await getBridgeFee(srcToken, targetChain, amount, mapRpcProvider);
   }
+
   let totalAmountOut: string = '0';
   for (let route of routes.mapChain) {
     totalAmountOut = BigNumber.from(totalAmountOut)

@@ -53,30 +53,32 @@ export function getRouterIndexByChainIdAndDexName(
 export function assembleBridgeRoute(routeStr: string): string {
   let route: any = JSON.parse(routeStr);
 
-  const srcChainLastRoute = route.srcChain[route.srcChain.length - 1];
-  let srcChainTokenOut = srcChainLastRoute.tokenOut;
-
-  const targetChainFirstRoute = route.targetChain[0];
-  let targetChainTokenIn = targetChainFirstRoute.tokenIn;
-
   const mapChainFirstRoute = route.mapChain[route.mapChain.length - 1];
   const mapChainLastRoute = route.mapChain[0];
 
   const mapChainTokenIn = mapChainFirstRoute.tokenIn;
   const mapChainTokenOut = mapChainLastRoute.tokenOut;
+
   let bridgeInfo: any = {};
+  if (route.srcChain != undefined) {
+    const srcChainLastRoute = route.srcChain[route.srcChain.length - 1];
+    let srcChainTokenOut = srcChainLastRoute.tokenOut;
+    bridgeInfo.bridgeIn = {
+      tokenIn: srcChainTokenOut,
+      tokenOut: mapChainTokenIn,
+      amount: srcChainLastRoute.amountOut,
+    };
+  }
 
-  bridgeInfo.bridgeIn = {
-    tokenIn: srcChainTokenOut,
-    tokenOut: mapChainTokenIn,
-    amount: srcChainLastRoute.amountOut,
-  };
+  if (route.targetChain != undefined) {
+    const targetChainFirstRoute = route.targetChain[0];
+    let targetChainTokenIn = targetChainFirstRoute.tokenIn;
 
-  bridgeInfo.bridgeOut = {
-    tokenIn: mapChainTokenOut,
-    tokenOut: targetChainTokenIn,
-    amount: targetChainFirstRoute.amountIn,
-  };
-
+    bridgeInfo.bridgeOut = {
+      tokenIn: mapChainTokenOut,
+      tokenOut: targetChainTokenIn,
+      amount: targetChainFirstRoute.amountIn,
+    };
+  }
   return JSON.stringify(bridgeInfo);
 }

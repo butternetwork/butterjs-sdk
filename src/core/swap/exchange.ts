@@ -99,6 +99,7 @@ export class ButterSwap {
     }
     // check if source chain needs to do agg-swap
     if (
+      route.srcChain != undefined &&
       route.srcChain.length != 0 &&
       route.srcChain[0]!.path.length != 0 &&
       !IS_NEAR(fromChainId)
@@ -228,6 +229,7 @@ export class ButterSwap {
 
     // check if source chain needs to do agg-swap
     if (
+      route.srcChain != undefined &&
       route.srcChain.length != 0 &&
       route.srcChain[0]!.path.length != 0 &&
       !IS_NEAR(fromChainId)

@@ -262,6 +262,7 @@ export class RelayOmnichainService implements IMapOmnichainService {
     let estimatedGas;
     if (this.contract instanceof EthersContract) {
       const gas = await this.contract.estimateGas.transferOutNative!(
+        fromAddress,
         toAddress,
         toChainId,
         {
@@ -295,7 +296,8 @@ export class RelayOmnichainService implements IMapOmnichainService {
         tokenAddress,
         toAddress,
         amount,
-        toChainId
+        toChainId,
+        swapData
       );
       estimatedGas = gas.toString();
     } else {
@@ -321,6 +323,7 @@ export class RelayOmnichainService implements IMapOmnichainService {
         fromAddress,
         toAddress,
         toChainId,
+        swapData,
         {
           value: amount,
         }

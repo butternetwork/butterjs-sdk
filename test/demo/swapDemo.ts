@@ -81,15 +81,16 @@ import {
 } from './config';
 import { ButterSmartRouter } from '../../src/core/router/ButterSmartRouter';
 import { validateAndParseAddressByChainId } from '../../src/utils';
+import { assembleBridgeRoute } from '../../src/utils/routeUtil';
 
 async function demo() {
   console.log('start demo');
 
   const fromAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
-  const toAddress = 'xyli.testnet';
-  const fromToken = BSC_TEST_NATIVE;
-  const toToken = NEAR_TEST_USDC;
-  const inputAmount = '0.01';
+  const toAddress = '0x9f477490Aac940cE48249D8C455D8f6AE6Dc29c0';
+  const fromToken = MAP_TEST_USDC;
+  const toToken = BSC_TEST_NATIVE;
+  const inputAmount = '1';
   let signer;
   const fromChainId = fromToken.chainId;
   const toChainId = toToken.chainId;
@@ -119,6 +120,7 @@ async function demo() {
   );
   console.log('routeResponse', routeResponse);
   const routeStr = JSON.stringify(routeResponse.data);
+  console.log('assemble bridge route', assembleBridgeRoute(routeStr));
 
   console.log(
     'swap fee',
