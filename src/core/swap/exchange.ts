@@ -280,6 +280,14 @@ export class ButterSwap {
         swapData
       );
     } else {
+      console.log({
+        fromAddress,
+        fromTokenAddress: fromToken.address,
+        amountIn,
+        toAddress,
+        toChainId: toChainId.toString(),
+        swapData
+      }, 'butter sdk gasEstimateSwapOutToken params')
       gas = await mos.gasEstimateSwapOutToken(
         fromAddress,
         fromToken.address,
