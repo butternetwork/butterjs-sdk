@@ -269,14 +269,9 @@ export class NearOmnichainService implements IMapOmnichainService {
       const near: Near = await connect(this.provider);
       account = await near.account(this.provider.fromAccount);
     } else {
-      // mosAccountId = this.provider.getAccountId().endsWith('testnet')
-      //   ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-      //   : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
-      // account = this.provider.account();
-      mosAccountId =
-        this.provider._networkId === 'testnet'
-          ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-          : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
+      mosAccountId = this.provider._networkId == 'testnet'
+        ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+        : MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_MAINNET];
       account = this.provider.account();
     }
     try {

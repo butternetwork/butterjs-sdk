@@ -302,7 +302,7 @@ export class RelayOmnichainService implements IMapOmnichainService {
       estimatedGas = gas.toString();
     } else {
       const gas = await this.contract.methods
-        .swapOutToken(fromAddress, tokenAddress, toAddress, amount, toChainId, swapData)
+        .swapOutToken(fromAddress, tokenAddress, toAddress, amount, toChainId,swapData)
         .estimateGas({ from: fromAddress });
       estimatedGas = gas.toString();
     }
