@@ -1,5 +1,3 @@
-// import Decimals from 'decimal.js';
-import {Token} from "./Token";
 import {Currency} from "./Currency";
 
 /**
