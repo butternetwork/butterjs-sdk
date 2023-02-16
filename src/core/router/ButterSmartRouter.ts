@@ -6,8 +6,8 @@ import {
 } from '../../constants/constants';
 import { BaseCurrency } from '../../entities';
 import { RouteResponse } from '../../types/responseTypes';
-import { IS_MAINNET } from '../../utils/chainUtil';
 import { assembleBridgeRoute } from '../../utils/routeUtil';
+import {IS_MAINNET} from "../../constants";
 export class ButterSmartRouter {
   async getBestRoute(
     fromToken: BaseCurrency,

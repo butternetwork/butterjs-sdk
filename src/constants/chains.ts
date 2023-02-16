@@ -411,70 +411,70 @@ export const MAP_NETWORK_NAME_TO_ID = (network: string): ChainId => {
 //   ),
 // };
 
-export const IS_MAP = (id: string): boolean => {
-  switch (id) {
-    case ChainId.MAP_MAINNET:
-    case ChainId.MAP_TEST:
-      return true;
-    default:
-      return false;
-  }
-};
-
-export const IS_NEAR = (id: string): boolean => {
-  switch (id) {
-    case '1':
-    case '3':
-    case '4':
-    case '5':
-    case '42':
-    case '10':
-    case '69':
-    case '42161':
-    case '421611':
-    case '137':
-    case ChainId.MAP_TEST:
-    case ChainId.ETH_GOERLI:
-    case ChainId.ETH_PRIV:
-    case ChainId.BSC_TEST:
-    case ChainId.POLYGON_TEST:
-    case ChainId.MAP_MAINNET:
-    case ChainId.BSC_MAINNET:
-    case ChainId.POLYGON_MAINNET:
-      return false;
-    case ChainId.NEAR_TESTNET:
-    case ChainId.NEAR_MAINNET:
-      return true;
-    default:
-      throw new Error(`IS_NEAR: Unsupported chain id: ${id}`);
-  }
-};
-
-export const IS_EVM = (id: string): boolean => {
-  switch (id) {
-    case '1':
-    case '3':
-    case '4':
-    case '5':
-    case '42':
-    case '10':
-    case '69':
-    case '42161':
-    case '421611':
-    case ChainId.POLYGON_MAINNET:
-    case ChainId.BSC_MAINNET:
-    case ChainId.MAP_MAINNET:
-
-    case ChainId.BSC_TEST:
-    case ChainId.POLYGON_TEST:
-    case ChainId.MAP_TEST:
-    case ChainId.ETH_GOERLI:
-    case ChainId.ETH_PRIV:
-      return true;
-    case ChainId.NEAR_TESTNET:
-    case ChainId.NEAR_MAINNET:
-      return false;
-    default:
-      throw new Error(`IS_EVM: unknown chain id: ${id}`);
-  }
-};
+// export const IS_MAP = (id: string): boolean => {
+//   switch (id) {
+//     case ChainId.MAP_MAINNET:
+//     case ChainId.MAP_TEST:
+//       return true;
+//     default:
+//       return false;
+//   }
+// };
+//
+// export const IS_NEAR = (id: string): boolean => {
+//   switch (id) {
+//     case '1':
+//     case '3':
+//     case '4':
+//     case '5':
+//     case '42':
+//     case '10':
+//     case '69':
+//     case '42161':
+//     case '421611':
+//     case '137':
+//     case ChainId.MAP_TEST:
+//     case ChainId.ETH_GOERLI:
+//     case ChainId.ETH_PRIV:
+//     case ChainId.BSC_TEST:
+//     case ChainId.POLYGON_TEST:
+//     case ChainId.MAP_MAINNET:
+//     case ChainId.BSC_MAINNET:
+//     case ChainId.POLYGON_MAINNET:
+//       return false;
+//     case ChainId.NEAR_TESTNET:
+//     case ChainId.NEAR_MAINNET:
+//       return true;
+//     default:
+//       throw new Error(`IS_NEAR: Unsupported chain id: ${id}`);
+//   }
+// };
+//
+// export const IS_EVM = (id: string): boolean => {
+//   switch (id) {
+//     case '1':
+//     case '3':
+//     case '4':
+//     case '5':
+//     case '42':
+//     case '10':
+//     case '69':
+//     case '42161':
+//     case '421611':
+//     case ChainId.POLYGON_MAINNET:
+//     case ChainId.BSC_MAINNET:
+//     case ChainId.MAP_MAINNET:
+//
+//     case ChainId.BSC_TEST:
+//     case ChainId.POLYGON_TEST:
+//     case ChainId.MAP_TEST:
+//     case ChainId.ETH_GOERLI:
+//     case ChainId.ETH_PRIV:
+//       return true;
+//     case ChainId.NEAR_TESTNET:
+//     case ChainId.NEAR_MAINNET:
+//       return false;
+//     default:
+//       throw new Error(`IS_EVM: unknown chain id: ${id}`);
+//   }
+// };

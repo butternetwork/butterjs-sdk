@@ -1,22 +1,6 @@
-import { BaseCurrency } from '../entities';
 import {
-  BSC_MAINNET_USDC,
-  BSC_TEST_BMOS,
-  BSC_TEST_NATIVE,
-  BSC_TEST_USDC,
-  ChainId,
-  ETH_GOERLI_NATIVE,
-  ETH_GOERLI_USDC,
-  MAP_TEST_USDC,
-  NEAR_MAINNET_USDC,
-  NEAR_TEST_NATIVE,
-  NEAR_TEST_USDC,
-  POLYGON_MAINNET_USDC,
-  POLYGON_TEST_BMOS,
-  POLYGON_TEST_NATIVE,
-  POLYGON_TEST_USDC,
+  ChainId
 } from '../constants';
-import { ButterCrossChainRoute } from '../types';
 
 export const ID_TO_ROUTER_MAP = (id: string): Map<string, number> => {
   switch (id) {

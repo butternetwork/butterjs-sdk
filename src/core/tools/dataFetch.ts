@@ -5,9 +5,8 @@ import {
   ID_TO_DEFAULT_RPC_URL,
   IS_MAP,
   IS_NEAR,
-  MOS_CONTRACT_ADDRESS_SET,
-  TOKEN_REGISTER_ADDRESS_SET,
   ZERO_ADDRESS,
+  MOS_CONTRACT, TOKEN_REGISTER
 } from '../../constants';
 import {
   ButterFee,
@@ -27,7 +26,7 @@ import MOS_RELAY_METADATA from '../../abis/MAPOmnichainServiceRelay.json';
 import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
 import { connect } from 'near-api-js';
 import { CodeResult } from 'near-api-js/lib/providers/provider';
-import { GET_MCS_TOKENS } from '../../constants/near_method_names';
+import { GET_MCS_TOKENS } from '../../constants/methods';
 import {
   batchGetRelayChainToken,
   batchGetToChainToken,
@@ -59,7 +58,7 @@ export async function getBridgeFee(
     mapRpcProvider.url ? mapRpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
   );
   const tokenRegister = new TokenRegister(
-    TOKEN_REGISTER_ADDRESS_SET[chainId]!,
+    TOKEN_REGISTER(chainId)!,
     mapProvider
   );
   let feeAmount = '';
@@ -157,7 +156,7 @@ export async function getSwapFee(
     mapRpcProvider.url ? mapRpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
   );
   const tokenRegister = new TokenRegister(
-    TOKEN_REGISTER_ADDRESS_SET[chainId]!,
+      TOKEN_REGISTER(chainId)!,
     mapProvider
   );
   let feeAmount = '';
@@ -248,7 +247,8 @@ export async function getVaultBalance(
   );
 
   const tokenRegister = new TokenRegister(
-    TOKEN_REGISTER_ADDRESS_SET[mapChainId]!,
+      TOKEN_REGISTER(mapChainId)!,
+    // TOKEN_REGISTER_ADDRESS_SET[mapChainId]!,
     provider
   );
 
@@ -339,7 +339,8 @@ export async function getTargetTokenAddress(
     rpcProvider.url ? rpcProvider.url : ID_TO_DEFAULT_RPC_URL(mapChainId)
   );
   const tokenRegister = new TokenRegister(
-    TOKEN_REGISTER_ADDRESS_SET[mapChainId]!,
+      TOKEN_REGISTER(mapChainId)!,
+    // TOKEN_REGISTER_ADDRESS_SET[mapChainId]!,
     provider
   );
   let mapTokenAddress = srcToken.address;
@@ -402,7 +403,8 @@ export async function getTokenCandidates(
 
   const tokenRegisterContract = new web3.eth.Contract(
     TokenRegisterMetadata.abi as any,
-    TOKEN_REGISTER_ADDRESS_SET[provider.chainId.toString()]
+      TOKEN_REGISTER(provider.chainId.toString())!,
+    // TOKEN_REGISTER_ADDRESS_SET[provider.chainId.toString()]
   );
 
   let tokenArr = ID_TO_SUPPORTED_TOKEN(fromChainId).map(
@@ -458,12 +460,14 @@ export async function isTokenMintable(
   const rpcProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
   if (IS_MAP(chainId)) {
     const tokenRegister = new TokenRegister(
-      TOKEN_REGISTER_ADDRESS_SET[chainId]!,
+        TOKEN_REGISTER(chainId),
+      // TOKEN_REGISTER_ADDRESS_SET[chainId]!,
       rpcProvider
     );
     return tokenRegister.checkMintable(tokenAddress);
   } else if (IS_NEAR(chainId)) {
-    const accountId = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
+    // const accountId = MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)];
+    const accountId = MOS_CONTRACT(chainId);
     const connectionConfig = {
       networkId: ID_TO_NEAR_NETWORK(chainId),
       nodeUrl: ID_TO_DEFAULT_RPC_URL(chainId),
@@ -488,7 +492,8 @@ export async function isTokenMintable(
     return false;
   } else {
     const mos = new EVMOmnichainService(
-      MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
+      // MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(chainId)],
+        MOS_CONTRACT(chainId),
       MOS_EVM_METADATA.abi,
       rpcProvider
     );
@@ -506,7 +511,8 @@ export async function getDistributeRate(
   }
 
   const mos = new ethers.Contract(
-    MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(mapChainId)],
+    // MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(mapChainId)],
+      MOS_CONTRACT(mapChainId),
     MOS_RELAY_METADATA.abi,
     rpcProvider
   );

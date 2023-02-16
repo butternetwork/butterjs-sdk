@@ -4,7 +4,6 @@ import {
 } from '../types/responseTypes';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 import { ButterProviderType, ButterReceiptType } from '../types/paramTypes';
-import { NearNetworkConfig } from '../types';
 import { Signer } from 'ethers';
 import { Provider } from '@ethersproject/abstract-provider';
 

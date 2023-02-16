@@ -3,10 +3,7 @@ import {
   ID_TO_CHAIN_ID,
   IS_EVM,
   IS_MAP,
-  IS_NEAR,
-  MOS_CONTRACT_ADDRESS_SET,
-  MAP_NETWORK_NAME_TO_ID,
-  TOKEN_REGISTER_ADDRESS_SET,
+  IS_NEAR, MAP_NETWORK_NAME_TO_ID, MOS_CONTRACT, TOKEN_REGISTER,
 } from '../../constants';
 import { EVMOmnichainService } from '../../libs/mos/EVMOmnichainService';
 import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
@@ -65,7 +62,8 @@ export async function addTokenPair({
   /** case 1: source chain is non-MAP evm chain*/
   if (IS_EVM(srcToken.chainId) && !IS_MAP(srcToken.chainId)) {
     const mosContractAddress: string =
-      MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(srcToken.chainId)];
+      // MOS_CONTRACT_ADDRESS_SET[ID_TO_CHAIN_ID(srcToken.chainId)];
+    MOS_CONTRACT(srcToken.chainId);
 
     const mosService = new EVMOmnichainService(
       mosContractAddress,
@@ -104,7 +102,8 @@ export async function addTokenPair({
 
   // create contract instance
   const mosContractAddress: string =
-    MOS_CONTRACT_ADDRESS_SET[MAP_NETWORK_NAME_TO_ID(mapNetwork)];
+    // MOS_CONTRACT_ADDRESS_SET[MAP_NETWORK_NAME_TO_ID(mapNetwork)];
+  MOS_CONTRACT(mapNetwork);
   const mapMOS = new RelayOmnichainService(
     mosContractAddress,
     MOS_MAP_METADATA.abi,
@@ -112,7 +111,8 @@ export async function addTokenPair({
   );
 
   const tokenRegister = new TokenRegister(
-    TOKEN_REGISTER_ADDRESS_SET[MAP_NETWORK_NAME_TO_ID(mapNetwork)]!,
+      TOKEN_REGISTER(MAP_NETWORK_NAME_TO_ID(mapNetwork))!,
+    // TOKEN_REGISTER_ADDRESS_SET[MAP_NETWORK_NAME_TO_ID(mapNetwork)]!,
     mapSigner
   );
 

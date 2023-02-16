@@ -1,34 +1,23 @@
-import { BigNumber, ethers } from 'ethers';
-import { InMemoryKeyStore } from 'near-api-js/lib/key_stores';
-import { connect, KeyPair, keyStores, Near, utils } from 'near-api-js';
-import {
-  AddTokenPairParam,
-  BridgeRequestParam,
-  NearNetworkConfig,
-} from '../../src/types';
-import { ButterBridge } from '../../src';
+import {BigNumber, ethers} from 'ethers';
+import {InMemoryKeyStore} from 'near-api-js/lib/key_stores';
+import {connect, KeyPair, keyStores, Near, utils} from 'near-api-js';
+import {AddTokenPairParam, BridgeRequestParam, NearNetworkConfig,} from '../../src/types';
+import {ButterBridge, CHAIN_ID, MOS_CONTRACT} from '../../src';
 import {
   BSC_TEST_CHAIN,
-  BSC_TEST_NATIVE,
   BSC_TEST_NEAR,
   ChainId,
   ETH_PRIV_LMAP,
   ETH_PRIV_NATIVE,
-  ETH_PRIV_NEAR,
   ETH_PRIV_WETH,
   MAP_TEST_METH,
   MAP_TEST_NATIVE,
   MAP_TEST_NEAR,
-  MOS_CONTRACT_ADDRESS_SET,
   NEAR_TEST_NATIVE,
 } from '../../src/constants';
-import BN from 'bn.js';
-import { getBridgeFee, getVaultBalance } from '../../src/core/tools/dataFetch';
-import { addTokenPair } from '../../src/core/tools/tokenManagement';
-import { hexToDecimalArray } from '../../src/utils';
-import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
-import { TRANSFER_OUT_TOKEN } from '../../src/constants/near_method_names';
-import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
+import {addTokenPair} from '../../src/core/tools/tokenManagement';
+import {ChangeFunctionCallOptions} from 'near-api-js/lib/account';
+import {FinalExecutionOutcome} from 'near-api-js/lib/providers';
 
 const mapProvider = new ethers.providers.JsonRpcProvider(
   'https://testnet-rpc.maplabs.io',
@@ -192,9 +181,9 @@ async function nearToEth() {}
 
 async function addChainTypeToNear(chainId: number, chainType: string) {
   const mosAccountId: string =
-    nearConfig.networkId === 'testnet'
-      ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
-      : '';
+    nearConfig.networkId === 'testnet'?MOS_CONTRACT(CHAIN_ID.NEAR_TEST):''
+      // ? MOS_CONTRACT_ADDRESS_SET[ChainId.NEAR_TESTNET]
+      // : '';
 
   // prep near connection
   const near: Near = await connect(nearConfig);

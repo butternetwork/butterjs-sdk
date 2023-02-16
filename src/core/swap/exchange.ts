@@ -1,5 +1,5 @@
 import {
-  BUTTER_ROUTER_ADDRESS_SET,
+  BUTTER_ROUTER,
   ChainId,
   ID_TO_CHAIN_ID,
   IS_EVM,
@@ -113,7 +113,8 @@ export class ButterSwap {
           toAddress
         );
       const butterRouter: ButterRouter = new ButterRouter(
-        BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+          BUTTER_ROUTER(fromChainId),
+        // BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID()],
         BUTTER_ROUTER_METADATA.abi,
         options.signerOrProvider!
       );
@@ -243,7 +244,8 @@ export class ButterSwap {
           toAddress
         );
       const butterRouter: ButterRouter = new ButterRouter(
-        BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+          BUTTER_ROUTER(fromChainId),
+          // BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
         BUTTER_ROUTER_METADATA.abi,
         options.signerOrProvider!
       );

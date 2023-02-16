@@ -104,6 +104,8 @@ export const NEAR_MAINNET_USDC = new Token(
   'https://files.maplabs.io/bridge/usdc.png'
 );
 
+
+//----------------------------------------------------------------------------------------------
 /************************* testnet tokens *************************/
 /** map test **/
 export const MAP_TEST_NATIVE = new EVMNativeCoin(
