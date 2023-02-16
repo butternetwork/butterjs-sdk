@@ -6,6 +6,15 @@ export class Token  extends Currency{
     readonly isNative: boolean=false;
     readonly isToken: boolean=true;
 
+    constructor(   chainId: string,
+                   decimals: number,
+                   address: string,
+                   symbol?: string,
+                   name?: string,
+                   logo?: string) {
+        super(chainId, decimals, address, symbol, name, logo);
+    }
+
     static from(data:any):Currency{
         if (!data){
             throw new Error('No Data find for Token!')
