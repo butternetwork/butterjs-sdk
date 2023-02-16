@@ -13,10 +13,10 @@ export const MOS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.NEAR_MAINNET]: 'mos.mfac.butternetwork.near',
 
   [ChainId.ETH_PRIV]: '0x43130059C655314d7ba7eDfb8299d26FbDE726F1',
-  [ChainId.ETH_GOERLI]: '0xaE194F5d43ccab94C6dEA994Ff19001708d0e2eb',
-  [ChainId.BSC_TEST]: '0x8A6aaDf40fB100f4a27c9ADA1B0F0d90eC91F35C',
-  [ChainId.MAP_TEST]: '0x9D8ECF3aa8a93be0bb026fAd7529d9Be8F5849B9',
-  [ChainId.POLYGON_TEST]: '0xA179d181cF855258Bc26a8623E1CE7a2e3fD3606',
+  [ChainId.ETH_GOERLI]: '0x2e2D0FBF6c69B21a56d49ca3A31fEB8Df923f2FB',
+  [ChainId.BSC_TEST]: '0x6858B990A504D7Fc41D0BBB5178c4675518BDA27',
+  [ChainId.MAP_TEST]: '0xb4fCfdD492202c91A7eBaf887642F437a07A2664',
+  [ChainId.POLYGON_TEST]: '0x6858B990A504D7Fc41D0BBB5178c4675518BDA27',
   [ChainId.NEAR_TESTNET]: 'mos.map007.testnet',
 };
 
@@ -24,7 +24,7 @@ export const MOS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
  * TokenRegister Address: https://github.com/butternetwork/butter-mos-contracts/blob/master/evm/contracts/TokenRegister.sol
  */
 export const TOKEN_REGISTER_ADDRESS_SET: { [chainId: string]: string } = {
-  [ChainId.MAP_TEST]: '0x648349aDd3790813787746A7A569a87216944003',
+  [ChainId.MAP_TEST]: '0x636fCd559cc620dd7233aFD3c3556f63Bd39e721',
   [ChainId.MAP_MAINNET]: '0xff44790d336d3C004F2Dac7e401E4EA5680529dD',
 };
 
@@ -35,10 +35,10 @@ export const BUTTER_ROUTER_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.NEAR_MAINNET]: '',
 
   [ChainId.ETH_PRIV]: '',
-  [ChainId.ETH_GOERLI]: '0x46eB9b3f26519c42cb08158d62463d0bA2997f5F',
-  [ChainId.BSC_TEST]: '0x90A19319810f5A00176D4E588062362119440e71',
+  [ChainId.ETH_GOERLI]: '0x8A75D36796f823d21284C79A5Ab80ACaA90BB77a',
+  [ChainId.BSC_TEST]: '0x9920f3d762C13b1AbbC8c3D8425C61B0EAe9213b',
   [ChainId.MAP_TEST]: '',
-  [ChainId.POLYGON_TEST]: '0x866b852BF2e7CD1C348aF9Eb4c32684012549796',
+  [ChainId.POLYGON_TEST]: '0x409425E311eda1DbfBe6480dC230C40bf1eA276D',
   [ChainId.NEAR_TESTNET]: '',
 };
 

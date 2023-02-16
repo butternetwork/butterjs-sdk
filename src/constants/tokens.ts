@@ -152,7 +152,7 @@ export const MAP_TEST_NEAR = new Token(
 
 export const MAP_TEST_USDC = new Token(
   ChainId.MAP_TEST,
-  '0x424D3bcdC96F42aC919F276D7D4f6C94f24e0703',
+  '0xd28c1187168dA9df1B7f6cb8495e659322D27c9F',
   18,
   'USDC',
   'USDC Circle',
@@ -187,7 +187,7 @@ export const ETH_GOERLI_WETH = new Token(
 
 export const ETH_GOERLI_USDC = new Token(
   ChainId.ETH_GOERLI,
-  '0x86CBE739888bFbC0bcA6e2D6106cfC5B3B1F69A5',
+  '0xE66D4a30d177369d134e0E49a9096D357C0e8383',
   18,
   'bUSDC',
   'Butter USDC',
@@ -205,7 +205,7 @@ export const BSC_TEST_NATIVE = new EVMNativeCoin(
 
 export const BSC_TEST_USDC = new Token(
   ChainId.BSC_TEST,
-  '0x3F1E91BFC874625f4ee6EF6D8668E79291882373',
+  '0xd8f69e1F100Db655d4503545C3BB308CAab4a3B6',
   18,
   'bUSDC',
   'Butter USDC',
@@ -250,7 +250,7 @@ export const BSC_TEST_MAP = new Token(
 
 export const BSC_TEST_WBNB = new Token(
   ChainId.BSC_TEST,
-  '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd',
+  '0xae13d989dac2f0debff460ac112a837c89baa7cd',
   18,
   'BNB',
   'wBNB',
@@ -268,7 +268,7 @@ export const POLYGON_TEST_NATIVE = new EVMNativeCoin(
 
 export const POLYGON_TEST_USDC = new Token(
   ChainId.POLYGON_TEST,
-  '0x1E01CF4503808Fb30F17806035A87cf5A5217727',
+  '0xd8f69e1F100Db655d4503545C3BB308CAab4a3B6',
   18,
   'bUSDC',
   'Butter USDC',
