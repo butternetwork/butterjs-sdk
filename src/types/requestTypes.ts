@@ -1,15 +1,14 @@
 import { Token } from '../entities';
-import { ChainId } from '../constants/chains';
 import { BigNumber, Signer } from 'ethers';
 import { KeyStore } from 'near-api-js/lib/key_stores';
-import { BaseCurrency } from '../entities/BaseCurrency';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
 import { NearProviderType } from './paramTypes';
+import {Currency} from "../beans";
 
 export type BridgeRequestParam = {
   fromAddress: string;
-  fromToken: BaseCurrency;
+  fromToken: Currency;
   fromChainId: string;
   toChainId: string;
   toAddress: string;
@@ -19,9 +18,9 @@ export type BridgeRequestParam = {
 
 export type SwapRequestParam = {
   fromAddress: string;
-  fromToken: BaseCurrency;
+  fromToken: Currency;
   toAddress: string;
-  toToken: BaseCurrency;
+  toToken: Currency;
   amountIn: string; // in minimal uint
   swapRouteStr: string;
   slippage?: number; // in bps
@@ -42,8 +41,8 @@ export interface ButterSwapRoute {
   amountOut: string;
   path: ButterPath[];
   dexName: string;
-  tokenIn: BaseCurrency;
-  tokenOut: BaseCurrency;
+  tokenIn: Currency;
+  tokenOut: Currency;
 }
 
 export interface ButterPath {
@@ -72,8 +71,8 @@ export type BridgeOptions = {
 };
 
 export type AddTokenPairParam = {
-  srcToken: BaseCurrency;
-  targetToken: BaseCurrency;
+  srcToken: Currency;
+  targetToken: Currency;
   feeRate: FeeRate;
   mapNetwork: 'map-devnet' | 'map-testnet' | 'map-mainnet';
   mapSigner: Signer;

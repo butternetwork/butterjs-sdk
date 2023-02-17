@@ -1,7 +1,5 @@
 import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import {
-  ChainId,
-  ID_TO_CHAIN_ID,
   IS_EVM,
   IS_MAP,
   IS_NEAR,

@@ -4,14 +4,14 @@ import {
   BUTTER_SMART_ROUTER_URL,
   BUTTER_SMART_ROUTER_URL_MAINNET,
 } from '../../constants/constants';
-import { BaseCurrency } from '../../entities';
 import { RouteResponse } from '../../types/responseTypes';
 import { assembleBridgeRoute } from '../../utils/routeUtil';
 import {IS_MAINNET} from "../../constants";
+import {Currency} from "../../beans";
 export class ButterSmartRouter {
   async getBestRoute(
-    fromToken: BaseCurrency,
-    toToken: BaseCurrency,
+    fromToken: Currency,
+    toToken: Currency,
     amountIn: string
   ): Promise<RouteResponse> {
     const fromChainId = fromToken.chainId;

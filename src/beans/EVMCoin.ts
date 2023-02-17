@@ -28,4 +28,8 @@ export class EVMCoin extends Currency{
         return other.isNative && other.chainId === this.chainId;
     }
 
+    get copy(): EVMCoin {
+        return new EVMCoin(this.chainId,this.decimals,this.symbol,this.name,this.logo);
+    }
+
 }

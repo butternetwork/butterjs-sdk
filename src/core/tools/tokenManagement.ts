@@ -1,9 +1,8 @@
 import { AddTokenPairParam } from '../../types';
 import {
-  ID_TO_CHAIN_ID,
   IS_EVM,
   IS_MAP,
-  IS_NEAR, MAP_NETWORK_NAME_TO_ID, MOS_CONTRACT, TOKEN_REGISTER,
+  IS_NEAR, MOS_CONTRACT, TO_CHAIN_ID, TOKEN_REGISTER,
 } from '../../constants';
 import { EVMOmnichainService } from '../../libs/mos/EVMOmnichainService';
 import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
@@ -39,11 +38,9 @@ export async function addTokenPair({
   /**
    * argument check
    */
-  if (
-    targetToken.chainId != MAP_NETWORK_NAME_TO_ID(mapNetwork) &&
-    srcToken.chainId != MAP_NETWORK_NAME_TO_ID(mapNetwork) &&
-    mapToken == undefined
-  ) {
+  if (!IS_MAP(targetToken.chainId)
+      && !IS_MAP( srcToken.chainId)
+      && mapToken==null) {
     throw new Error('intermediary map token is not specified');
   }
   if (
@@ -111,13 +108,13 @@ export async function addTokenPair({
   );
 
   const tokenRegister = new TokenRegister(
-      TOKEN_REGISTER(MAP_NETWORK_NAME_TO_ID(mapNetwork))!,
+      TOKEN_REGISTER(TO_CHAIN_ID(mapNetwork))!,
     // TOKEN_REGISTER_ADDRESS_SET[MAP_NETWORK_NAME_TO_ID(mapNetwork)]!,
     mapSigner
   );
 
   /** case 1: target chain is map */
-  if (targetToken.chainId == MAP_NETWORK_NAME_TO_ID(mapNetwork)) {
+  if (targetToken.chainId == TO_CHAIN_ID(mapNetwork)) {
     await tokenRegister.registerToken(
       srcToken.chainId,
       srcToken.address,
@@ -136,7 +133,7 @@ export async function addTokenPair({
       targetToken.chainId,
       targetToken.decimals
     );
-  } else if (srcToken.chainId == MAP_NETWORK_NAME_TO_ID(mapNetwork)) {
+  } else if (srcToken.chainId == TO_CHAIN_ID(mapNetwork)) {
     /** case 2: source chain is map */
     await tokenRegister.registerToken(
       targetToken.chainId,

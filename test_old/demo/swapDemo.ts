@@ -43,7 +43,6 @@ import {
     NEAR_MAINNET_NATIVE,
     NEAR_MAINNET_WNEAR, MOS_CONTRACT, BUTTER_ROUTER,
 } from '../../src/constants';
-import {ID_TO_SUPPORTED_TOKEN} from '../../src/utils/tokenUtil';
 import {
     getBridgeFee,
     getVaultBalance,

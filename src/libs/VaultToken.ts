@@ -2,12 +2,6 @@ import { ButterContractType, ButterProviderType } from '../types/paramTypes';
 import { ethers, Signer } from 'ethers';
 import { Provider } from '@ethersproject/abstract-provider';
 import VaultTokenMetadata from '../abis/VaultToken.json';
-import { ButterTransactionReceipt } from '../types/responseTypes';
-import { getHexAddress } from '../utils';
-import { Eth } from 'web3-eth';
-import { adaptEthReceipt } from '../utils/responseUtil';
-import { BaseCurrency } from '../entities';
-
 export class VaultToken {
   private readonly contract: ButterContractType;
   private readonly provider: ButterProviderType;

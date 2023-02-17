@@ -36,6 +36,7 @@ export abstract class Currency {
      * logo of the token, for display only
      */
     public readonly logo?: string;
+
     /**
      * Constructs an instance of the base class `BaseCurrency`.
      * @param chainId the chain ID on which this currency resides
@@ -76,7 +77,7 @@ export abstract class Currency {
      * Returns whether this currency is functionally equivalent to the other currency
      * @param other the other currency
      */
-    public equals(other: Currency): boolean{
+    public equals(other: Currency): boolean {
         return (
             other.isToken &&
             this.chainId === other.chainId &&
@@ -88,7 +89,11 @@ export abstract class Currency {
      * Return the wrapped version of this currency that can be used with the butter contracts. Currencies must
      * implement this to be used in butter
      */
-    public get wrapped(): Currency{
+    public get wrapped(): Currency {
+        return this
+    }
+
+    public get copy(): Currency {
         return this;
     }
 }

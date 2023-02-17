@@ -16,7 +16,8 @@ export enum CHAIN_ID {
 }
 
 export enum TOKEN_ID {
-    NATIVE = 'native',
+    ALL = 'ALL',
+    NATIVE = 'NATIVE',
     WRAP = 'WRAP',
     USDC = 'USDC',
     METH = 'METH',
@@ -44,364 +45,252 @@ export enum CHAIN_NAME {
 
 }
 
-const TOKEN_PRIV = (tokenId: TOKEN_ID | string): Currency => {
-    if (tokenId === TOKEN_ID.NATIVE) {
-        return new EVMCoin(CHAIN_ID.ETH_PRIV,
-            18,
-            'ETH',
-            'ether',
-            'https://files.maplabs.io/bridge/eth.png')
+const createToken = (chainId: CHAIN_ID | string, decimals: number, address: string, name: string): Currency => {
+
+    if (name === 'lMAP') {
+        return new Token(chainId, decimals, address, 'lMAP', 'Wrapped MAP', 'https://files.maplabs.io/bridge/map.png');
     }
-    if (tokenId === TOKEN_ID.WRAP) {
-        return new Token(CHAIN_ID.ETH_PRIV,
-            18,
-            '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B',
-            'WETH',
-            'Wrapped ETH',
-            'https://files.maplabs.io/bridge/eth.png'
-        )
+    if (name === 'pMAPO') {
+        return new Token(chainId, decimals, address, 'MAPO', 'Matic-Pegged MAPO', 'https://files.maplabs.io/bridge/map.png');
     }
-    if (tokenId === TOKEN_ID.lMAP) {
-        return new Token(CHAIN_ID.ETH_PRIV, 18,
-            '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847',
-            'lMAP',
-            'Wrapped MAP Token',
-            ''
-        )
-    }
-    if (tokenId === TOKEN_ID.NEAR) {
-        return new Token(CHAIN_ID.ETH_PRIV, 18,
-            '0x152fB50d334a66F7fD8559F6Dad057Ac13b3eD44',
-            'bNear',
-            'Wrapped Near Token',
-            'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
-        )
+    if (name === 'nMAPO') {
+        return new Token(chainId, decimals, address, 'MAPO', 'NEAR MAPO', 'https://files.maplabs.io/bridge/map.png');
     }
 
+    if (name === 'bMAPO') {
+        return new Token(chainId, decimals, address, 'MAPO', 'Butter MAPO', 'https://files.maplabs.io/bridge/map.png');
+    }
+    if (name === 'bUSDC') {
+        return new Token(chainId, decimals, address, 'bUSDC', 'Butter USDC', 'https://files.maplabs.io/bridge/usdc.png');
+    }
+    if (name === 'bNEAR') {
+        return new Token(chainId, decimals, address, 'bNEAR', 'Butter Near', 'https://files.maplabs.io/bridge/near1.png');
+    }
+    if (name === 'bMOS') {
+        return new Token(chainId, decimals, address, 'BMOS', 'Butter MOST', 'https://files.maplabs.io/bridge/most1.png');
+    }
+
+
+    if (name === 'mUSDC') {
+        return new Token(chainId, decimals, address, 'mBNB', 'MAP USDC', 'https://files.maplabs.io/bridge/usdc.png');
+    }
+    if (name === 'mBNB') {
+        return new Token(chainId, decimals, address, 'MBNB', 'MAP BNB', 'https://files.maplabs.io/bridge/bnb.png');
+    }
+    if (name === 'mETH') {
+        return new Token(chainId, decimals, address, 'METH', 'MAP ETH', 'https://files.maplabs.io/bridge/eth.png');
+    }
+    if (name === 'MOST') {
+        return new Token(chainId, decimals, address, 'MOST', 'MOST Token', 'https://files.maplabs.io/bridge/most1.png');
+    }
+
+    if (name === 'wETH') {
+        return new Token(chainId, decimals, address, 'wETH', 'Wrapped ETH', 'https://files.maplabs.io/bridge/eth.png');
+    }
+    if (name === 'wMAPO') {
+        return new Token(chainId, decimals, address, 'wMAPO', 'Wrapped MAPO', 'https://files.maplabs.io/bridge/map.png');
+    }
+    if (name === 'wBNB') {
+        return new Token(chainId, decimals, address, 'WBNB', 'Wrapped BNB', 'https://files.maplabs.io/bridge/bnb.png');
+    }
+    if (name === 'wMATIC') {
+        return new Token(chainId, decimals, address, 'WMATIC', 'Wrapped MATIC', 'https://files.maplabs.io/bridge/polygon.png');
+    }
+    if (name === 'wNEAR') {
+        return new Token(chainId, decimals, address, 'wNear', 'Wrapped Near', 'https://files.maplabs.io/bridge/near1.png');
+    }
+
+
+    if (name === 'NEAR') {
+        return new EVMCoin(chainId, decimals, 'Near', 'Near', 'https://files.maplabs.io/bridge/near1.png');
+    }
+    if (name === 'ETH') {
+        return new EVMCoin(chainId, decimals, 'ETH', 'Ethereum', 'https://files.maplabs.io/bridge/eth.png');
+    }
+    if (name === 'MAPO') {
+        return new EVMCoin(chainId, decimals, 'MAPO', 'MAP Protocol', 'https://files.maplabs.io/bridge/map.png');
+    }
+    if (name === 'BNB') {
+        return new EVMCoin(chainId, decimals, 'BNB', 'BNB Token', 'https://files.maplabs.io/bridge/bnb.png');
+    }
+    if (name === 'USDC') {
+        return new EVMCoin(chainId, decimals, 'USDC', 'USD Circle', 'https://files.maplabs.io/bridge/usdc.png');
+    }
+    if (name === 'MATIC') {
+        return new EVMCoin(chainId, decimals, 'MATIC', 'Polygon', 'https://files.maplabs.io/bridge/polygon.png');
+    }
+    throw new Error(`Not Support this Token(${name}) in Chain Id${chainId}`);
+
+}
+
+const TOKENS_PRIV: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: createToken(CHAIN_ID.ETH_PRIV, 18, '', 'ETH'),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.ETH_PRIV, 18, '0xB59B98DF47432371A36A8F83fC7fd8371ec1300B', 'WETH'),
+    [TOKEN_ID.lMAP]: createToken(CHAIN_ID.ETH_PRIV, 18, '0xE1b2b81B66150F9EF5A89dC346a7A8B8df05d847', 'lMAP'),
+    [TOKEN_ID.NEAR]: createToken(CHAIN_ID.ETH_PRIV, 18, '0x152fB50d334a66F7fD8559F6Dad057Ac13b3eD44', 'bNEAR')
+}
+const TOKENS_GOERLI: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: createToken(CHAIN_ID.ETH_GOERLI, 18, '', 'ETH'),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.ETH_GOERLI, 18, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 'WETH'),
+    [TOKEN_ID.USDC]: createToken(CHAIN_ID.ETH_GOERLI, 18, '0xE66D4a30d177369d134e0E49a9096D357C0e8383', 'bUSDC')
+}
+
+const TOKENS_MAP: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: createToken(CHAIN_ID.MAP_MAINNET, 18, '', 'MAPO'),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.MAP_MAINNET, 18, '0x13CB04d4a5Dfb6398Fc5AB005a6c84337256eE23', 'wMAPO'),
+    [TOKEN_ID.USDC]: createToken(CHAIN_ID.MAP_MAINNET, 18, '0x424D3bcdC96F42aC919F276D7D4f6C94f24e0703', 'mUSDC')
+}
+const TOKENS_MAP_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: createToken(CHAIN_ID.MAP_TEST, 18, '', 'MAPO'),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.MAP_TEST, 18, '0x2eD27dF9B4c903aB53666CcA59AFB431F7D15e91', 'wMAPO'),
+    [TOKEN_ID.USDC]: createToken(CHAIN_ID.MAP_TEST, 18, '0xd28c1187168dA9df1B7f6cb8495e659322D27c9F', 'USDC'),
+    [TOKEN_ID.BNB]: createToken(CHAIN_ID.MAP_TEST, 18, '0xc0fAa9255A4099D50C2b356bFbD440B69359cEa3', 'mBNB'),
+    [TOKEN_ID.METH]: createToken(CHAIN_ID.MAP_TEST, 18, '0x41358EFc7d49d19F76E1E3bdD694f3bff9af3b36', 'mETH'),
+    [TOKEN_ID.MOST]: createToken(CHAIN_ID.MAP_TEST, 18, '0xc74bc33a95a62D90672aEFAf4bA784285903cf09', 'MOST'),
+    [TOKEN_ID.NEAR]: createToken(CHAIN_ID.MAP_TEST, 18, '0xf1b33B4aB498e17C82bA903e5256533cBf51e1Fd', 'bNEAR')
+}
+
+const TOKENS_BNB: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: createToken(CHAIN_ID.BNB_MAINNET, 18, '', 'BNB'),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.MAP_MAINNET, 18, '0xae13d989dac2f0debff460ac112a837c89baa7cd', 'wBNB'),
+    [TOKEN_ID.USDC]: createToken(CHAIN_ID.MAP_MAINNET, 18, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 'USDC')
+}
+const TOKENS_BNB_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: createToken(CHAIN_ID.BNB_TEST, 18, '', 'BNB'),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.BNB_TEST, 18, '0xae13d989dac2f0debff460ac112a837c89baa7cd', 'wBNB'),
+    [TOKEN_ID.BMOS]: createToken(CHAIN_ID.BNB_TEST, 18, '0xd8f69e1F100Db655d4503545C3BB308CAab4a3B6', 'USDC'),
+    [TOKEN_ID.BMOS]: createToken(CHAIN_ID.BNB_TEST, 18, '0x593F6F6748dc203DFa636c299EeA6a39C0734EEd', 'bMOS'),
+    [TOKEN_ID.NEAR]: createToken(CHAIN_ID.BNB_TEST, 18, '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c', 'bNEAR'),
+    [TOKEN_ID.MOST]: createToken(CHAIN_ID.BNB_TEST, 18, '0x688f3Ef5f728995a9DcB299DAEC849CA2E49ddE1', 'MOST'),
+    [TOKEN_ID.MAP]: createToken(CHAIN_ID.BNB_TEST, 18, '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273', 'MAPO'),
+}
+
+const TOKENS_POLYGON: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: createToken(CHAIN_ID.POLYGON_MAINNET, 18, '', 'MATIC'),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.POLYGON_MAINNET, 18, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 'WMATIC'),
+}
+const TOKENS_POLYGON_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: createToken(CHAIN_ID.POLYGON_TEST, 18, '', 'MATIC'),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.POLYGON_TEST, 18, '0xae13d989dac2f0debff460ac112a837c89baa7cd', 'WMATIC'),
+    [TOKEN_ID.BMOS]: createToken(CHAIN_ID.POLYGON_TEST, 18, '0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa', 'bMOS'),
+    [TOKEN_ID.MOST]: createToken(CHAIN_ID.POLYGON_TEST, 18, '0x6d4570191C7B5835226a0bE18734A8E922ff353B', 'MOST'),
+    [TOKEN_ID.MAP]: createToken(CHAIN_ID.POLYGON_TEST, 18, '0xE6687528C7b85115a038D806339dd7E7b869B87C', 'bMAP'),
+}
+
+const TOKENS_NEAR: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: new NEARCoin(CHAIN_ID.NEAR_MAINNET),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.NEAR_MAINNET, 24, 'wrap.near', 'WNEAR'),
+    [TOKEN_ID.USDC]: createToken(CHAIN_ID.NEAR_MAINNET, 6, 'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near', 'USDC'),
+}
+const TOKENS_NEAR_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
+    [TOKEN_ID.NATIVE]: new NEARCoin(CHAIN_ID.NEAR_TEST),
+    [TOKEN_ID.WRAP]: createToken(CHAIN_ID.NEAR_TEST, 24, 'wrap.testnet', 'WNEAR'),
+    [TOKEN_ID.USDC]: createToken(CHAIN_ID.NEAR_TEST, 6, 'usdc.map007.testnet', 'USDC'),
+    [TOKEN_ID.MOST]: createToken(CHAIN_ID.NEAR_TEST, 24, 'most.mos2.mfac.maplabs.testnet', 'MOST'),
+    [TOKEN_ID.MAP]: createToken(CHAIN_ID.NEAR_TEST, 24, 'mapo.maplabs.testnet', 'MAPO'),
+}
+
+const TOKEN_PRIV = (tokenId: TOKEN_ID | string): Currency => {
+    let current: any = TOKENS_PRIV[tokenId];
+    if (current) {
+        return ((current as Currency)).copy;
+    }
     throw new Error(`Not Support this Token(${tokenId}) in ETH Priv Chain`)
 }
 const TOKEN_GOERLI = (tokenId: TOKEN_ID | string): Currency => {
-    if (tokenId === TOKEN_ID.NATIVE) {
-        return new EVMCoin(CHAIN_ID.ETH_GOERLI,
-            18,
-            'ETH',
-            'ether',
-            'https://files.maplabs.io/bridge/eth.png')
+    let current: any = TOKENS_GOERLI[tokenId];
+    if (current) {
+        return ((current as Currency)).copy;
     }
-    if (tokenId === TOKEN_ID.WRAP) {
-        return new Token(CHAIN_ID.ETH_GOERLI, 18,
-            '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6',
-            'wETH',
-            'Wrapped Ether',
-            'https://files.maplabs.io/bridge/eth.png'
-        )
-    }
-    if (tokenId === TOKEN_ID.USDC) {
-        return new Token(CHAIN_ID.ETH_GOERLI, 18,
-            '0xE66D4a30d177369d134e0E49a9096D357C0e8383',
-            'bUSDC',
-            'Butter USDC',
-            'https://files.maplabs.io/bridge/usdc.png'
-        )
-    }
-
     throw new Error(`Not Support this Token(${tokenId}) in ETH Goerli Chain`)
 }
 const TOKEN_MAP = (tokenId: TOKEN_ID | string, isTest = true): Currency => {
+    let current: any;
     if (isTest) {
-        if (tokenId === TOKEN_ID.NATIVE) {
-            return new EVMCoin(CHAIN_ID.MAP_TEST,
-                18,
-                'MAPO',
-                'MAP Protocol',
-                'https://files.maplabs.io/bridge/map.png')
-        }
-        if (tokenId === TOKEN_ID.WRAP) {
-            return new Token(
-                CHAIN_ID.MAP_TEST, 18,
-                '0x2eD27dF9B4c903aB53666CcA59AFB431F7D15e91',
-                'wMAPO',
-                'Wrapped MAPO',
-                'https://files.maplabs.io/bridge/map.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.USDC) {
-            return new Token(
-                CHAIN_ID.MAP_TEST, 18,
-                '0xd28c1187168dA9df1B7f6cb8495e659322D27c9F',
-                'USDC',
-                'USDC Circle',
-                'https://files.maplabs.io/bridge/usdc.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.METH) {
-            return new Token(
-                CHAIN_ID.MAP_TEST, 18,
-                '0x41358EFc7d49d19F76E1E3bdD694f3bff9af3b36',
-                'METH',
-                'MAP ETH',
-                'https://files.maplabs.io/bridge/eth.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.MOST) {
-            return new Token(
-                CHAIN_ID.MAP_TEST, 18,
-                '0xc74bc33a95a62D90672aEFAf4bA784285903cf09',
-                'MOST',
-                'MOST Token',
-                'https://files.maplabs.io/bridge/usdc.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.NEAR) {
-            return new Token(
-                CHAIN_ID.MAP_TEST, 18,
-                '0xf1b33B4aB498e17C82bA903e5256533cBf51e1Fd',
-                'Butter Near',
-                'bNear',
-                'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.BNB) {
-            return new Token(
-                CHAIN_ID.MAP_TEST, 18,
-                '0xc0fAa9255A4099D50C2b356bFbD440B69359cEa3',
-                'BNB',
-                'MAPO BNB',
-                'https://files.maplabs.io/bridge/bnb.png'
-            )
-        }
-        throw new Error(`Not Support this Token(${tokenId}) in MAP`)
+        current = TOKENS_MAP_TEST[tokenId];
+    } else {
+        current = TOKENS_MAP[tokenId];
     }
-    if (tokenId === TOKEN_ID.NATIVE) {
-        return new EVMCoin(CHAIN_ID.MAP_MAINNET,
-            18,
-            'MAPO',
-            'MAP Protocol',
-            'https://files.maplabs.io/bridge/map.png')
-    }
-    if (tokenId === TOKEN_ID.WRAP) {
-        return new Token(
-            CHAIN_ID.MAP_MAINNET, 18,
-            '0x13CB04d4a5Dfb6398Fc5AB005a6c84337256eE23',
-            'wMAPO',
-            'Wrapped MAPO',
-            'https://files.maplabs.io/bridge/map.png'
-        )
-    }
-    if (tokenId === TOKEN_ID.USDC) {
-        return new Token(
-            CHAIN_ID.MAP_MAINNET, 18,
-            '0x424D3bcdC96F42aC919F276D7D4f6C94f24e0703',
-            'USDC',
-            'MAP USDC',
-            'https://files.maplabs.io/bridge/usdc.png'
-        )
+    if (current) {
+        return ((current as Currency)).copy;
     }
     throw new Error(`Not Support this Token(${tokenId}) in MAP`)
 }
 const TOKEN_BNB = (tokenId: TOKEN_ID | string, isTest = true): Currency => {
+    let current: any;
     if (isTest) {
-        if (tokenId === TOKEN_ID.NATIVE) {
-            return new EVMCoin(CHAIN_ID.BNB_TEST,
-                18,
-                'BNB',
-                'BNB',
-                'https://files.maplabs.io/bridge/bnb.png')
-        }
-        if (tokenId === TOKEN_ID.WRAP) {
-            return new Token(CHAIN_ID.BNB_TEST, 18,
-                '0xae13d989dac2f0debff460ac112a837c89baa7cd',
-                'BNB',
-                'wBNB',
-                'https://files.maplabs.io/bridge/bnb.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.BMOS) {
-            return new Token(CHAIN_ID.BNB_TEST, 18,
-                '0x593F6F6748dc203DFa636c299EeA6a39C0734EEd',
-                'BMOS',
-                'Butter MOST',
-                'https://logos-world.net/imageup/Bitcoin/Bitcoin-Logo-PNG14.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.NEAR) {
-            return new Token(CHAIN_ID.BNB_TEST, 18,
-                '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c',
-                'Near',
-                'Near',
-                'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.MOST) {
-            return new Token(CHAIN_ID.BNB_TEST, 18,
-                '0x688f3Ef5f728995a9DcB299DAEC849CA2E49ddE1',
-                'MOST',
-                'MOST Token',
-                'https://files.maplabs.io/bridge/usdc.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.MAP) {
-            return new Token(CHAIN_ID.BNB_TEST, 18,
-                '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273',
-                'MAPO',
-                'BSC MAPO',
-                'https://files.maplabs.io/bridge/map.png'
-            )
-        }
+        current = TOKENS_BNB_TEST[tokenId];
+    } else {
+        current = TOKENS_BNB[tokenId];
+    }
+    if (current) {
+        return ((current as Currency)).copy;
+    }
 
-        throw new Error(`Not Support this Token(${tokenId}) in BNB Chain`)
-    }
-    if (tokenId === TOKEN_ID.NATIVE) {
-        return new EVMCoin(CHAIN_ID.BNB_MAINNET,
-            18,
-            'BNB',
-            'BNB',
-            'https://files.maplabs.io/bridge/bnb.png')
-    }
-    if (tokenId === TOKEN_ID.WRAP) {
-        return new Token(
-            CHAIN_ID.BNB_MAINNET, 18,
-            '0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',
-            'WBNB',
-            'Wrapped BNB',
-            'https://files.maplabs.io/bridge/bnb.png'
-        )
-    }
-    if (tokenId === TOKEN_ID.USDC) {
-        return new Token(
-            CHAIN_ID.BNB_MAINNET, 18,
-            '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d',
-            'USDC',
-            'Binance-Peg USD Coin',
-            'https://files.maplabs.io/bridge/usdc.png'
-        )
-    }
     throw new Error(`Not Support this Token(${tokenId}) in BNB Chain`)
 }
 const TOKEN_POLYGON = (tokenId: TOKEN_ID | string, isTest = true): Currency => {
+    let current: any;
     if (isTest) {
-        if (tokenId === TOKEN_ID.NATIVE) {
-            return new EVMCoin(CHAIN_ID.POLYGON_TEST,
-                18,
-                'MATIC',
-                'Polygon',
-                'https://files.maplabs.io/bridge/polygon.png')
-        }
-        if (tokenId === TOKEN_ID.WRAP) {
-            return new Token(CHAIN_ID.POLYGON_TEST, 18,
-                '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
-                'WMATIC',
-                'Wrapped Matic',
-                'https://files.maplabs.io/bridge/polygon.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.BMOS) {
-            return new Token(CHAIN_ID.POLYGON_TEST, 18,
-                '0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa',
-                'BMOS',
-                'Butter MOST',
-                'https://logos-world.net/imageup/Bitcoin/Bitcoin-Logo-PNG14.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.MOST) {
-            return new Token(CHAIN_ID.POLYGON_TEST, 18,
-                '0x6d4570191C7B5835226a0bE18734A8E922ff353B',
-                'MOST',
-                'MAP Omnichain Service Token',
-                'https://files.maplabs.io/bridge/usdc.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.MAP) {
-            return new Token(CHAIN_ID.POLYGON_TEST, 18,
-                '0xE6687528C7b85115a038D806339dd7E7b869B87C',
-                'MAPO',
-                'Matic-Pegged MAPO',
-                'https://files.maplabs.io/bridge/map.png'
-            )
-        }
-
-        throw new Error(`Not Support this Token(${tokenId}) in Polygon Chain`)
+        current = TOKENS_POLYGON_TEST[tokenId];
+    } else {
+        current = TOKENS_POLYGON[tokenId];
     }
-    if (tokenId === TOKEN_ID.NATIVE) {
-        return new EVMCoin(CHAIN_ID.POLYGON_MAINNET,
-            18,
-            'BNB',
-            'BNB',
-            'https://files.maplabs.io/bridge/bnb.png')
-    }
-    if (tokenId === TOKEN_ID.WRAP) {
-        return new Token(
-            CHAIN_ID.POLYGON_MAINNET, 18,
-            '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270',
-            'WMATIC',
-            'Wrapped Matic',
-            'https://files.maplabs.io/bridge/polygon.png'
-        )
+    if (current) {
+        return ((current as Currency)).copy;
     }
     throw new Error(`Not Support this Token(${tokenId}) in Polygon Chain`)
 }
 const TOKEN_NEAR = (tokenId: TOKEN_ID | string, isTest = true): Currency => {
+    let current: any;
     if (isTest) {
-        if (tokenId === TOKEN_ID.NATIVE) {
-            return new NEARCoin(CHAIN_ID.NEAR_TEST)
-        }
-        if (tokenId === TOKEN_ID.WRAP) {
-            return new Token(CHAIN_ID.NEAR_TEST, 24,
-                'wrap.testnet',
-                'wNear',
-                'Wrapped Near',
-                'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.USDC) {
-            return new Token(CHAIN_ID.NEAR_TEST, 6,
-                'usdc.map007.testnet',
-                'USDC',
-                'USD Circle',
-                'https://files.maplabs.io/bridge/usdc.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.MOST) {
-            return new Token(CHAIN_ID.NEAR_TEST, 24,
-                'most.mos2.mfac.maplabs.testnet',
-                'MOST',
-                'MOST Token',
-                'https://files.maplabs.io/bridge/usdc.png'
-            )
-        }
-        if (tokenId === TOKEN_ID.MAP) {
-            return new Token(CHAIN_ID.NEAR_TEST, 24,
-                'mapo.maplabs.testnet',
-                'MAPO',
-                'NEAR MAPO',
-                'https://files.maplabs.io/bridge/map.png'
-            )
-        }
+        current = TOKENS_NEAR_TEST[tokenId];
+    } else {
+        current = TOKENS_NEAR[tokenId];
+    }
+    if (current) {
+        return ((current as Currency)).copy;
+    }
 
-        throw new Error(`Not Support this Token(${tokenId}) in Near Chain`)
-    }
-    if (tokenId === TOKEN_ID.NATIVE) {
-        return new NEARCoin(CHAIN_ID.NEAR_MAINNET)
-    }
-    if (tokenId === TOKEN_ID.WRAP) {
-        return new Token(
-            CHAIN_ID.NEAR_MAINNET, 24,
-            'wrap.near',
-            'wNear',
-            'Wrapped Near',
-            'https://s3-us-west-1.amazonaws.com/compliance-ico-af-us-west-1/production/token_profiles/logos/original/9d5/c43/cc-/9d5c43cc-e232-4267-aa8a-8c654a55db2d-1608222929-b90bbe4696613e2faeb17d48ac3aa7ba6a83674a.png'
-        )
-    }
-    if (tokenId === TOKEN_ID.USDC) {
-        return new Token(
-            CHAIN_ID.NEAR_MAINNET, 6,
-            'a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.factory.bridge.near',
-            'USDC',
-            'USD Circle',
-            'https://files.maplabs.io/bridge/usdc.png'
-        )
-    }
     throw new Error(`Not Support this Token(${tokenId}) in Near Chain`)
+}
+
+export const TO_CHAIN_ID = (str:CHAIN_ID|CHAIN_NAME|string) => {
+    switch (str) {
+        case CHAIN_ID.MAP_MAINNET:
+        case CHAIN_NAME.MAP_MAINNET:
+            return CHAIN_ID.MAP_MAINNET;
+        case CHAIN_ID.BNB_MAINNET:
+        case CHAIN_NAME.BNB_MAINNET:
+            return CHAIN_ID.BNB_MAINNET;
+        case CHAIN_ID.POLYGON_MAINNET:
+        case CHAIN_NAME.POLYGON_MAINNET:
+            return CHAIN_ID.POLYGON_MAINNET;
+        case CHAIN_ID.NEAR_MAINNET:
+        case CHAIN_NAME.NEAR_MAINNET:
+            return CHAIN_ID.NEAR_MAINNET;
+        case CHAIN_ID.ETH_PRIV:
+        case CHAIN_NAME.ETH_PRIV:
+            return CHAIN_ID.ETH_PRIV;
+        case CHAIN_ID.ETH_GOERLI:
+        case CHAIN_NAME.ETH_GOERLI:
+            return CHAIN_ID.ETH_GOERLI;
+        case CHAIN_ID.MAP_TEST:
+        case CHAIN_NAME.MAP_TEST:
+            return CHAIN_ID.MAP_TEST;
+        case CHAIN_ID.BNB_TEST:
+        case CHAIN_NAME.BNB_TEST:
+            return CHAIN_ID.BNB_TEST;
+        case CHAIN_ID.POLYGON_TEST:
+        case CHAIN_NAME.POLYGON_TEST:
+            return CHAIN_ID.POLYGON_TEST;
+        case CHAIN_ID.NEAR_TEST:
+        case CHAIN_NAME.NEAR_TEST:
+            return CHAIN_ID.NEAR_TEST;
+    }
+    throw new Error(
+        `TO_CHAIN_ID Unsupported network params: ${str}`
+    );
 }
 
 export const CHAINS = (chainId: CHAIN_ID | string): Chain => {
@@ -557,65 +446,66 @@ export const TOKENS = (chainId: CHAIN_ID | string, tokenId: TOKEN_ID | string): 
  * @constructor
  */
 export const AVAILABLE_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
+    let items = [];
     if (chainId === CHAIN_ID.MAP_MAINNET) {
-        return [];
+        for (const key in TOKENS_MAP) {
+            items.push(TOKEN_MAP(key,false));
+        }
+        return items;
     }
     if (chainId === CHAIN_ID.BNB_MAINNET) {
-        return [];
+        for (const key in TOKENS_BNB) {
+            items.push(TOKEN_BNB(key,false));
+        }
+        return items;
     }
     if (chainId === CHAIN_ID.POLYGON_MAINNET) {
-        return [];
+        for (const key in TOKENS_POLYGON) {
+            items.push(TOKEN_POLYGON(key,false));
+        }
+        return items;
     }
     if (chainId === CHAIN_ID.NEAR_MAINNET) {
-        return [];
+        for (const key in TOKENS_NEAR) {
+            items.push(TOKEN_NEAR(key,false));
+        }
+        return items;
     }
     if (chainId === CHAIN_ID.ETH_PRIV) {
-        return [];
+        for (const key in TOKENS_PRIV) {
+            items.push(TOKEN_PRIV(key));
+        }
+        return items;
     }
     if (chainId === CHAIN_ID.ETH_GOERLI) {
-        return [
-            TOKEN_GOERLI(TOKEN_ID.NATIVE),
-            TOKEN_GOERLI(TOKEN_ID.USDC),
-            TOKEN_GOERLI(TOKEN_ID.WRAP)
-        ];
+        for (const key in TOKENS_GOERLI) {
+            items.push(TOKEN_GOERLI(key));
+        }
+        return items;
     }
     if (chainId === CHAIN_ID.MAP_TEST) {
-        return [
-            TOKEN_MAP(TOKEN_ID.NATIVE),
-            TOKEN_MAP(TOKEN_ID.WRAP),
-            TOKEN_MAP(TOKEN_ID.USDC),
-            TOKEN_MAP(TOKEN_ID.MOS),
-            TOKEN_MAP(TOKEN_ID.BNB),
-            TOKEN_MAP(TOKEN_ID.NEAR),
-        ];
+        for (const key in TOKENS_MAP_TEST) {
+            items.push(TOKEN_MAP(key,true));
+        }
+        return items;
     }
     if (chainId === CHAIN_ID.BNB_TEST) {
-        return [
-            TOKEN_BNB(TOKEN_ID.NATIVE),
-            TOKEN_BNB(TOKEN_ID.WRAP),
-            TOKEN_BNB(TOKEN_ID.MAP),
-            TOKEN_BNB(TOKEN_ID.USDC),
-            TOKEN_BNB(TOKEN_ID.BMOS),
-            TOKEN_BNB(TOKEN_ID.MOST),
-        ];
+        for (const key in TOKENS_BNB_TEST) {
+            items.push(TOKEN_BNB(key,true));
+        }
+        return items;
     }
     if (chainId === CHAIN_ID.POLYGON_TEST) {
-        return [
-            TOKEN_POLYGON(TOKEN_ID.WRAP),
-            TOKEN_POLYGON(TOKEN_ID.USDC),
-            TOKEN_POLYGON(TOKEN_ID.BMOS),
-            TOKEN_POLYGON(TOKEN_ID.MAP),
-            TOKEN_MAP(TOKEN_ID.NATIVE),
-        ];
+        for (const key in TOKENS_POLYGON_TEST) {
+            items.push(TOKEN_POLYGON(key,true));
+        }
+        return items;
     }
     if (chainId === CHAIN_ID.NEAR_TEST) {
-        return [
-            TOKEN_NEAR(TOKEN_ID.NATIVE),
-            TOKEN_NEAR(TOKEN_ID.USDC),
-            TOKEN_NEAR(TOKEN_ID.MOST),
-            TOKEN_NEAR(TOKEN_ID.WRAP),
-            TOKEN_NEAR(TOKEN_ID.MAP),
-        ];
+        for (const key in TOKENS_NEAR_TEST) {
+            items.push(TOKEN_NEAR(key,true));
+        }
+        return items;
     }
     throw new Error(`AVAILABLE_TOKENS: unknown chain id: ${chainId}`);
 }
@@ -674,6 +564,19 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
     }
     throw new Error(`SUPPORT_TOKENS: unknown chain id: ${chainId}`);
 };
+
+export const NEAR_CONNECT = (chainId:CHAIN_ID|string) => {
+    const connectionConfig = {
+        networkId: chainId===CHAIN_ID.NEAR_TEST?'testnet':'',
+        nodeUrl: CHAINS(chainId).rpc,
+    };
+    if (!connectionConfig.networkId){
+        throw new Error(
+            `ID_TO_NEAR_NETWORK: unknown chain id when querying near network: ${chainId}`
+        );
+    }
+    return connectionConfig;
+}
 
 export const IS_MAP = (id: string): boolean => {
     switch (id) {

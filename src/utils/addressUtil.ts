@@ -1,10 +1,7 @@
 import { getAddress } from '@ethersproject/address';
 import {
-  ID_TO_NEAR_NETWORK,
-  ID_TO_NETWORK_NAME,
-  ID_TO_DEFAULT_RPC_URL,
   IS_EVM,
-  IS_NEAR,
+  IS_NEAR, CHAINS, CHAIN_ID, NEAR_CONNECT,
 } from '../constants';
 import { Token } from '../entities/Token';
 import { connect } from 'near-api-js';
@@ -13,24 +10,26 @@ import { NearAccountState } from '../types/responseTypes';
 /**
  * Validates an address and returns the parsed (checksummed) version of that address
  * @param address the unchecksummed hex address
+ * @param chainId the chainId
  */
 export function validateAndParseAddressByChainId(
   address: string,
   chainId: string
 ): string {
   console.log('test')
+  let chain = CHAINS(chainId);
   if (IS_EVM(chainId)) {
     try {
       return getAddress(address);
     } catch (error) {
       throw new Error(
-        `${address} is not a valid address on ${ID_TO_NETWORK_NAME(chainId)}`
+        `${address} is not a valid address on ${chain.name}`
       );
     }
   } else if (IS_NEAR(chainId)) {
     return address;
   } else {
-    throw new Error(`${ID_TO_NETWORK_NAME(chainId)} is not supported`);
+    throw new Error(` ${chain.name} is not supported`);
   }
 }
 
@@ -48,10 +47,12 @@ export async function verifyNearAccountId(
   accountId: string,
   chainId: string
 ): Promise<NearAccountState> {
-  const connectionConfig = {
-    networkId: ID_TO_NEAR_NETWORK(chainId),
-    nodeUrl: ID_TO_DEFAULT_RPC_URL(chainId),
-  };
+  // const connectionConfig = {
+  //   networkId: ID_TO_NEAR_NETWORK(chainId),
+  //   nodeUrl: ID_TO_DEFAULT_RPC_URL(chainId),
+  // };
+  const connectionConfig = NEAR_CONNECT(chainId);
+  // @ts-ignore
   const near = await connect(connectionConfig);
   const account = await near.account(accountId);
   try {

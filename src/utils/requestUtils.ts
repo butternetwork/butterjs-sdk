@@ -5,7 +5,6 @@ import {
     ButterRouterParam,
     ButterSwapRoute,
 } from '../types';
-import {BaseCurrency} from '../entities';
 import {ethers} from 'ethers';
 import {
     BUTTER_ROUTER,
@@ -15,6 +14,7 @@ import {
 import {asciiToHex, getHexAddress, hexToDecimalArray} from './addressUtil';
 import {NEAR_TOKEN_SEPARATOR} from '../constants/constants';
 import {getRouterIndexByChainIdAndDexName} from './routeUtil';
+import {Currency} from "../beans";
 
 const abi = ethers.utils.defaultAbiCoder;
 
@@ -22,7 +22,7 @@ export async function assembleButterRouterParamFromRoute(
     routes: ButterCrossChainRoute,
     amount: string,
     fromChainId: string,
-    targetChainTokenOut: BaseCurrency,
+    targetChainTokenOut: Currency,
     toAddress: string
 ): Promise<ButterRouterParam> {
     const targetSwapData = await assembleTargetSwapDataFromRoute(
@@ -128,7 +128,7 @@ export async function assembleSrcSwapDataFromRoute(
 
 export async function assembleTargetSwapDataFromRoute(
     routes: ButterCrossChainRoute,
-    targetChainTokenOut: BaseCurrency,
+    targetChainTokenOut: Currency,
     toAddress?: string
 ): Promise<string> {
     if (IS_EVM(targetChainTokenOut.chainId)) {
@@ -148,7 +148,7 @@ const swapDataAbi = [
 
 export async function assembleEVMSwapDataFromRoute(
     route: ButterCrossChainRoute,
-    targetChainTokenOut: BaseCurrency
+    targetChainTokenOut: Currency
 ): Promise<string> {
     const mapRoute = route.mapChain;
     const mapTargetTokenAddress = mapRoute[0]!.tokenOut.address;
@@ -257,7 +257,7 @@ export function assembleCrossChainRouteFromJson(
 
 export function assembleNearSwapDataFromRoute(
     routes: ButterCrossChainRoute,
-    targetChainTokenOut: BaseCurrency
+    targetChainTokenOut: Currency
 ) {
     const mapRoute = routes.mapChain;
     const mapTargetTokenAddress = mapRoute[0]!.tokenOut.address;
@@ -312,8 +312,8 @@ export function assembleNearSwapDataFromRoute(
 
 export function assembleNearSwapMsgFromRoute(
     routes: ButterCrossChainRoute,
-    fromToken: BaseCurrency,
-    targetChainTokenOut: BaseCurrency,
+    fromToken: Currency,
+    targetChainTokenOut: Currency,
     toAddress: string
 ): string {
     const toChainId = targetChainTokenOut.chainId;

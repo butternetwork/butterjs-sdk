@@ -29,4 +29,8 @@ export class NEARCoin extends Currency{
         return other.isNative && other.chainId === this.chainId;
     }
 
+    get copy(): Currency {
+        return new NEARCoin(this.chainId);
+    }
+
 }

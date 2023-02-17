@@ -1,7 +1,6 @@
 import {
   BUTTER_ROUTER,
   ChainId,
-  ID_TO_CHAIN_ID,
   IS_EVM,
   IS_NEAR,
 } from '../../constants';

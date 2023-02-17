@@ -17,7 +17,7 @@ import {
   NEAR_TEST_CHAIN,
   NEAR_TEST_MOST,
 } from '../../src/constants';
-import { ID_TO_SUPPORTED_TOKEN } from '../../src/utils/tokenUtil';
+import {findSupportTokens} from '../../src/utils/tokenUtil';
 import {
   getBridgeFee,
   getVaultBalance,
@@ -84,7 +84,7 @@ console.log('supported chain', SUPPORTED_CHAIN_LIST_TESTNET);
 /** 支持的token {@link supported_token.ts} **/
 console.log(
   'supported token by chainId',
-  ID_TO_SUPPORTED_TOKEN(ChainId.NEAR_TESTNET)
+  findSupportTokens(ChainId.NEAR_TESTNET)
 );
 
 /** 下面假设我们要从将MOST代币从BSC链Bridge到NEAR链从而获得NEAR上的MOST代币

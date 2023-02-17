@@ -21,4 +21,8 @@ export class Token  extends Currency{
         }
         return new Token(data.chainId,data.decimals,data.address,data.symbol,data.name,data.logo);
     }
+
+    get copy(): Token {
+        return new Token(this.chainId,this.decimals,this.address,this.symbol,this.name,this.logo);
+    }
 }
