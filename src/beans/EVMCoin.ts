@@ -1,8 +1,7 @@
 import {Currency} from "./Currency";
-import {ZERO_ADDRESS} from "../constants";
+import {TOKEN_ID, TOKENS, ZERO_ADDRESS} from "../constants";
 import invariant from "tiny-invariant";
 import {Token} from "./Token";
-import {WToken} from "./WToken";
 
 export class EVMCoin extends Currency{
     readonly isNative: boolean=true;
@@ -19,7 +18,7 @@ export class EVMCoin extends Currency{
     }
 
     public get wrapped(): Token {
-        const weth9 = WToken(this.chainId);
+        const weth9 = TOKENS(this.chainId,TOKEN_ID.WRAP);
         invariant(!!weth9, 'WRAPPED');
         return weth9;
     }

@@ -1,26 +1,26 @@
 import {
-  ChainId
+  CHAIN_ID
 } from '../constants';
 
 export const ID_TO_ROUTER_MAP = (id: string): Map<string, number> => {
   switch (id) {
-    case ChainId.MAP_MAINNET:
+    case CHAIN_ID.MAP_MAINNET:
       return new Map<string, number>([]);
-    case ChainId.BSC_MAINNET:
+    case CHAIN_ID.BNB_MAINNET:
       return new Map<string, number>([]);
-    case ChainId.POLYGON_MAINNET:
+    case CHAIN_ID.POLYGON_MAINNET:
       return new Map<string, number>([]);
-    case ChainId.NEAR_MAINNET:
+    case CHAIN_ID.NEAR_MAINNET:
       return new Map<string, number>([]);
-    case ChainId.MAP_TEST:
+    case CHAIN_ID.MAP_TEST:
       return new Map<string, number>([]);
-    case ChainId.ETH_GOERLI:
+    case CHAIN_ID.ETH_GOERLI:
       return new Map<string, number>([['UniswapV2', 0]]);
-    case ChainId.NEAR_TESTNET:
+    case CHAIN_ID.NEAR_TEST:
       return new Map<string, number>([]);
-    case ChainId.BSC_TEST:
+    case CHAIN_ID.BNB_TEST:
       return new Map<string, number>([['Pancakeswap', 0]]);
-    case ChainId.POLYGON_TEST:
+    case CHAIN_ID.POLYGON_TEST:
       return new Map<string, number>([['Quickswap', 0]]);
     default:
       throw new Error(`ID_TO_ROUTER_MAP: unknown chain id : ${id}`);

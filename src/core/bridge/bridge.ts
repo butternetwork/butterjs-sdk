@@ -1,4 +1,4 @@
-import { ChainId, IS_EVM, IS_NEAR } from '../../constants';
+import {CHAIN_ID, IS_EVM, IS_NEAR} from '../../constants';
 import {
   getHexAddress,
   validateAndParseAddressByChainId,
@@ -42,7 +42,7 @@ export class ButterBridge {
 
     // if src chain is near chain, near network provider must be provided
     if (
-      ChainId.NEAR_TESTNET == fromToken.chainId &&
+      CHAIN_ID.NEAR_TEST == fromToken.chainId &&
       options.nearProvider == undefined
     ) {
       throw new Error(

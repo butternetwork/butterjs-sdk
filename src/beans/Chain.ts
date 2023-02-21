@@ -1,11 +1,12 @@
 import {Currency} from "./Currency";
-
+import Decimal from 'decimal.js';
 /**
  * Represents a chain with some metadata.
  */
 export class Chain {
   /** chain id, we use string because some non-evm chain might have larger chainId that we defiend*/
   public readonly chainId: string;
+  public readonly chainHex?: string;
 
   /** name of the chain */
   public readonly name?: string;
@@ -54,7 +55,13 @@ export class Chain {
       }
     }
     this.chainName=chainName;
+    if (!this.chainName){
+      this.chainName=name;
+    }
     this.token =token;
+    if (this.chainId){
+      this.chainHex = new Decimal(this.chainId).toHex();
+    }
   }
 
   /**

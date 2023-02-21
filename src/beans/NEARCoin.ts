@@ -1,7 +1,6 @@
 import {Currency} from "./Currency";
-import {ZERO_ADDRESS} from "../constants";
+import {TOKEN_ID, TOKENS, ZERO_ADDRESS} from "../constants";
 import invariant from "tiny-invariant";
-import {WToken} from "./WToken";
 import {Token} from "./Token";
 
 export class NEARCoin extends Currency{
@@ -20,7 +19,7 @@ export class NEARCoin extends Currency{
     }
 
     public get wrapped(): Token {
-        const wnear = WToken(this.chainId);
+        const wnear = TOKENS(this.chainId,TOKEN_ID.WRAP);
         invariant(!!wnear, 'WRAPPED');
         return wnear;
     }

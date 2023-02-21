@@ -1,6 +1,6 @@
 import {
   BUTTER_ROUTER,
-  ChainId,
+  CHAIN_ID,
   IS_EVM,
   IS_NEAR,
 } from '../../constants';
@@ -64,7 +64,7 @@ export class ButterSwap {
 
     // if src chain is near chain, near network provider must be provided
     if (
-      ChainId.NEAR_TESTNET == fromToken.chainId &&
+        CHAIN_ID.NEAR_TEST == fromToken.chainId &&
       options.nearProvider == undefined
     ) {
       throw new Error(`Network config must be provided for NEAR blockchain`);
@@ -197,7 +197,7 @@ export class ButterSwap {
     }
     // if src chain is near chain, near network provider must be provided
     if (
-      ChainId.NEAR_TESTNET == fromToken.chainId &&
+        CHAIN_ID.NEAR_TEST == fromToken.chainId &&
       options.nearProvider == undefined
     ) {
       throw new Error(`Network config must be provided for NEAR blockchain`);
