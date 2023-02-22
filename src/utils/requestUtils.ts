@@ -58,7 +58,17 @@ export async function assembleSrcSwapDataFromRoute(
   toAddress: string
 ): Promise<ButterCoreParam> {
   const srcRoute: ButterSwapRoute[] = route.srcChain;
-
+  try {
+    let route0 = srcRoute[0];
+    if (route0?.tokenIn.address === route0?.tokenOut.address) {
+      return  <ButterCoreParam>{
+        amountInArr: [],
+        paramsArr: [],
+        routerIndex: [],
+        inputOutAddre: [route0?.tokenIn.address, route0?.tokenOut.address],
+      };
+    }
+  } catch (e) {}
   let amountInArr: string[] = [];
   let paramsArr: string[] = [];
   let routerIndexArr: string[] = [];
