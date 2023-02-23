@@ -55,6 +55,7 @@ export class ButterSwap {
                             slippage,
                             options,
                         }: SwapRequestParam): Promise<ButterTransactionResponse> {
+
         const toChainId = toToken.chainId;
         const fromChainId = fromToken.chainId;
         // check validity of toAddress according to toChainId
@@ -243,11 +244,25 @@ export class ButterSwap {
 
         // check if source chain needs to do agg-swap
         if (
-            route.srcChain != undefined &&
-            route.srcChain.length != 0 &&
-            route.srcChain[0]!.path.length != 0 &&
+            // route.srcChain != undefined &&
+            // route.srcChain.length != 0 &&
+            // route.srcChain[0]!.path.length != 0 &&
             !IS_NEAR(fromChainId)
         ) {
+            if (!route.srcChain
+                || route.srcChain.length == 0) {
+                route.srcChain = [
+                    {
+                        chainId: fromChainId,
+                        amountIn: amountIn,
+                        amountOut: '',
+                        path: [],
+                        dexName: '',
+                        tokenIn: fromToken,
+                        tokenOut: fromToken
+                    }
+                ]
+            }
             const routerParam: ButterRouterParam =
                 await assembleButterRouterParamFromRoute(
                     route,

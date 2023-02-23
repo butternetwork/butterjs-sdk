@@ -19,6 +19,10 @@ export const MOS_CONTRACT_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.POLYGON_TEST]: '0x6858B990A504D7Fc41D0BBB5178c4675518BDA27',
   [ChainId.NEAR_TESTNET]: 'mos.map007.testnet',
 };
+export const MOS_CONTRACT_NEAR : any = {
+  [ChainId.NEAR_MAINNET]: 'mos.mfac.butternetwork.near',
+  [ChainId.NEAR_TESTNET]: 'mos.map007.testnet',
+};
 
 /**
  * TokenRegister Address: https://github.com/butternetwork/butter-mos-contracts/blob/master/evm/contracts/TokenRegister.sol

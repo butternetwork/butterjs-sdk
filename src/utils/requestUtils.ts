@@ -393,6 +393,7 @@ export function assembleNearVersionTargetSwapParamArrayFromRoutes(
       route.chainId,
       route.dexName
     );
+    console.log('assembleSrcSwapDataFromRoute','routerIndex:',routerIndex,'route:',route)
     if (routerIndex === undefined) {
       throw new Error('assembleSrcSwapDataFromRoute: routerIndex is undefined');
     }
