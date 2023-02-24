@@ -47,7 +47,20 @@ export function getRouterIndexByChainIdAndDexName(
   chainId: string,
   dexName: string
 ): number | undefined {
-  return ID_TO_ROUTER_MAP(chainId).get(dexName);
+  let routerMap = ID_TO_ROUTER_MAP(chainId);
+  let result:number = -1;
+  if (!dexName){
+   routerMap.forEach((value,key)=>{
+     if (result==-1 || !result){
+       result=value;
+     }
+   })
+  }else{
+    // @ts-ignore
+    result = routerMap.get(dexName);
+  }
+  if (!result || result<0){result=0;}
+  return result;
 }
 
 export function assembleBridgeRoute(routeStr: string): string {
