@@ -1,4 +1,4 @@
-import { BaseCurrency } from '../../entities';
+import { Currency } from '../../beans';
 import {
   ID_TO_CHAIN_ID,
   ID_TO_NEAR_NETWORK,
@@ -20,24 +20,21 @@ import { BigNumber, ethers } from 'ethers';
 import { getTokenByAddressAndChainId } from '../../utils/tokenUtil';
 import { ButterJsonRpcProvider } from '../../types/paramTypes';
 import { ID_TO_SUPPORTED_TOKEN } from '../../utils/tokenUtil';
-import { asciiToHex, asciiToString, getHexAddress } from '../../utils';
+import {asciiToHex, asciiToString, getHexAddress, getRelayChainToken,getToChainToken} from '../../utils';
 import { VaultToken } from '../../libs/VaultToken';
 import { EVMOmnichainService } from '../../libs/mos/EVMOmnichainService';
 import MOS_RELAY_METADATA from '../../abis/MAPOmnichainServiceRelay.json';
 import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
 import { connect } from 'near-api-js';
 import { CodeResult } from 'near-api-js/lib/providers/provider';
-import { GET_MCS_TOKENS } from '../../constants/near_method_names';
-import {
-  batchGetRelayChainToken,
-  batchGetToChainToken,
-} from '../../utils/batchRequestUtils';
+import { GET_MCS_TOKENS } from '../../constants';
+
 import Web3 from 'web3';
 import TokenRegisterMetadata from '../../abis/TokenRegister.json';
 import { RelayOmnichainService } from '../../libs/mos/RelayOmnichainService';
 import { ButterSwapRoute } from '../../types';
-import { assembleCrossChainRouteFromJson } from '../../utils/requestUtils';
-import { DEFAULT_SLIPPAGE } from '../../constants/constants';
+import { assembleCrossChainRouteFromJson } from '../../utils';
+import { DEFAULT_SLIPPAGE } from '../../constants';
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -47,7 +44,7 @@ import { DEFAULT_SLIPPAGE } from '../../constants/constants';
  * @param mapRpcProvider
  */
 export async function getBridgeFee(
-  srcToken: BaseCurrency,
+  srcToken: Currency,
   targetChain: string,
   amount: string,
   mapRpcProvider: ButterJsonRpcProvider
@@ -125,7 +122,7 @@ export async function getBridgeFee(
  * @param mapRpcProvider map relay chain rpc provider
  */
 export async function getSwapFee(
-  srcToken: BaseCurrency,
+  srcToken: Currency,
   targetChain: string,
   amount: string,
   routeStr: string,
@@ -148,7 +145,7 @@ export async function getSwapFee(
       .add(route.amountOut)
       .toString();
   }
-  const tokenOut: BaseCurrency = srcRoute[0]!.tokenOut;
+  const tokenOut: Currency = srcRoute[0]!.tokenOut;
 
   const chainId: string = mapRpcProvider.chainId.toString();
 
@@ -234,7 +231,7 @@ export async function getSwapFee(
  */
 export async function getVaultBalance(
   fromChainId: string,
-  fromToken: BaseCurrency,
+  fromToken: Currency,
   toChainId: string,
   rpcProvider: ButterJsonRpcProvider
 ): Promise<VaultBalance> {
@@ -308,10 +305,10 @@ export async function getVaultBalance(
  * @param rpcProvider
  */
 export async function getTargetToken(
-  srcToken: BaseCurrency,
+  srcToken: Currency,
   targetChainId: string,
   rpcProvider: ButterJsonRpcProvider
-): Promise<BaseCurrency> {
+): Promise<Currency> {
   const tokenAddress = await getTargetTokenAddress(
     srcToken,
     targetChainId,
@@ -330,7 +327,7 @@ export async function getTargetToken(
  * @param rpcProvider
  */
 export async function getTargetTokenAddress(
-  srcToken: BaseCurrency,
+  srcToken: Currency,
   targetChainId: string,
   rpcProvider: ButterJsonRpcProvider
 ): Promise<string> {
@@ -369,12 +366,12 @@ export async function getTokenCandidatesOneByOne(
   fromChainId: string,
   toChainId: string,
   provider: ButterJsonRpcProvider
-): Promise<BaseCurrency[]> {
+): Promise<Currency[]> {
   let ret = [];
   const fromChainTokenList = ID_TO_SUPPORTED_TOKEN(fromChainId);
   for (let i = 0; i < fromChainTokenList.length; i++) {
-    const token: BaseCurrency = fromChainTokenList[i]!;
-    const tokenToCheck: BaseCurrency = token.isNative ? token.wrapped : token;
+    const token: Currency = fromChainTokenList[i]!;
+    const tokenToCheck: Currency = token.isNative ? token.wrapped : token;
     if (
       (await getTargetTokenAddress(tokenToCheck, toChainId, provider)) != '0x'
     ) {
@@ -394,7 +391,7 @@ export async function getTokenCandidates(
   fromChainId: string,
   toChainId: string,
   provider: ButterJsonRpcProvider
-): Promise<BaseCurrency[]> {
+): Promise<Currency[]> {
   const mapUrl = provider.url
     ? provider.url
     : ID_TO_DEFAULT_RPC_URL(provider.chainId.toString());
@@ -406,7 +403,7 @@ export async function getTokenCandidates(
   );
 
   let tokenArr = ID_TO_SUPPORTED_TOKEN(fromChainId).map(
-    (token: BaseCurrency) => {
+    (token: Currency) => {
       if (IS_NEAR(token.chainId)) {
         if (token.isNative) {
           return getHexAddress(token.wrapped.address, token.chainId, false);
@@ -419,7 +416,8 @@ export async function getTokenCandidates(
     }
   );
   if (!IS_MAP(fromChainId)) {
-    tokenArr = await batchGetRelayChainToken(
+    // @ts-ignore
+    tokenArr = await getRelayChainToken(
       tokenRegisterContract,
       fromChainId,
       tokenArr,
@@ -430,13 +428,13 @@ export async function getTokenCandidates(
   if (IS_MAP(toChainId)) {
     return ID_TO_SUPPORTED_TOKEN(fromChainId);
   }
-  const toChainTokenList = await batchGetToChainToken(
+  const toChainTokenList = await getToChainToken(
     tokenRegisterContract,
-    tokenArr,
     toChainId,
+      tokenArr,
     mapUrl
   );
-  let supportedFromChainTokenArr: BaseCurrency[] = [];
+  let supportedFromChainTokenArr: Currency[] = [];
   for (let i = 0; i < toChainTokenList.length; i++) {
     if (toChainTokenList[i] != null && toChainTokenList[i] != '0x') {
       supportedFromChainTokenArr.push(ID_TO_SUPPORTED_TOKEN(fromChainId)[i]!);

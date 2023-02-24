@@ -1,10 +1,15 @@
 {
   "name": "butterjs-sdk",
-  "version": "1.1.20-beta.swap",
+  "version": "1.1.4",
   "description": "Butter Network SDK",
-  "author": "xyli <moorelee@butternetwork.io>",
+  "author": "butternetwork.io",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "dist/*",
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "jest --config jest.json",
@@ -37,7 +42,9 @@
     "@ethersproject/abstract-provider": "^5.7.0",
     "@types/bn.js": "^5.1.1",
     "bn.js": "^5.2.1",
+    "decimal.js": "^10.4.3",
     "near-api-js": "^1.0.0",
+    "superagent": "^8.0.9",
     "tiny-invariant": "^1.2.0",
     "web3": "^1.8.0"
   }

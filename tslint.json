@@ -1,0 +1,11 @@
+{
+  "extends": ["tslint:recommended", "tslint-config-prettier"],
+  "rules": {
+    "no-console": false,
+    "no-empty": false,
+    "forin": false,
+    "variable-name": false,
+    "prefer-const": false,
+    "no-shadowed-variable": false
+  }
+}

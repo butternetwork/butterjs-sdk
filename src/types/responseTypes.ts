@@ -1,6 +1,5 @@
-import { BigNumber } from '@ethersproject/bignumber';
-import BN from 'bn.js';
-import { BaseCurrency } from '../entities';
+
+import { Currency } from '../beans';
 import {
   PromiEvent,
   TransactionReceipt as Web3TransactionReceipt,
@@ -32,7 +31,7 @@ export type ButterFeeRate = {
 };
 
 export interface ButterFee {
-  feeToken: BaseCurrency;
+  feeToken: Currency;
   amount: string;
   feeRate: ButterFeeRate;
   feeDistribution?: ButterFeeDistribution;
@@ -51,7 +50,7 @@ export type NearAccountState = {
 };
 
 export interface VaultBalance {
-  token: BaseCurrency; // vault token
+  token: Currency; // vault token
   balance: string; // amount in minimal uint
   isMintable: boolean; // is token mintable, if it is, then there is no need to show balance
 }

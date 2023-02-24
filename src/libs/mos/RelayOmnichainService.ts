@@ -16,7 +16,7 @@ import {
 import {
   adaptEthReceipt,
   assembleEVMTransactionResponse,
-} from '../../utils/responseUtil';
+} from '../../utils';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
 import { TransactionOptions } from '../../types';

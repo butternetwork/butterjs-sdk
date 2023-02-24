@@ -7,9 +7,9 @@ import {
   ButterFeeRate,
   ButterTransactionReceipt,
 } from '../types/responseTypes';
-import { adaptEthReceipt } from '../utils/responseUtil';
+import { adaptEthReceipt } from '../utils';
 import { getHexAddress } from '../utils';
-import { BaseCurrency } from '../entities';
+import { Currency } from '../beans';
 
 export class TokenRegister {
   private readonly contract: ButterContractType;
@@ -64,7 +64,7 @@ export class TokenRegister {
   }
 
   async getToChainAmount(
-    token: BaseCurrency,
+    token: Currency,
     amount: string,
     toChainId: string
   ): Promise<string> {
@@ -79,7 +79,7 @@ export class TokenRegister {
 
   async getRelayChainToken(
     fromChain: string,
-    fromToken: BaseCurrency
+    fromToken: Currency
   ): Promise<string> {
     if (fromToken.isNative) {
       fromToken = fromToken.wrapped;

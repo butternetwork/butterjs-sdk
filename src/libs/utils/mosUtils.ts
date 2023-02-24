@@ -5,11 +5,10 @@ import {
   IS_EVM,
   IS_MAP,
   IS_NEAR,
-} from '../../constants/chains';
+} from '../../constants';
 import { RelayOmnichainService } from '../mos/RelayOmnichainService';
-import { MOS_CONTRACT_ADDRESS_SET } from '../../constants/addresses';
-import { Signer } from 'ethers';
-import { BridgeOptions, NearNetworkConfig } from '../../types/requestTypes';
+import { MOS_CONTRACT_ADDRESS_SET } from '../../constants';
+import { BridgeOptions, NearNetworkConfig } from '../../types';
 import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
 import MOS_MAP_METADATA from '../../abis/MAPOmnichainServiceRelay.json';
 import { EVMOmnichainService } from '../mos/EVMOmnichainService';

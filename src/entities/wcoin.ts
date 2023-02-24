@@ -1,4 +1,4 @@
-import { Token } from './Token';
+import { Token } from '../beans';
 import {
   BSC_MAINNET_WBNB,
   BSC_TEST_WBNB,

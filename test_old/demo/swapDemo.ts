@@ -57,19 +57,9 @@ import {
   ButterTransactionReceipt,
   ButterTransactionResponse,
   RouteResponse,
-  VaultBalance,
 } from '../../src/types/responseTypes';
-import { ButterBridge } from '../../src';
-import Web3 from 'web3';
-import { ButterJsonRpcProvider } from '../../src/types/paramTypes';
-import {
-  assembleButterRouterParamFromRoute,
-  assembleCrossChainRouteFromJson,
-} from '../../src/utils/requestUtils';
 import { ButterSwap } from '../../src/core/swap/exchange';
-import { BaseCurrency } from '../../src/entities';
 import { approveToken } from '../../src/libs/allowance';
-import axios from 'axios';
 import './config';
 import {
   bscSigner,

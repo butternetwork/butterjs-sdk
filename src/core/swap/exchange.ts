@@ -30,7 +30,7 @@ import {
     assembleEVMSwapDataFromRoute,
     assembleNearSwapMsgFromRoute,
     assembleTargetSwapDataFromRoute,
-} from '../../utils/requestUtils';
+} from '../../utils';
 import {ButterRouter} from '../../libs/butter-router/ButterRouter';
 import {DEFAULT_SLIPPAGE} from '../../constants/constants';
 import any = jasmine.any;

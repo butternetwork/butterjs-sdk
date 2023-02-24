@@ -13,7 +13,7 @@ import {
   TRANSFER_OUT_NATIVE,
   TRANSFER_OUT_TOKEN,
   VALID_MCS_TOKEN_OUT,
-} from '../../constants/near_method_names';
+} from '../../constants';
 import BN from 'bn.js';
 import {
   ChangeFunctionCallOptions,
@@ -23,7 +23,7 @@ import {
 import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import { hexToDecimalArray } from '../../utils';
 import { ButterTransactionResponse } from '../../types/responseTypes';
-import { assembleNearTransactionResponse } from '../../utils/responseUtil';
+import { assembleNearTransactionResponse } from '../../utils';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 import { NearProviderType } from '../../types/paramTypes';
 

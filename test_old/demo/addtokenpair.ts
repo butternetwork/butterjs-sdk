@@ -27,7 +27,6 @@ import { getBridgeFee, getVaultBalance } from '../../src/core/tools/dataFetch';
 import { addTokenPair } from '../../src/core/tools/tokenManagement';
 import { hexToDecimalArray } from '../../src/utils';
 import { ChangeFunctionCallOptions } from 'near-api-js/lib/account';
-import { TRANSFER_OUT_TOKEN } from '../../src/constants/near_method_names';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
 
 const mapProvider = new ethers.providers.JsonRpcProvider(

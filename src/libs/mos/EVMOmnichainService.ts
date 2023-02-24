@@ -8,7 +8,7 @@ import {
 import { Eth } from 'web3-eth';
 import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import { ButterTransactionResponse } from '../../types/responseTypes';
-import { assembleEVMTransactionResponse } from '../../utils/responseUtil';
+import { assembleEVMTransactionResponse } from '../../utils';
 
 import { Provider } from '@ethersproject/abstract-provider';
 import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';

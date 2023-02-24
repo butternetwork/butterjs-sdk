@@ -1,4 +1,4 @@
-import { BaseCurrency } from '../entities';
+import { Currency } from '../beans';
 import {
   BSC_MAINNET_USDC,
   BSC_TEST_MAP,
@@ -32,7 +32,7 @@ import {
   ETH_GOERLI_USDC,
   ETH_GOERLI_WETH,
 } from '../constants';
-import { getHexAddress } from './addressUtil';
+import { getHexAddress } from './common';
 
 /**
  * get token entity from address and chain id
@@ -42,8 +42,8 @@ import { getHexAddress } from './addressUtil';
 export function getTokenByAddressAndChainId(
   tokenAddress: string,
   chainId: string
-): BaseCurrency {
-  const allToken: BaseCurrency[] = ID_TO_ALL_TOKEN(chainId);
+): Currency {
+  const allToken: Currency[] = ID_TO_ALL_TOKEN(chainId);
   for (let i = 0; i < allToken.length; i++) {
     if (
       getHexAddress(allToken[i]!.address, chainId, false).toLowerCase() ===
@@ -58,7 +58,7 @@ export function getTokenByAddressAndChainId(
 }
 
 /** Chain Id to supported tokens */
-export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
+export const ID_TO_SUPPORTED_TOKEN = (id: string): Currency[] => {
   switch (id) {
     case ChainId.MAP_MAINNET:
       return [];
@@ -86,7 +86,7 @@ export const ID_TO_SUPPORTED_TOKEN = (id: string): BaseCurrency[] => {
 };
 
 /** Chain Id to all available tokens */
-export const ID_TO_ALL_TOKEN = (id: string): BaseCurrency[] => {
+export const ID_TO_ALL_TOKEN = (id: string): Currency[] => {
   switch (id) {
     case ChainId.MAP_TEST:
       return [

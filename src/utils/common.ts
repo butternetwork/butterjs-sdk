@@ -1,13 +1,12 @@
 import { getAddress } from '@ethersproject/address';
 import {
-  ChainId,
   ID_TO_NEAR_NETWORK,
   ID_TO_NETWORK_NAME,
   ID_TO_DEFAULT_RPC_URL,
   IS_EVM,
   IS_NEAR,
-} from '../constants/chains';
-import { Token } from '../entities/Token';
+} from '../constants';
+import { Token } from '../beans';
 import { connect } from 'near-api-js';
 import { NearAccountState } from '../types/responseTypes';
 
