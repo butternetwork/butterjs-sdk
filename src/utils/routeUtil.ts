@@ -46,7 +46,6 @@ export function getRouterIndexByChainIdAndDexName(
     result = map.get(dexName);
   }
   console.log('getRouterIndexByChainIdAndDexName',{chainId,dexName},result);
-
   return result;
 }
 

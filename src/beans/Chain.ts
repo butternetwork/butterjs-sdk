@@ -19,6 +19,7 @@ export class Chain {
 
   /** chain logo */
   public readonly logo?: string;
+  public readonly chainLogo?: string;
 
   /** chain symbol **/
   public readonly symbol?: string;
@@ -28,12 +29,12 @@ export class Chain {
 
   constructor(
     chainId: string,
-    name: string,
+    chainName?: string,
     symbol?: string,
     rpc?: string,
     scan?: string,
     logo?: string,
-    chainName?: string,
+    name?: string,
     token?:Currency,
   ) {
     // this.chainId = new Decimals(chainId).toNumber();
@@ -47,6 +48,7 @@ export class Chain {
     }
     if (logo) {
       this.logo = logo;
+      this.chainLogo = logo;
     }
     if (symbol) {
       this.symbol = symbol;
