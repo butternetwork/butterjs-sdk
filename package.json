@@ -38,6 +38,7 @@
     "@types/bn.js": "^5.1.1",
     "bn.js": "^5.2.1",
     "near-api-js": "^1.0.0",
+    "superagent": "^8.0.9",
     "tiny-invariant": "^1.2.0",
     "web3": "^1.8.0"
   }
