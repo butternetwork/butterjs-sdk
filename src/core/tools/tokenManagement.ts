@@ -90,7 +90,6 @@ export async function addTokenPair({
         targetToken.chainId
       );
     }
-    console.log(`add token ${srcToken.name} to ${targetToken.chainId}`);
   } else if (!IS_MAP(srcToken.chainId)) {
     throw new Error(`source chainId: ${srcToken.chainId} is not supported yet`);
   }
@@ -162,14 +161,12 @@ export async function addTokenPair({
       getHexAddress(srcToken.address, srcToken.chainId, false),
       mapToken!.address
     );
-    console.log(`register ${srcToken.name} done`);
 
     await tokenRegister.registerToken(
       targetToken.chainId,
       getHexAddress(targetToken.address, targetToken.chainId, false),
       mapToken!.address
     );
-    console.log(`register ${targetToken.name} done`);
 
     // set token decimals for conversion.
     await mapMOS.doSetTokenOtherChainDecimals(
@@ -184,5 +181,4 @@ export async function addTokenPair({
       targetToken.decimals
     );
   }
-  console.log('token reg done');
 }

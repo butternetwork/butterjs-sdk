@@ -15,6 +15,9 @@ import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
 import { ButterCoreParam, TransactionOptions } from '../../types';
 import { ButterContractType, ButterProviderType } from '../../types/paramTypes';
 import { PromiEvent } from 'web3-core';
+import {createVLog} from "../../utils/common";
+
+const vlog = createVLog('ButterRouter');
 
 /**
  * EVM Omnichain Chain Service smart contracts abstraction
@@ -64,6 +67,7 @@ export class ButterRouter {
     isNative: boolean,
     options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
+    vlog('entrance',{fromAddress,coreParam,targetSwapData,amount,toChain,targetToAddress,isNative,options})
     let txHash: string;
     if (this.contract instanceof EthersContract) {
       let ethersOptions: any = {
@@ -72,8 +76,6 @@ export class ButterRouter {
       if (isNative) {
         ethersOptions.value = amount;
       }
-      console.log('targetSwapData', targetSwapData);
-      console.log('amount', amount);
       const entranceTx: ContractTransaction = await this.contract.entrance(
         coreParam,
         targetSwapData,
@@ -113,16 +115,9 @@ export class ButterRouter {
     targetToAddress: string,
     isNative: boolean
   ): Promise<string> {
-    // gas estimation
+    vlog('gasEstimateEntrance',{fromAddress,coreParam,targetSwapData,amount,toChain,targetToAddress,isNative})
     let estimatedGas = '';
     if (this.contract instanceof EthersContract) {
-      // console.log('access param', coreParam);
-      // console.log('swapData', targetSwapData);
-      // console.log('amount', amount);
-      // console.log('toChain', toChain);
-      // console.log('tagetToAddress', targetToAddress);
-      // console.log('isNative', isNative);
-
       const gas: BigNumber = await this.contract.estimateGas.entrance!(
         coreParam,
         targetSwapData,

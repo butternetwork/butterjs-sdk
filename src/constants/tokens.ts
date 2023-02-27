@@ -214,7 +214,7 @@ export const BSC_TEST_USDC = new Token(
 
 export const BSC_TEST_BMOS = new Token(
   ChainId.BSC_TEST,
-  '0x593F6F6748dc203DFa636c299EeA6a39C0734EEd',
+  '0xb443882EC74e6F2631267FF4fc0E04C06f000089',
   18,
   'BMOS',
   'Butter MOST',
@@ -277,7 +277,7 @@ export const POLYGON_TEST_USDC = new Token(
 
 export const POLYGON_TEST_BMOS = new Token(
   ChainId.POLYGON_TEST,
-  '0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa',
+  '0x85485E03aEc8bF84a4B1fF5bfAE2E069179149bC',
   18,
   'BMOS',
   'Butter MOST',

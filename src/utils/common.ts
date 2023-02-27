@@ -134,3 +134,11 @@ export function asciiToString(input: number[]): string {
   }
   return ret;
 }
+
+export function createVLog(tag:string){
+  const vlog = (...data:any[]) => {
+    console.log(`🐣🦚[${tag}] `,...data);
+  }
+  return vlog;
+}
+

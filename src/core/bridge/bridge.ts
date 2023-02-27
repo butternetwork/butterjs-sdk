@@ -11,6 +11,8 @@ import {
   ButterTransactionResponse,
   NearAccountState,
 } from '../../types/responseTypes';
+import {createVLog} from "../../utils/common";
+const vlog = createVLog('ButterBridge')
 
 export class ButterBridge {
   /**

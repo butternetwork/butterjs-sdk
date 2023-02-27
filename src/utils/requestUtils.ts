@@ -199,8 +199,6 @@ export async function assembleEVMSwapDataFromRoute(
         );
       }
     }
-
-    // console.log('tokenAddressArr', tokenAddressArr);
     swapParam.push(abi.encode(['address[]'], [tokenAddressArr]));
 
     const routerIndex = getRouterIndexByChainIdAndDexName(
@@ -217,7 +215,6 @@ export async function assembleEVMSwapDataFromRoute(
   swapData.push(swapParamArr);
   swapData.push(targetChainTokenOut.address);
   swapData.push(mapTargetTokenAddress);
-  console.log('swap Data', swapData);
   return abi.encode(swapDataAbi, swapData);
 }
 
@@ -343,9 +340,6 @@ export function assembleNearSwapMsgFromRoute(
     src_swap: srcSwap,
     dst_swap: targetSwapData,
   };
-
-  console.log('dst_swap', targetSwapData);
-
   if (fromToken.isNative) {
     return JSON.stringify(swapInfo);
   }
@@ -393,7 +387,6 @@ export function assembleNearVersionTargetSwapParamArrayFromRoutes(
       route.chainId,
       route.dexName
     );
-    console.log('assembleSrcSwapDataFromRoute','routerIndex:',routerIndex,'route:',route)
     if (routerIndex === undefined) {
       throw new Error('assembleSrcSwapDataFromRoute: routerIndex is undefined');
     }

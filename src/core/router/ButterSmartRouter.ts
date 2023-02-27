@@ -9,6 +9,8 @@ import {BaseCurrency} from '../../entities';
 import {RouteResponse} from '../../types/responseTypes';
 import {IS_MAINNET} from '../../utils/chainUtil';
 import {assembleBridgeRoute} from '../../utils/routeUtil';
+import {createVLog} from "../../utils/common";
+const vlog = createVLog('ButterSmartRouter');
 
 export class ButterSmartRouter {
     async getBestRoute(
@@ -39,12 +41,12 @@ export class ButterSmartRouter {
             `tokenOutAddress=${toToken.address}&` +
             `tokenOutDecimal=${toToken.decimals}&` +
             `tokenOutSymbol=${toToken.symbol}`;
-        console.log(requestUrl);
+        vlog('getBestRoute',requestUrl);
         let routeResponse: RouteResponse;
         try {
             const response = await superagent.get(requestUrl);
             const data = response.body;
-            console.log('getBestRoute', data)
+            vlog('getBestRoute','response',data);
             if (data.hasOwnProperty('status') && data.hasOwnProperty('error')) {
                 routeResponse = {
                     status: 200,

@@ -209,8 +209,6 @@ export async function getSwapFee(
       .toString();
   }
   const distribution = await getDistributeRate(mapChainId);
-  console.log('11123123123123213123');
-  console.log('distribution', distribution);
   return Promise.resolve({
     feeToken: getTokenByAddressAndChainId(
       getHexAddress(
@@ -513,7 +511,6 @@ export async function getDistributeRate(
   const lpRate = await mos.distributeRate(0);
   const relayerRate = await mos.distributeRate(1);
   const protocolRate = await mos.distributeRate(2);
-  console.log('relay', relayerRate);
   return Promise.resolve({
     relayer: relayerRate.rate.div(100).toString(),
     lp: lpRate.rate.div(100).toString(),

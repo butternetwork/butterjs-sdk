@@ -33,8 +33,8 @@ import {
 } from '../../utils/requestUtils';
 import {ButterRouter} from '../../libs/butter-router/ButterRouter';
 import {DEFAULT_SLIPPAGE} from '../../constants/constants';
-import any = jasmine.any;
-
+import {createVLog} from "../../utils/common";
+const vlog = createVLog('ButterSwap');
 export class ButterSwap {
     /**
      * The BridgeToken method is used to bridge token from one chain to another.
@@ -56,6 +56,7 @@ export class ButterSwap {
                             options,
                         }: SwapRequestParam): Promise<ButterTransactionResponse> {
 
+        vlog('omnichainSwap',{ fromAddress, fromToken, toAddress, toToken, amountIn, swapRouteStr, slippage, options,})
         const toChainId = toToken.chainId;
         const fromChainId = fromToken.chainId;
         // check validity of toAddress according to toChainId
@@ -202,6 +203,8 @@ export class ButterSwap {
                               slippage,
                               options,
                           }: SwapRequestParam): Promise<string> {
+        vlog('gasEstimateSwap',{ fromAddress, fromToken, toAddress, toToken, amountIn, swapRouteStr, slippage, options,})
+
         const toChainId = toToken.chainId;
         const fromChainId = fromToken.chainId;
         // check validity of toAddress according to toChainId
@@ -309,14 +312,6 @@ export class ButterSwap {
                 swapData
             );
         } else {
-            console.log({
-                fromAddress,
-                fromTokenAddress: fromToken.address,
-                amountIn,
-                toAddress,
-                toChainId: toChainId.toString(),
-                swapData
-            }, 'butter sdk gasEstimateSwapOutToken params')
             gas = await mos.gasEstimateSwapOutToken(
                 fromAddress,
                 fromToken.address,

@@ -61,8 +61,7 @@ export async function verifyNearAccountId(
       state: await account.state(),
     };
   } catch (e) {
-    // @ts-ignore
-    console.log(e.message);
+    console.log(e);
     return {
       isValid: false,
       // @ts-ignore
