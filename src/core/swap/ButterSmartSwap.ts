@@ -1,9 +1,6 @@
 import {
-    BUTTER_ROUTER_ADDRESS_SET,
-    ChainId,
-    ID_TO_CHAIN_ID,
     IS_EVM,
-    IS_NEAR, DEFAULT_SLIPPAGE
+    IS_NEAR, DEFAULT_SLIPPAGE, BUTTER_ROUTER
 } from '../../constants';
 import {
     getHexAddress,
@@ -99,7 +96,7 @@ export class ButterSmartSwap {
             const routerParam: ButterRouterParam = await assembleButterRouterParamFromRoute(
                 route, amountIn, fromChainId, toToken, toAddress);
             const router: ButterRouterV2 = ButterRouterV2.from({
-                contract: BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+                contract: BUTTER_ROUTER(fromChainId),
                 abi: BUTTER_ROUTER_METADATA.abi,
                 signerOrProvider: options.signerOrProvider!
             });
@@ -207,7 +204,7 @@ export class ButterSmartSwap {
                     toAddress
                 );
             const router: ButterRouterV2 = ButterRouterV2.from({
-                contract: BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+                contract: BUTTER_ROUTER(fromChainId),
                 abi: BUTTER_ROUTER_METADATA.abi,
                 signerOrProvider: options.signerOrProvider!
             });

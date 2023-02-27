@@ -55,7 +55,10 @@ export const MOS_CONTRACT = (chainId:CHAIN_ID|string):string => {
   }
   throw new Error(`Unsupport mos with chainId:${chainId}`)
 }
-
+export const MOS_CONTRACT_NEAR : any = {
+  [CHAIN_ID.NEAR_MAINNET]: 'mos.mfac.butternetwork.near',
+  [CHAIN_ID.NEAR_TEST]: 'mos.map007.testnet',
+};
 export const BUTTER_ROUTER = (chainId:CHAIN_ID|string):string => {
   if (BUTTER_ROUTER_ADDRESSES[chainId]){
     return BUTTER_ROUTER_ADDRESSES[chainId];

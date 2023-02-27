@@ -1,3 +1,3 @@
-export * from './requestTypes';
-export * from './responseTypes';
-export * from './paramTypes';
+export * from './request';
+export * from './response';
+export * from './param';

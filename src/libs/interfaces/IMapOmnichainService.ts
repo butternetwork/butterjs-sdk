@@ -1,5 +1,5 @@
-import { TransactionOptions } from '../../types/requestTypes';
-import { ButterTransactionResponse } from '../../types/responseTypes';
+import { TransactionOptions } from '../../types';
+import { ButterTransactionResponse } from '../../types';
 import BN from 'bn.js';
 import { PromiEvent, TransactionReceipt } from 'web3-core';
 

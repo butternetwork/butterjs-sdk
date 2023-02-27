@@ -4,7 +4,7 @@ import { KeyStore } from 'near-api-js/lib/key_stores';
 import { Currency } from '../beans';
 import { Provider } from '@ethersproject/abstract-provider';
 import { Eth } from 'web3-eth';
-import { NearProviderType } from './paramTypes';
+import { NearProviderType } from './param';
 
 export type BridgeRequestParam = {
   fromAddress: string;

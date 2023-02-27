@@ -577,7 +577,7 @@ export const NEAR_CONNECT = (chainId:CHAIN_ID|string) => {
     };
     if (!connectionConfig.networkId){
         throw new Error(
-            `ID_TO_NEAR_NETWORK: unknown chain id when querying near network: ${chainId}`
+            `NEAR_CONNECT: unknown chain id when querying near network: ${chainId}`
         );
     }
     return connectionConfig;

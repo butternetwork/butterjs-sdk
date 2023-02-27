@@ -1,7 +1,8 @@
 export * from './common';
 export * from './reqeust';
 export * from './response';
-export * from './routeUtil';
+export * from './token';
+export * from './route';
 
 
 

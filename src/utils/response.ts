@@ -1,9 +1,9 @@
 import {
   ButterTransactionReceipt,
   ButterTransactionResponse,
-} from '../types/responseTypes';
+} from '../types';
 import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
-import { ButterProviderType, ButterReceiptType } from '../types/paramTypes';
+import { ButterProviderType, ButterReceiptType } from '../types';
 import { NearNetworkConfig } from '../types';
 import { Signer } from 'ethers';
 import { Provider } from '@ethersproject/abstract-provider';

@@ -10,17 +10,15 @@ import { Contract as Web3Contract } from 'web3-eth-contract';
 import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
 import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import {
+  ButterProviderType,
   ButterTransactionReceipt,
-  ButterTransactionResponse,
-} from '../../types/responseTypes';
+  ButterTransactionResponse, TransactionOptions,
+} from '../../types';
 import {
   adaptEthReceipt,
   assembleEVMTransactionResponse,
 } from '../../utils';
 import { Provider } from '@ethersproject/abstract-provider';
-import { Eth } from 'web3-eth';
-import { TransactionOptions } from '../../types';
-import { ButterProviderType } from '../../types/paramTypes';
 import { PromiEvent } from 'web3-core';
 
 export class RelayOmnichainService implements IMapOmnichainService {

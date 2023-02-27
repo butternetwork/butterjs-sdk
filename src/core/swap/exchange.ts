@@ -1,9 +1,6 @@
 import {
-    BUTTER_ROUTER_ADDRESS_SET,
-    ChainId,
-    ID_TO_CHAIN_ID,
     IS_EVM,
-    IS_NEAR, DEFAULT_SLIPPAGE
+    IS_NEAR, DEFAULT_SLIPPAGE, CHAIN_ID, BUTTER_ROUTER
 } from '../../constants';
 import {
     getHexAddress,
@@ -66,7 +63,7 @@ export class ButterSwap {
 
         // if src chain is near chain, near network provider must be provided
         if (
-            ChainId.NEAR_TESTNET == fromToken.chainId &&
+            CHAIN_ID.NEAR_TEST == fromToken.chainId &&
             options.nearProvider == undefined
         ) {
             throw new Error(`Network config must be provided for NEAR blockchain`);
@@ -127,7 +124,7 @@ export class ButterSwap {
                 toAddress
             );
             const butterRouter: ButterRouter = new ButterRouter(
-                BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+                BUTTER_ROUTER(fromChainId),
                 BUTTER_ROUTER_METADATA.abi,
                 options.signerOrProvider!
             );
@@ -211,7 +208,7 @@ export class ButterSwap {
         }
         // if src chain is near chain, near network provider must be provided
         if (
-            ChainId.NEAR_TESTNET == fromToken.chainId &&
+            CHAIN_ID.NEAR_TEST == fromToken.chainId &&
             options.nearProvider == undefined
         ) {
             throw new Error(`Network config must be provided for NEAR blockchain`);
@@ -271,7 +268,7 @@ export class ButterSwap {
                     toAddress
                 );
             const butterRouter: ButterRouter = new ButterRouter(
-                BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+                BUTTER_ROUTER(fromChainId),
                 BUTTER_ROUTER_METADATA.abi,
                 options.signerOrProvider!
             );

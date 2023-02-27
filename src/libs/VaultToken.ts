@@ -1,4 +1,4 @@
-import { ButterContractType, ButterProviderType } from '../types/paramTypes';
+import { ButterContractType, ButterProviderType } from '../types';
 import { ethers, Signer } from 'ethers';
 import { Provider } from '@ethersproject/abstract-provider';
 import VaultTokenMetadata from '../abis/VaultToken.json';

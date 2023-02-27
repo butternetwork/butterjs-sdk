@@ -7,14 +7,12 @@ import {
 } from 'ethers';
 import { Eth } from 'web3-eth';
 import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
-import { ButterTransactionResponse } from '../../types/responseTypes';
-import { assembleEVMTransactionResponse } from '../../utils';
 
 import { Provider } from '@ethersproject/abstract-provider';
 import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
-import { TransactionOptions } from '../../types';
-import { ButterContractType, ButterProviderType } from '../../types/paramTypes';
+import {ButterContractType, ButterProviderType, ButterTransactionResponse, TransactionOptions} from '../../types';
 import { PromiEvent } from 'web3-core';
+import {assembleEVMTransactionResponse} from "../../utils";
 
 /**
  * EVM Omnichain Chain Service smart contracts abstraction

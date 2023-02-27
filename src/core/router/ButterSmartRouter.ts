@@ -3,10 +3,10 @@ const superagent = require('superagent');
 import {
     BUTTER_SMART_ROUTER_URL,
     BUTTER_SMART_ROUTER_URL_MAINNET,
+    IS_MAINNET
 } from '../../constants';
 import {Currency} from '../../beans';
-import {RouteResponse} from '../../types/responseTypes';
-import {IS_MAINNET} from '../../utils/chainUtil';
+import {RouteResponse} from '../../types';
 
 export class ButterSmartRouter {
     async getBestRoute(
