@@ -70,7 +70,6 @@ export async function approveToken(
   approvalAddress: string,
   unlimitedAmount = false
 ): Promise<void> {
-  console.log(`approve ${token.address} to ${approvalAddress}`);
   if (token.isNative) {
     return;
   }
@@ -83,7 +82,6 @@ export async function approveToken(
   );
 
   if (approvedAmount.gte(BigNumber.from(amount.toString()))) {
-    console.log('already approved');
     return;
   }
 

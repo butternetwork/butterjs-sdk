@@ -41,8 +41,9 @@ export const BUTTER_ROUTER_ADDRESS_SET: { [chainId in ChainId]: string } = {
   [ChainId.ETH_PRIV]: '',
   [ChainId.ETH_GOERLI]: '0xE4585c433B953320B5012fcD31AE00863684fA59',
   [ChainId.BSC_TEST]: '0x85485E03aEc8bF84a4B1fF5bfAE2E069179149bC',
-  [ChainId.MAP_TEST]: '',
   [ChainId.POLYGON_TEST]: '0x1d4F72EEcEECE11AB385a0fd624a6C8FF9E570fE',
+  [ChainId.MAP_TEST]: '',
+
   [ChainId.NEAR_TESTNET]: '',
 };
 
