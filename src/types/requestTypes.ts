@@ -101,6 +101,7 @@ export class NearNetworkConfig {
 
 export type TransactionOptions = {
   gas?: string;
+  isNative?:boolean
 };
 
 export type FeeRate = {

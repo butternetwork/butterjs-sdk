@@ -14,10 +14,7 @@ import { NearAccountState } from '../types/responseTypes';
  * Validates an address and returns the parsed (checksummed) version of that address
  * @param address the unchecksummed hex address
  */
-export function validateAndParseAddressByChainId(
-  address: string,
-  chainId: string
-): string {
+export function validateAndParseAddressByChainId(address: string, chainId: string): string {
   if (IS_EVM(chainId)) {
     try {
       return getAddress(address);
@@ -43,10 +40,7 @@ export function validateAndParseAddressByChainId(
  * @param accountId
  * @param chainId
  */
-export async function verifyNearAccountId(
-  accountId: string,
-  chainId: string
-): Promise<NearAccountState> {
+export async function verifyNearAccountId(accountId: string, chainId: string): Promise<NearAccountState> {
   const connectionConfig = {
     networkId: ID_TO_NEAR_NETWORK(chainId),
     nodeUrl: ID_TO_DEFAULT_RPC_URL(chainId),
@@ -88,11 +82,7 @@ export function hexToDecimalArray(address: string, chainId: string): number[] {
   return ret;
 }
 
-export function getHexAddress(
-  address: string,
-  chainId: string,
-  isAddress: boolean
-): string {
+export function getHexAddress(address: string, chainId: string, isAddress: boolean): string {
   if (IS_EVM(chainId)) {
     return address;
   } else if (IS_NEAR(chainId)) {
@@ -132,4 +122,11 @@ export function asciiToString(input: number[]): string {
     ret += String.fromCharCode(input[i]!);
   }
   return ret;
+}
+
+export function createVLog(tag:string){
+  const vlog = (...data:any[]) => {
+    console.log(`🐣🦚[${tag}] `,...data);
+  }
+  return vlog;
 }

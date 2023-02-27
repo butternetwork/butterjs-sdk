@@ -8,7 +8,7 @@ import {
 import { Eth } from 'web3-eth';
 import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
 import { ButterTransactionResponse } from '../../types/responseTypes';
-import { assembleEVMTransactionResponse } from '../../utils';
+import {assembleEVMTransactionResponse, createVLog} from '../../utils';
 
 import { Provider } from '@ethersproject/abstract-provider';
 import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
@@ -19,15 +19,21 @@ import { PromiEvent } from 'web3-core';
 /**
  * EVM Omnichain Chain Service smart contracts abstraction
  */
+
+const vlog = createVLog('ButterRouter');
+export interface ButterRouterType{
+  /**
+   * contract address
+   */
+  contract:string,
+  abi:any,
+  signerOrProvider:ButterProviderType
+}
 export class ButterRouter {
   contract: ButterContractType;
   provider: ButterProviderType;
 
-  constructor(
-    contractAddress: string,
-    abi: any,
-    signerOrProvider: ButterProviderType
-  ) {
+  constructor(contractAddress: string, abi: any, signerOrProvider: ButterProviderType) {
     if (
       signerOrProvider instanceof Signer ||
       signerOrProvider instanceof Provider
@@ -41,6 +47,10 @@ export class ButterRouter {
       this.contract = new signerOrProvider.Contract(abi, contractAddress);
     }
     this.provider = signerOrProvider;
+  }
+
+  static from(config:ButterRouterType):ButterRouter {
+    return new ButterRouter(config.contract,config.abi,config.signerOrProvider);
   }
 
   /**
@@ -64,6 +74,7 @@ export class ButterRouter {
     isNative: boolean,
     options: TransactionOptions
   ): Promise<ButterTransactionResponse> {
+    vlog('entrance',{fromAddress,coreParam,targetSwapData,amount,toChain,targetToAddress,isNative,options})
     let txHash: string;
     if (this.contract instanceof EthersContract) {
       let ethersOptions: any = {
@@ -72,8 +83,6 @@ export class ButterRouter {
       if (isNative) {
         ethersOptions.value = amount;
       }
-      console.log('targetSwapData', targetSwapData);
-      console.log('amount', amount);
       const entranceTx: ContractTransaction = await this.contract.entrance(
         coreParam,
         targetSwapData,
@@ -84,7 +93,6 @@ export class ButterRouter {
       );
       txHash = entranceTx.hash;
       return assembleEVMTransactionResponse(txHash!, this.provider);
-      // receipt = await entranceTx.wait();
     } else {
       let web3JSOptions: any = {
         from: fromAddress,

@@ -7,7 +7,6 @@ import {
 import {Currency} from '../../beans';
 import {RouteResponse} from '../../types/responseTypes';
 import {IS_MAINNET} from '../../utils/chainUtil';
-import {assembleBridgeRoute} from '../../utils/routeUtil';
 
 export class ButterSmartRouter {
     async getBestRoute(
