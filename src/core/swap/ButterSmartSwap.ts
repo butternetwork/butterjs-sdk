@@ -34,10 +34,10 @@ import {ButterRouter as ButterRouterV2} from '../../libs/router/ButterRouter';
 
 export class ButterSmartSwap {
 
-    _checkParams(params:SwapRequestParam){
-        let { fromToken,  options}=params;
+    _checkParams(params: SwapRequestParam) {
+        let {fromToken, options} = params;
         const fromChainId = fromToken.chainId;
-        if (options.signerOrProvider == undefined){
+        if (options.signerOrProvider == undefined) {
             // if src chain is evm chain, signer must be provided
             if (IS_EVM(fromChainId)) {
                 throw new Error(`Signer must be provided for EVM blockchains`);
@@ -51,14 +51,18 @@ export class ButterSmartSwap {
 
     async swap(params: SwapRequestParam): Promise<ButterTransactionResponse> {
         this._checkParams(params);
-        let { fromAddress, fromToken, toAddress, toToken,
-            amountIn, swapRouteStr, slippage, options}=params;
+        let {
+            fromAddress, fromToken, toAddress, toToken,
+            amountIn, swapRouteStr, slippage, options
+        } = params;
         const toChainId = toToken.chainId;
         const fromChainId = fromToken.chainId;
         toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
         let result: ButterTransactionResponse;
         // assemble cross-chain swap route
-        if (slippage === undefined) {slippage = DEFAULT_SLIPPAGE;}
+        if (slippage === undefined) {
+            slippage = DEFAULT_SLIPPAGE;
+        }
         const route: ButterCrossChainRoute = assembleCrossChainRouteFromJson(swapRouteStr, slippage);
         let swapData = '';
         // convert near address to hex
@@ -157,10 +161,12 @@ export class ButterSmartSwap {
         return result;
     }
 
-    async estimateGas(params:SwapRequestParam):Promise<string>{
+    async estimateGas(params: SwapRequestParam): Promise<string> {
         this._checkParams(params);
-        let { fromAddress, fromToken, toAddress, toToken,
-            amountIn, swapRouteStr, slippage, options}=params;
+        let {
+            fromAddress, fromToken, toAddress, toToken,
+            amountIn, swapRouteStr, slippage, options
+        } = params;
         const toChainId = toToken.chainId;
         const fromChainId = fromToken.chainId;
         // check validity of toAddress according to toChainId
@@ -177,9 +183,7 @@ export class ButterSmartSwap {
         let gas;
 
         // check if source chain needs to do agg-swap
-        if (
-            !IS_NEAR(fromChainId)
-        ) {
+        if (!IS_NEAR(fromChainId)) {
             if (!route.srcChain
                 || route.srcChain.length == 0) {
                 route.srcChain = [
@@ -202,20 +206,16 @@ export class ButterSmartSwap {
                     toToken,
                     toAddress
                 );
-            const butterRouter: ButterRouter = new ButterRouter(
-                BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
-                BUTTER_ROUTER_METADATA.abi,
-                options.signerOrProvider!
-            );
-            gas = await butterRouter.gasEstimateEntrance(
-                fromAddress,
-                routerParam.coreSwapData,
-                routerParam.targetSwapData,
-                routerParam.amount,
-                routerParam.toChainId,
-                routerParam.toAddress,
-                fromToken.isNative
-            );
+            const router: ButterRouterV2 = ButterRouterV2.from({
+                contract: BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+                abi: BUTTER_ROUTER_METADATA.abi,
+                signerOrProvider: options.signerOrProvider!
+            });
+            let gas = await router.estimateGas(fromAddress, routerParam.toAddress, routerParam.amount, routerParam.toChainId,
+                routerParam.coreSwapData, routerParam.targetSwapData, {
+                    isNative: fromToken.isNative
+                }
+            )
 
             return gas;
         }
@@ -260,141 +260,5 @@ export class ButterSmartSwap {
 
         return gas;
     }
-    async gasEstimateSwap({
-                              fromAddress,
-                              fromToken,
-                              toAddress,
-                              toToken,
-                              amountIn,
-                              swapRouteStr,
-                              slippage,
-                              options,
-                          }: SwapRequestParam): Promise<string> {
-        const toChainId = toToken.chainId;
-        const fromChainId = fromToken.chainId;
-        // check validity of toAddress according to toChainId
-        toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
-        // if src chain is evm chain, signer must be provided
-        if (IS_EVM(fromToken.chainId) && options.signerOrProvider == undefined) {
-            throw new Error(`provider must be provided`);
-        }
-        // if src chain is near chain, near network provider must be provided
-        if (
-            ChainId.NEAR_TESTNET == fromToken.chainId &&
-            options.nearProvider == undefined
-        ) {
-            throw new Error(`Network config must be provided for NEAR blockchain`);
-        }
 
-        // assemble cross-chain swap route
-        const route: ButterCrossChainRoute = assembleCrossChainRouteFromJson(
-            swapRouteStr,
-            DEFAULT_SLIPPAGE
-        );
-        let swapData = '';
-        // if (IS_NEAR(fromChainId)) {
-        //   swapData = assembleNearSwapMsgFromRoute(
-        //     route,
-        //     fromToken,
-        //     toToken,
-        //     toAddress
-        //   );
-        //   return 'not supported near estimate';
-        // }
-        if (IS_EVM(fromChainId)) {
-            swapData = await assembleTargetSwapDataFromRoute(route, toToken);
-        }
-
-        if (IS_NEAR(toChainId)) {
-            toAddress = getHexAddress(toAddress, toChainId, false);
-        }
-        let gas;
-
-        // check if source chain needs to do agg-swap
-        if (
-            // route.srcChain != undefined &&
-            // route.srcChain.length != 0 &&
-            // route.srcChain[0]!.path.length != 0 &&
-            !IS_NEAR(fromChainId)
-        ) {
-            if (!route.srcChain
-                || route.srcChain.length == 0) {
-                route.srcChain = [
-                    {
-                        chainId: fromChainId,
-                        amountIn: amountIn,
-                        amountOut: '',
-                        path: [],
-                        dexName: '',
-                        tokenIn: fromToken,
-                        tokenOut: fromToken
-                    }
-                ]
-            }
-            const routerParam: ButterRouterParam =
-                await assembleButterRouterParamFromRoute(
-                    route,
-                    amountIn,
-                    fromChainId,
-                    toToken,
-                    toAddress
-                );
-            const butterRouter: ButterRouter = new ButterRouter(
-                BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
-                BUTTER_ROUTER_METADATA.abi,
-                options.signerOrProvider!
-            );
-            gas = await butterRouter.gasEstimateEntrance(
-                fromAddress,
-                routerParam.coreSwapData,
-                routerParam.targetSwapData,
-                routerParam.amount,
-                routerParam.toChainId,
-                routerParam.toAddress,
-                fromToken.isNative
-            );
-
-            return gas;
-        }
-
-        // if no swap, direct call mos swap method
-        const mos: IMapOmnichainService = createMOSInstance(
-            fromToken.chainId,
-            options
-        );
-
-        if (IS_NEAR(toChainId)) {
-            toAddress = getHexAddress(toAddress, toChainId, false);
-        }
-
-        // if input token is Native coin, call transferOutNative method
-        if (fromToken.isNative) {
-            gas = await mos.gasEstimateSwapOutNative(
-                fromAddress,
-                toAddress,
-                toChainId.toString(),
-                amountIn,
-                swapData
-            );
-        } else {
-            console.log({
-                fromAddress,
-                fromTokenAddress: fromToken.address,
-                amountIn,
-                toAddress,
-                toChainId: toChainId.toString(),
-                swapData
-            }, 'butter sdk gasEstimateSwapOutToken params')
-            gas = await mos.gasEstimateSwapOutToken(
-                fromAddress,
-                fromToken.address,
-                amountIn,
-                toAddress,
-                toChainId.toString(),
-                swapData
-            );
-        }
-
-        return gas;
-    }
 }

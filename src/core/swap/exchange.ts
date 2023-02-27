@@ -29,9 +29,11 @@ import {
     assembleNearSwapMsgFromRoute,
     assembleTargetSwapDataFromRoute,
 } from '../../utils';
-// import {ButterRouter} from '../../libs/butter-router/ButterRouter';
-import {ButterRouter as ButterRouterV2} from '../../libs/router/ButterRouter';
+import {ButterRouter} from '../../libs/butter-router/ButterRouter';
 
+/**
+ * @deprecated {@link {}}}
+ */
 export class ButterSwap {
     /**
      * The BridgeToken method is used to bridge token from one chain to another.
@@ -124,42 +126,24 @@ export class ButterSwap {
                 toToken,
                 toAddress
             );
-            const router: ButterRouterV2 = ButterRouterV2.from({
-                contract: BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
-                abi: BUTTER_ROUTER_METADATA.abi,
-                signerOrProvider: options.signerOrProvider!
-            });
+            const butterRouter: ButterRouter = new ButterRouter(
+                BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
+                BUTTER_ROUTER_METADATA.abi,
+                options.signerOrProvider!
+            );
 
-            result = await router.entrance(
+            result = await butterRouter.entrance(
                 fromAddress,
-                routerParam.toAddress,
-                routerParam.amount,
-                routerParam.toChainId,
                 routerParam.coreSwapData,
                 routerParam.targetSwapData,
+                routerParam.amount,
+                routerParam.toChainId,
+                routerParam.toAddress,
+                fromToken.isNative,
                 {
-                    isNative: fromToken.isNative,
                     gas: options.gas,
                 }
             );
-            // const butterRouter: ButterRouter = new ButterRouter(
-            //     BUTTER_ROUTER_ADDRESS_SET[ID_TO_CHAIN_ID(fromChainId)],
-            //     BUTTER_ROUTER_METADATA.abi,
-            //     options.signerOrProvider!
-            // );
-
-            // result = await butterRouter.entrance(
-            //     fromAddress,
-            //     routerParam.coreSwapData,
-            //     routerParam.targetSwapData,
-            //     routerParam.amount,
-            //     routerParam.toChainId,
-            //     routerParam.toAddress,
-            //     fromToken.isNative,
-            //     {
-            //         gas: options.gas,
-            //     }
-            // );
 
             return result;
         }

@@ -21,6 +21,8 @@ import { PromiEvent } from 'web3-core';
  */
 
 const vlog = createVLog('ButterRouter');
+
+
 export interface ButterRouterType{
   /**
    * contract address
@@ -29,6 +31,10 @@ export interface ButterRouterType{
   abi:any,
   signerOrProvider:ButterProviderType
 }
+
+/**
+ * @Deprecated
+ */
 export class ButterRouter {
   contract: ButterContractType;
   provider: ButterProviderType;
