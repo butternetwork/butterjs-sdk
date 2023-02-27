@@ -20,7 +20,6 @@ export function validateAndParseAddressByChainId(
   address: string,
   chainId: string
 ): string {
-  console.log('test')
   if (IS_EVM(chainId)) {
     try {
       return getAddress(address);
