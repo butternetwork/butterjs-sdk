@@ -3,6 +3,7 @@ import {
     IS_NEAR, DEFAULT_SLIPPAGE, BUTTER_ROUTER
 } from '../../constants';
 import {
+    createVLog,
     getHexAddress,
     validateAndParseAddressByChainId,
     verifyNearAccountId,
@@ -28,7 +29,7 @@ import {
 } from '../../utils';
 // import {ButterRouter} from '../../libs/butter-router/ButterRouter';
 import {ButterRouter as ButterRouterV2} from '../../libs/router/ButterRouter';
-
+const vlog = createVLog('ButterSmartSwap');
 export class ButterSmartSwap {
 
     _checkParams(params: SwapRequestParam) {
@@ -47,6 +48,7 @@ export class ButterSmartSwap {
     }
 
     async swap(params: SwapRequestParam): Promise<ButterTransactionResponse> {
+        vlog('swap',params);
         this._checkParams(params);
         let {
             fromAddress, fromToken, toAddress, toToken,
@@ -159,6 +161,7 @@ export class ButterSmartSwap {
     }
 
     async estimateGas(params: SwapRequestParam): Promise<string> {
+        vlog('estimateGas','params',params);
         this._checkParams(params);
         let {
             fromAddress, fromToken, toAddress, toToken,
@@ -169,6 +172,7 @@ export class ButterSmartSwap {
         // check validity of toAddress according to toChainId
         toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
         const route: ButterCrossChainRoute = assembleCrossChainRouteFromJson(swapRouteStr, DEFAULT_SLIPPAGE);
+        vlog('estimateGas','route',route);
         let swapData = '';
         if (IS_EVM(fromChainId)) {
             swapData = await assembleTargetSwapDataFromRoute(route, toToken);
@@ -181,8 +185,7 @@ export class ButterSmartSwap {
 
         // check if source chain needs to do agg-swap
         if (!IS_NEAR(fromChainId)) {
-            if (!route.srcChain
-                || route.srcChain.length == 0) {
+            if (!route.srcChain || route.srcChain.length == 0) {
                 route.srcChain = [
                     {
                         chainId: fromChainId,

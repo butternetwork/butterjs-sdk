@@ -97,23 +97,26 @@ export class ButterRouter {
 
     async estimateGas(from: string, to: string, amount: string | number, toChain: string,
                       coreData: ButterCoreParam, swapData: string, options: TransactionOptions): Promise<string> {
+        vlog('estimateGas', {from, to, amount, toChain, coreData, swapData, options})
         let estimateGas = '';
         if (this.contract instanceof EthersContract) {
+            vlog('estimateGas','use EthersContract');
             const gas: BigNumber = await this.contract.estimateGas.entrance!(
                 coreData,
                 swapData,
                 amount,
                 toChain,
                 to,
-                {value: options.isNative ? amount : undefined,}
+                {value: options.isNative ? amount : '0x0',}
             );
             estimateGas = gas.toString();
         } else {
+            vlog('estimateGas','use NormalContract');
             const gas = await this.contract.methods
                 .entrance(coreData, swapData, amount, toChain, to)
                 .estimateGas({
                     from: from,
-                    value: options.isNative ? amount : undefined,
+                    value: options.isNative ? amount : '0x0',
                 });
             estimateGas = gas.toString();
         }
