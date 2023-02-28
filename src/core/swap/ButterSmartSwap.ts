@@ -33,16 +33,20 @@ const vlog = createVLog('ButterSmartSwap');
 export class ButterSmartSwap {
 
     _checkParams(params: SwapRequestParam) {
+        vlog('_checkParams',params);
         let {fromToken, options} = params;
         const fromChainId = fromToken.chainId;
-        if (options.signerOrProvider == undefined) {
-            // if src chain is evm chain, signer must be provided
-            if (IS_EVM(fromChainId)) {
-                throw new Error(`Signer must be provided for EVM blockchains`);
+        if (IS_EVM(fromChainId)) {
+            if (options.signerOrProvider == undefined) {
+                // if src chain is evm chain, signer must be provided
+                throw new Error(`[ButterSmartSwap] Signer must be provided for EVM blockchains`);
             }
-            // if src chain is near chain, near network provider must be provided
-            if (IS_NEAR(fromChainId)) {
-                throw new Error(`Network config must be provided for NEAR blockchain`);
+        }
+
+        // if src chain is near chain, near network provider must be provided
+        if (IS_NEAR(fromChainId)) {
+            if ( options.nearProvider == undefined){
+                throw new Error(`[ButterSmartSwap] Network config must be provided for NEAR blockchain`);
             }
         }
     }
