@@ -1,7 +1,6 @@
-import {
-    CHAIN_ID,
-} from '../constants';
+import {CHAIN_ID,} from '../constants';
 import {createVLog} from "./common";
+
 const vlog = createVLog('RouteUtil')
 
 const ROUTE_MAP = (chainId: string | CHAIN_ID): any[] => {

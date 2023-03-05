@@ -1,25 +1,10 @@
-import {
-  BigNumber,
-  Contract as EthersContract,
-  ContractInterface,
-  ContractTransaction,
-  ethers,
-  Signer,
-} from 'ethers';
-import { Contract as Web3Contract } from 'web3-eth-contract';
-import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
-import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
-import {
-  ButterProviderType,
-  ButterTransactionReceipt,
-  ButterTransactionResponse, TransactionOptions,
-} from '../../types';
-import {
-  adaptEthReceipt,
-  assembleEVMTransactionResponse,
-} from '../../utils';
-import { Provider } from '@ethersproject/abstract-provider';
-import { PromiEvent } from 'web3-core';
+import {BigNumber, Contract as EthersContract, ContractTransaction, ethers, Signer,} from 'ethers';
+import {Contract as Web3Contract} from 'web3-eth-contract';
+import {PromiEvent, TransactionReceipt as Web3TransactionReceipt} from 'web3-core';
+import {IMapOmnichainService} from '../interfaces/IMapOmnichainService';
+import {ButterProviderType, ButterTransactionResponse, TransactionOptions,} from '../../types';
+import {assembleEVMTransactionResponse,} from '../../utils';
+import {Provider} from '@ethersproject/abstract-provider';
 
 export class RelayOmnichainService implements IMapOmnichainService {
   contract: EthersContract | Web3Contract;

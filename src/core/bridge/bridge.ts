@@ -1,16 +1,8 @@
-import { CHAIN_ID, IS_EVM, IS_NEAR } from '../../constants';
-import {
-  getHexAddress,
-  validateAndParseAddressByChainId,
-  verifyNearAccountId,
-} from '../../utils';
-import { BridgeRequestParam } from '../../types';
-import { IMapOmnichainService } from '../../libs/interfaces/IMapOmnichainService';
-import { createMOSInstance } from '../../libs/utils/mosUtils';
-import {
-  ButterTransactionResponse,
-  NearAccountState,
-} from '../../types';
+import {CHAIN_ID, IS_EVM, IS_NEAR} from '../../constants';
+import {getHexAddress, validateAndParseAddressByChainId, verifyNearAccountId,} from '../../utils';
+import {BridgeRequestParam, ButterTransactionResponse, NearAccountState} from '../../types';
+import {IMapOmnichainService} from '../../libs/interfaces/IMapOmnichainService';
+import {createMOSInstance} from '../../libs/utils/mosUtils';
 
 export class ButterBridge {
   /**

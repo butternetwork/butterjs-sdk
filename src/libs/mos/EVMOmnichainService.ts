@@ -1,17 +1,10 @@
-import {
-  BigNumber,
-  Contract as EthersContract,
-  ContractTransaction,
-  ethers,
-  Signer,
-} from 'ethers';
-import { Eth } from 'web3-eth';
-import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
+import {BigNumber, Contract as EthersContract, ContractTransaction, ethers, Signer,} from 'ethers';
+import {Eth} from 'web3-eth';
+import {IMapOmnichainService} from '../interfaces/IMapOmnichainService';
 
-import { Provider } from '@ethersproject/abstract-provider';
-import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
+import {Provider} from '@ethersproject/abstract-provider';
+import {PromiEvent, TransactionReceipt as Web3TransactionReceipt} from 'web3-core';
 import {ButterContractType, ButterProviderType, ButterTransactionResponse, TransactionOptions} from '../../types';
-import { PromiEvent } from 'web3-core';
 import {assembleEVMTransactionResponse} from "../../utils";
 
 /**

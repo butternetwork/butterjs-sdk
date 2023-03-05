@@ -1,11 +1,8 @@
-import { getAddress } from '@ethersproject/address';
-import {
-  IS_EVM,
-  IS_NEAR, NEAR_CONNECT,
-} from '../constants';
-import { Token } from '../beans';
-import { connect } from 'near-api-js';
-import { NearAccountState } from '../types';
+import {getAddress} from '@ethersproject/address';
+import {IS_EVM, IS_NEAR, NEAR_CONNECT,} from '../constants';
+import {Token} from '../beans';
+import {connect} from 'near-api-js';
+import {NearAccountState} from '../types';
 
 /**
  * Validates an address and returns the parsed (checksummed) version of that address

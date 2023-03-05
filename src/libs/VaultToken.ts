@@ -1,7 +1,8 @@
-import { ButterContractType, ButterProviderType } from '../types';
-import { ethers, Signer } from 'ethers';
-import { Provider } from '@ethersproject/abstract-provider';
+import {ButterContractType, ButterProviderType} from '../types';
+import {ethers, Signer} from 'ethers';
+import {Provider} from '@ethersproject/abstract-provider';
 import VaultTokenMetadata from '../abis/VaultToken.json';
+
 export class VaultToken {
   private readonly contract: ButterContractType;
   private readonly provider: ButterProviderType;

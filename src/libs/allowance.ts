@@ -1,7 +1,7 @@
-import { constants, Contract, ContractTransaction, Signer } from 'ethers';
-import { BigNumber } from '@ethersproject/bignumber';
-import { ERC20_ABI, ERC20Contract } from '../abis/ERC20ABI';
-import { Currency, Token } from '../beans';
+import {constants, Contract, ContractTransaction, Signer} from 'ethers';
+import {BigNumber} from '@ethersproject/bignumber';
+import {ERC20_ABI, ERC20Contract} from '../abis/ERC20ABI';
+import {Currency, Token} from '../beans';
 
 /**
  * get contract allowance for token

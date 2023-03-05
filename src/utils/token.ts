@@ -1,4 +1,4 @@
-import { Currency } from '../beans';
+import {Currency} from '../beans';
 import {AVAILABLE_TOKENS, CHAIN_ID} from "../constants";
 
 /**

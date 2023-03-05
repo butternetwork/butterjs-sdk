@@ -1,12 +1,7 @@
-import {
-  ButterTransactionReceipt,
-  ButterTransactionResponse,
-} from '../types';
-import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
-import { ButterProviderType, ButterReceiptType } from '../types';
-import { NearNetworkConfig } from '../types';
-import { Signer } from 'ethers';
-import { Provider } from '@ethersproject/abstract-provider';
+import {ButterProviderType, ButterReceiptType, ButterTransactionReceipt, ButterTransactionResponse,} from '../types';
+import {FinalExecutionOutcome} from 'near-api-js/lib/providers';
+import {Signer} from 'ethers';
+import {Provider} from '@ethersproject/abstract-provider';
 
 /**
  * adapt different receipt into unified butter transaction receipt

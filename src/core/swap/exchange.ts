@@ -1,8 +1,9 @@
+import {BUTTER_ROUTER, CHAIN_ID, DEFAULT_SLIPPAGE, IS_EVM, IS_NEAR} from '../../constants';
 import {
-    IS_EVM,
-    IS_NEAR, DEFAULT_SLIPPAGE, CHAIN_ID, BUTTER_ROUTER
-} from '../../constants';
-import {
+    assembleButterRouterParamFromRoute,
+    assembleCrossChainRouteFromJson,
+    assembleNearSwapMsgFromRoute,
+    assembleTargetSwapDataFromRoute,
     getHexAddress,
     validateAndParseAddressByChainId,
     verifyNearAccountId,
@@ -10,22 +11,14 @@ import {
 import {
     BridgeRequestParam,
     ButterCrossChainRoute,
-    ButterRouterParam, ButterSwapRoute,
-    SwapRequestParam,
+    ButterRouterParam,
     ButterTransactionResponse,
     NearAccountState,
+    SwapRequestParam,
 } from '../../types';
 import {IMapOmnichainService} from '../../libs/interfaces/IMapOmnichainService';
 import {createMOSInstance} from '../../libs/utils/mosUtils';
 import BUTTER_ROUTER_METADATA from '../../abis/ButterRouter.json';
-
-import {
-    assembleButterRouterParamFromRoute,
-    assembleCrossChainRouteFromJson,
-    assembleEVMSwapDataFromRoute,
-    assembleNearSwapMsgFromRoute,
-    assembleTargetSwapDataFromRoute,
-} from '../../utils';
 import {ButterRouter} from '../../libs/butter-router/ButterRouter';
 
 /**

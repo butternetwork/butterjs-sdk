@@ -1,7 +1,141 @@
-import {CHAIN_ID, matchToken, TOKEN_ID} from "./chains2";
-import {Currency, NEARCoin} from "../beans";
+import {Currency, EVMCoin, NEARCoin, Token} from "../beans";
 
-export const MOS_CONTRACT_NEAR_ADDRESSES: any = {
+export enum CHAIN_ID {
+    ETH = '1',
+    MAP_MAINNET = '22776',
+    BNB_MAINNET = '56',
+    POLYGON_MAINNET = '137',
+    NEAR_MAINNET = '5566818579631833088',
+
+    ETH_PRIV = '34434',
+    ETH_GOERLI = '5',
+    MAP_TEST = '212',
+    BNB_TEST = '97',
+    POLYGON_TEST = '80001',
+    NEAR_TEST = '5566818579631833089',
+
+}
+
+export enum TOKEN_ID {
+    ALL = 'ALL',
+    NATIVE = 'NATIVE',
+    WRAP = 'WRAP',
+    USDC = 'USDC',
+    METH = 'METH',
+    MOST = 'MOST',
+    NEAR = 'NEAR',
+    BMOS = 'BMOS',
+    MOS = 'MOS',
+    MAP = 'MAP',
+    lMAP = 'lMAP',
+    BNB = 'BNB',
+}
+
+export enum CHAIN_NAME {
+    MAP_MAINNET = 'map-mainnet',
+    BNB_MAINNET = 'bnb-mainnet',
+    POLYGON_MAINNET = 'polygon-mainnet',
+    NEAR_MAINNET = 'near-mainnet',
+
+    MAP_TEST = 'map-testnet',
+    NEAR_TEST = 'near-testnet',
+    BNB_TEST = 'bnb-testnet',
+    POLYGON_TEST = 'matic-mumbai',
+    ETH_PRIV = 'eth-priv',
+    ETH_GOERLI = 'ethereum-goerli',
+
+}
+
+export const matchToken = (chainId: CHAIN_ID | string, decimals: number,
+                           address: string, name: string): Currency => {
+    name =name.toUpperCase();
+    let _name=name.toUpperCase();
+
+    if (_name === 'LMAP'||_name === 'LMAPO') {
+        return new Token(chainId, decimals, address, 'lMAP', 'Wrapped MAP', 'https://files.maplabs.io/bridge/map.png');
+    }
+    if (_name === 'PMAPO'||_name === 'PMAP') {
+        return new Token(chainId, decimals, address, 'MAPO', 'Matic-Pegged MAPO', 'https://files.maplabs.io/bridge/map.png');
+    }
+    if (_name === 'NMAPO'||_name === 'NMAP') {
+        return new Token(chainId, decimals, address, 'MAPO', 'NEAR MAPO', 'https://files.maplabs.io/bridge/map.png');
+    }
+    if (_name === 'BTMAPO'||_name === 'BTMAP') {
+        return new Token(chainId, decimals, address, 'MAPO', 'BNBChain MAPO', 'https://files.maplabs.io/bridge/map.png');
+    }
+
+    if (_name === 'BMAPO' || _name === 'BMAP') {
+        return new Token(chainId, decimals, address, 'MAPO', 'Butter MAPO', 'https://files.maplabs.io/bridge/map.png');
+    }
+    if (_name === 'BUSDC') {
+        return new Token(chainId, decimals, address, 'bUSDC', 'Butter USDC', 'https://files.maplabs.io/bridge/usdc.png');
+    }
+    if (_name === 'BNEAR') {
+        return new Token(chainId, decimals, address, 'NEAR', 'Near', 'https://files.maplabs.io/bridge/near1.png');
+    }
+    if (_name === 'BMOS') {
+        return new Token(chainId, decimals, address, 'BMOS', 'Butter MOST', 'https://files.maplabs.io/bridge/most1.png');
+    }
+
+
+    if (_name === 'MUSDC') {
+        return new Token(chainId, decimals, address, 'mBNB', 'MAP USDC', 'https://files.maplabs.io/bridge/usdc.png');
+    }
+    if (_name === 'MBNB') {
+        return new Token(chainId, decimals, address, 'MBNB', 'MAP BNB', 'https://files.maplabs.io/bridge/bnb.png');
+    }
+    if (_name === 'METH') {
+        return new Token(chainId, decimals, address, 'METH', 'MAP ETH', 'https://files.maplabs.io/bridge/eth.png');
+    }
+    if (_name === 'MOST') {
+        return new Token(chainId, decimals, address, 'MOST', 'MOST Token', 'https://files.maplabs.io/bridge/most1.png');
+    }
+
+    if (_name === 'WETH') {
+        return new Token(chainId, decimals, address, 'wETH', 'Wrapped ETH', 'https://files.maplabs.io/bridge/eth.png');
+    }
+    if (_name === 'WMAPO') {
+        return new Token(chainId, decimals, address, 'wMAPO', 'Wrapped MAPO', 'https://files.maplabs.io/bridge/map.png');
+    }
+    if (_name === 'WBNB') {
+        return new Token(chainId, decimals, address, 'WBNB', 'Wrapped BNB', 'https://files.maplabs.io/bridge/bnb.png');
+    }
+    if (_name === 'WMATIC') {
+        return new Token(chainId, decimals, address, 'WMATIC', 'Wrapped MATIC', 'https://files.maplabs.io/bridge/polygon.png');
+    }
+    if (_name === 'WNEAR') {
+        return new Token(chainId, decimals, address, 'wNear', 'Wrapped Near', 'https://files.maplabs.io/bridge/near1.png');
+    }
+    if (_name === 'USDC') {
+        return new Token(chainId, decimals, address, 'USDC','USD Circle', 'https://files.maplabs.io/bridge/usdc.png');
+    }
+
+    if (_name === 'NEAR') {
+        return new NEARCoin(chainId);
+    }
+    if (_name === 'ETH') {
+        return new EVMCoin(chainId, decimals, 'ETH', 'Ethereum', 'https://files.maplabs.io/bridge/eth.png');
+    }
+    if (_name === 'MAPO') {
+        return new EVMCoin(chainId, decimals, 'MAPO', 'MAP Protocol', 'https://files.maplabs.io/bridge/map.png');
+    }
+    if (_name === 'BNB') {
+        return new EVMCoin(chainId, decimals, 'BNB', 'BNB Token', 'https://files.maplabs.io/bridge/bnb.png');
+    }
+    if (_name === 'MATIC') {
+        return new EVMCoin(chainId, decimals, 'MATIC', 'Polygon', 'https://files.maplabs.io/bridge/polygon.png');
+    }
+    throw new Error(`Not Support this Token(${name}) in Chain Id${chainId}`);
+
+}
+export const createToken = (chainId: CHAIN_ID | string, decimals: number,
+                            address: string, name: string,symbol:string,logo:string): Currency => {
+    return new Token(chainId, decimals, address, symbol, name, logo);
+    // throw new Error(`Not Support this Token(${name}) in Chain Id${chainId}`);
+}
+
+
+const _MOS_CONTRACT_NEAR_ADDRESSES: any = {
     [CHAIN_ID.NEAR_MAINNET]: 'mos.mfac.butternetwork.near',
     [CHAIN_ID.NEAR_TEST]: 'mos.map007.testnet',
 };
@@ -15,8 +149,8 @@ export const MOS_CONTRACT_ADDRESSES: any = {
     [CHAIN_ID.POLYGON_MAINNET]: '0x630105189c7114667a7179Aa57f07647a5f42B7F',
     [CHAIN_ID.POLYGON_TEST]: '0x6858B990A504D7Fc41D0BBB5178c4675518BDA27',
 
-    [CHAIN_ID.NEAR_MAINNET]: MOS_CONTRACT_NEAR_ADDRESSES[CHAIN_ID.NEAR_MAINNET],
-    [CHAIN_ID.NEAR_TEST]: MOS_CONTRACT_NEAR_ADDRESSES[CHAIN_ID.NEAR_TEST],
+    [CHAIN_ID.NEAR_MAINNET]: _MOS_CONTRACT_NEAR_ADDRESSES[CHAIN_ID.NEAR_MAINNET],
+    [CHAIN_ID.NEAR_TEST]: _MOS_CONTRACT_NEAR_ADDRESSES[CHAIN_ID.NEAR_TEST],
 
     [CHAIN_ID.ETH]: '',
     [CHAIN_ID.ETH_PRIV]: '0x43130059C655314d7ba7eDfb8299d26FbDE726F1',
@@ -57,7 +191,7 @@ export const TOKEN_REGISTER_ADDRESSES: any = {
     [CHAIN_ID.ETH_PRIV]: '',
     [CHAIN_ID.ETH_GOERLI]: '',
 }
-
+export const MOS_CONTRACT_NEAR_ADDRESSES:any=_MOS_CONTRACT_NEAR_ADDRESSES;
 
 export const TOKENS_PRIV: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.NATIVE]: matchToken(CHAIN_ID.ETH_PRIV, 18, '', 'ETH'),

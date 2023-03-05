@@ -1,11 +1,7 @@
-
-import { Currency } from '../beans';
-import {
-  PromiEvent,
-  TransactionReceipt as Web3TransactionReceipt,
-} from 'web3-core';
-import { AccountView } from 'near-api-js/lib/providers/provider';
-import { Log } from '@ethersproject/abstract-provider';
+import {Currency} from '../beans';
+import {PromiEvent, TransactionReceipt as Web3TransactionReceipt,} from 'web3-core';
+import {AccountView} from 'near-api-js/lib/providers/provider';
+import {Log} from '@ethersproject/abstract-provider';
 
 export interface ButterTransactionReceipt {
   to: string;

@@ -1,26 +1,20 @@
-import { Account, connect, ConnectedWalletAccount, Near } from 'near-api-js';
-import {
-  ButterTransactionResponse,
-  NearNetworkConfig, NearProviderType,
-  TransactionOptions,
-} from '../../types';
+import {Account, connect, ConnectedWalletAccount, Near} from 'near-api-js';
+import {ButterTransactionResponse, NearNetworkConfig, NearProviderType, TransactionOptions,} from '../../types';
 import {
   ADD_MCS_TOKEN_TO_CHAIN,
-  ADD_NATIVE_TO_CHAIN, CHAIN_ID,
-  FT_TRANSFER_CALL, MOS_CONTRACT_NEAR,
+  ADD_NATIVE_TO_CHAIN,
+  CHAIN_ID,
+  FT_TRANSFER_CALL,
+  MOS_CONTRACT_NEAR,
   SWAP_OUT_NATIVE,
   TRANSFER_OUT_NATIVE,
   TRANSFER_OUT_TOKEN,
   VALID_MCS_TOKEN_OUT,
 } from '../../constants';
 import BN from 'bn.js';
-import {
-  ChangeFunctionCallOptions,
-  FunctionCallOptions,
-  ViewFunctionCallOptions,
-} from 'near-api-js/lib/account';
-import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
-import { FinalExecutionOutcome } from 'near-api-js/lib/providers';
+import {ChangeFunctionCallOptions, FunctionCallOptions, ViewFunctionCallOptions,} from 'near-api-js/lib/account';
+import {IMapOmnichainService} from '../interfaces/IMapOmnichainService';
+import {FinalExecutionOutcome} from 'near-api-js/lib/providers';
 import {assembleNearTransactionResponse, hexToDecimalArray} from "../../utils";
 
 export class NearOmnichainService implements IMapOmnichainService {
@@ -57,8 +51,8 @@ export class NearOmnichainService implements IMapOmnichainService {
       // get mos contract address
       mosAccountId =
         this.provider.networkId === 'testnet'
-          ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-          : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+          ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+          : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
 
       // prep near connection
       const near: Near = await connect(this.provider);
@@ -67,8 +61,8 @@ export class NearOmnichainService implements IMapOmnichainService {
       // this.provider._networkId;
       mosAccountId =
         this.provider._networkId === 'testnet'
-          ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-          : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+          ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+          : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
       account = this.provider.account();
     }
     try {
@@ -154,15 +148,15 @@ export class NearOmnichainService implements IMapOmnichainService {
     if (this.provider instanceof NearNetworkConfig) {
       mosAccountId =
         this.provider.networkId === 'testnet'
-          ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-          : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+          ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+          : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
 
       const near: Near = await connect(this.provider);
       account = await near.account(this.provider.fromAccount);
     } else {
       mosAccountId = this.provider.getAccountId().endsWith('testnet')
-        ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-        : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+        ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+        : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
       account = this.provider.account();
     }
     try {
@@ -206,8 +200,8 @@ export class NearOmnichainService implements IMapOmnichainService {
       // get mos contract address
       mosAccountId =
         this.provider.networkId === 'testnet'
-          ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-          : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+          ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+          : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
 
       // prep near connection
       const near: Near = await connect(this.provider);
@@ -216,8 +210,8 @@ export class NearOmnichainService implements IMapOmnichainService {
       // this.provider._networkId;
       mosAccountId =
         this.provider._networkId === 'testnet'
-          ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-          : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+          ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+          : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
       account = this.provider.account();
     }
     try {
@@ -259,15 +253,15 @@ export class NearOmnichainService implements IMapOmnichainService {
     if (this.provider instanceof NearNetworkConfig) {
       mosAccountId =
         this.provider.networkId === 'testnet'
-          ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-          : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+          ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+          : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
 
       const near: Near = await connect(this.provider);
       account = await near.account(this.provider.fromAccount);
     } else {
       mosAccountId = this.provider._networkId == 'testnet'
-        ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-        : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+        ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+        : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
       account = this.provider.account();
     }
     try {
@@ -305,8 +299,8 @@ export class NearOmnichainService implements IMapOmnichainService {
     if (this.provider instanceof NearNetworkConfig) {
       const mosAccountId: string =
         this.provider.networkId === 'testnet'
-          ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-          : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+          ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+          : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
 
       const near: Near = await connect(this.provider);
       const account = await near.account(this.provider.fromAccount);
@@ -326,8 +320,8 @@ export class NearOmnichainService implements IMapOmnichainService {
     if (this.provider instanceof NearNetworkConfig) {
       const mosAccountId: string =
         this.provider.networkId === 'testnet'
-          ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-          : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+          ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+          : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
 
       const near: Near = await connect(this.provider);
       const account = await near.account(this.provider.fromAccount);
@@ -458,8 +452,8 @@ export class NearOmnichainService implements IMapOmnichainService {
     if (this.provider instanceof NearNetworkConfig) {
       const mosAccountId: string =
         this.provider.networkId === 'testnet'
-          ? MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_TEST]
-          : MOS_CONTRACT_NEAR[CHAIN_ID.NEAR_MAINNET];
+          ? MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_TEST)
+          : MOS_CONTRACT_NEAR(CHAIN_ID.NEAR_MAINNET);
 
       const near: Near = await connect(this.provider);
       const account = await near.account(this.provider.fromAccount);

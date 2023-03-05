@@ -1,20 +1,15 @@
+import {BigNumber, Contract as EthersContract, ContractTransaction, ethers, Signer,} from 'ethers';
 import {
-  BigNumber,
-  Contract as EthersContract,
-  ContractTransaction,
-  ethers,
-  Signer,
-} from 'ethers';
-import { Eth } from 'web3-eth';
-import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
-import { ButterTransactionResponse } from '../../types';
+  ButterContractType,
+  ButterCoreParam,
+  ButterProviderType,
+  ButterTransactionResponse,
+  TransactionOptions
+} from '../../types';
 import {assembleEVMTransactionResponse, createVLog} from '../../utils';
 
-import { Provider } from '@ethersproject/abstract-provider';
-import { TransactionReceipt as Web3TransactionReceipt } from 'web3-core';
-import { ButterCoreParam, TransactionOptions } from '../../types';
-import { ButterContractType, ButterProviderType } from '../../types';
-import { PromiEvent } from 'web3-core';
+import {Provider} from '@ethersproject/abstract-provider';
+import {PromiEvent, TransactionReceipt as Web3TransactionReceipt} from 'web3-core';
 
 /**
  * EVM Omnichain Chain Service smart contracts abstraction

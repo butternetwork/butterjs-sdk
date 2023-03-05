@@ -1,6 +1,4 @@
 import invariant from "tiny-invariant";
-import {Token} from "./Token";
-import {TOKEN_ID, TOKENS} from "../constants";
 
 export abstract class Currency {
     /**

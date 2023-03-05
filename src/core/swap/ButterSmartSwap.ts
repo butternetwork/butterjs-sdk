@@ -1,34 +1,27 @@
+import {BUTTER_ROUTER, DEFAULT_SLIPPAGE, IS_EVM, IS_NEAR} from '../../constants';
 import {
-    IS_EVM,
-    IS_NEAR, DEFAULT_SLIPPAGE, BUTTER_ROUTER
-} from '../../constants';
-import {
+    assembleButterRouterParamFromRoute,
+    assembleCrossChainRouteFromJson,
+    assembleNearSwapMsgFromRoute,
+    assembleTargetSwapDataFromRoute,
     createVLog,
     getHexAddress,
     validateAndParseAddressByChainId,
     verifyNearAccountId,
 } from '../../utils';
 import {
-    BridgeRequestParam,
     ButterCrossChainRoute,
-    ButterRouterParam, ButterSwapRoute,
-    SwapRequestParam,
+    ButterRouterParam,
     ButterTransactionResponse,
     NearAccountState,
+    SwapRequestParam,
 } from '../../types';
 import {IMapOmnichainService} from '../../libs/interfaces/IMapOmnichainService';
 import {createMOSInstance} from '../../libs/utils/mosUtils';
 import BUTTER_ROUTER_METADATA from '../../abis/ButterRouter.json';
-
-import {
-    assembleButterRouterParamFromRoute,
-    assembleCrossChainRouteFromJson,
-    assembleEVMSwapDataFromRoute,
-    assembleNearSwapMsgFromRoute,
-    assembleTargetSwapDataFromRoute,
-} from '../../utils';
 // import {ButterRouter} from '../../libs/butter-router/ButterRouter';
 import {ButterRouter as ButterRouterV2} from '../../libs/router/ButterRouter';
+
 const vlog = createVLog('ButterSmartSwap');
 export class ButterSmartSwap {
 

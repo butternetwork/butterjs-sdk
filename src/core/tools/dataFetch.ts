@@ -1,26 +1,25 @@
 import {Currency} from '../../beans';
 import {
-    NEAR_CONNECT,
+    CHAINS,
+    DEFAULT_SLIPPAGE,
+    GET_MCS_TOKENS,
     IS_MAP,
     IS_NEAR,
-    ZERO_ADDRESS, SUPPORT_TOKENS, DEFAULT_SLIPPAGE,
-    GET_MCS_TOKENS, TOKEN_REGISTER, MOS_CONTRACT, CHAINS
+    MOS_CONTRACT,
+    NEAR_CONNECT,
+    SUPPORT_TOKENS,
+    TOKEN_REGISTER,
+    ZERO_ADDRESS
 } from '../../constants';
-import {
-    ButterFee,
-    ButterFeeDistribution,
-    ButterFeeRate,
-    VaultBalance, ButterJsonRpcProvider
-} from '../../types';
+import {ButterFee, ButterFeeDistribution, ButterFeeRate, ButterJsonRpcProvider, VaultBalance} from '../../types';
 
 import {
-    asciiToHex,
     asciiToString,
+    assembleCrossChainRouteFromJson,
     getHexAddress,
     getRelayChainToken,
     getToChainToken,
-    getToken,
-    assembleCrossChainRouteFromJson
+    getToken
 } from '../../utils';
 import {TokenRegister} from '../../libs/TokenRegister';
 import {BigNumber, ethers} from 'ethers';

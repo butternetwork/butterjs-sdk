@@ -1,15 +1,11 @@
-import { IMapOmnichainService } from '../interfaces/IMapOmnichainService';
-import {
-  IS_EVM,
-  IS_MAP,
-  IS_NEAR, MOS_CONTRACT,
-} from '../../constants';
-import { RelayOmnichainService } from '../mos/RelayOmnichainService';
-import { BridgeOptions, NearNetworkConfig } from '../../types';
+import {IMapOmnichainService} from '../interfaces/IMapOmnichainService';
+import {IS_EVM, IS_MAP, IS_NEAR, MOS_CONTRACT,} from '../../constants';
+import {RelayOmnichainService} from '../mos/RelayOmnichainService';
+import {BridgeOptions} from '../../types';
 import MOS_EVM_METADATA from '../../abis/MAPOmnichainService.json';
 import MOS_MAP_METADATA from '../../abis/MAPOmnichainServiceRelay.json';
-import { EVMOmnichainService } from '../mos/EVMOmnichainService';
-import { NearOmnichainService } from '../mos/NearOmnichainService';
+import {EVMOmnichainService} from '../mos/EVMOmnichainService';
+import {NearOmnichainService} from '../mos/NearOmnichainService';
 
 export function createMOSInstance(
   chainId: string,

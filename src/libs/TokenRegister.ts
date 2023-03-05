@@ -1,14 +1,10 @@
-import { BigNumber, ethers, Signer } from 'ethers';
+import {BigNumber, ethers, Signer} from 'ethers';
 import TokenRegisterMetadata from '../abis/TokenRegister.json';
-import { Provider, TransactionReceipt } from '@ethersproject/abstract-provider';
-import { ButterContractType, ButterProviderType } from '../types';
-import { Eth } from 'web3-eth';
-import {
-  ButterFeeRate,
-  ButterTransactionReceipt,
-} from '../types';
-import { adaptEthReceipt,getHexAddress } from '../utils';
-import { Currency } from '../beans';
+import {Provider} from '@ethersproject/abstract-provider';
+import {ButterContractType, ButterFeeRate, ButterProviderType, ButterTransactionReceipt} from '../types';
+import {Eth} from 'web3-eth';
+import {adaptEthReceipt, getHexAddress} from '../utils';
+import {Currency} from '../beans';
 
 export class TokenRegister {
   private readonly contract: ButterContractType;
