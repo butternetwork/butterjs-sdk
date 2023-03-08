@@ -350,18 +350,21 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
     if (chainId === CHAIN_ID.ETH_GOERLI) {
         return [
             TOKEN_GOERLI(TOKEN_ID.NATIVE),
-            TOKEN_GOERLI(TOKEN_ID.USDC)
+            TOKEN_GOERLI(TOKEN_ID.USDC),
+            TOKEN_GOERLI(TOKEN_ID.USDT),
         ];
     }
     if (chainId === CHAIN_ID.MAP_TEST) {
         return [
             TOKEN_MAP(TOKEN_ID.USDC),
+            TOKEN_MAP(TOKEN_ID.USDT),
         ];
     }
     if (chainId === CHAIN_ID.BNB_TEST) {
         return [
             TOKEN_BNB(TOKEN_ID.NATIVE),
             TOKEN_BNB(TOKEN_ID.USDC),
+            TOKEN_BNB(TOKEN_ID.USDT),
             TOKEN_BNB(TOKEN_ID.BMOS),
         ];
     }
@@ -370,12 +373,14 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
             TOKEN_POLYGON(TOKEN_ID.NATIVE),
             TOKEN_POLYGON(TOKEN_ID.USDC),
             TOKEN_POLYGON(TOKEN_ID.BMOS),
+            TOKEN_POLYGON(TOKEN_ID.USDT),
         ];
     }
     if (chainId === CHAIN_ID.NEAR_TEST) {
         return [
             TOKEN_NEAR(TOKEN_ID.NATIVE),
-            TOKEN_NEAR(TOKEN_ID.USDC)
+            TOKEN_NEAR(TOKEN_ID.USDC),
+            TOKEN_NEAR(TOKEN_ID.USDT)
         ];
     }
     throw new Error(`SUPPORT_TOKENS: unknown chain id: ${chainId}`);

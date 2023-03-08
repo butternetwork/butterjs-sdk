@@ -36,6 +36,7 @@ export enum TOKEN_ID {
     MAP = 'MAP',
     lMAP = 'lMAP',
     BNB = 'BNB',
+    USDT = 'USDT',
 }
 
 export enum CHAIN_NAME {
@@ -115,6 +116,9 @@ export const matchToken = (chainId: CHAIN_ID | string, decimals: number,
     }
     if (_name === 'USDC') {
         return new Token(chainId, decimals, address, 'USDC','USD Circle', 'https://files.maplabs.io/bridge/usdc.png');
+    }
+    if (_name === 'USDT') {
+        return new Token(chainId, decimals, address, 'USDT','Tether USD', 'https://files.mapprotocol.io/bridge/usdt.png');
     }
 
     if (_name === 'NEAR') {
@@ -209,13 +213,14 @@ export const TOKENS_PRIV: { [tokenid: TOKEN_ID | string]: Currency } = {
 export const TOKENS_GOERLI: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.NATIVE]: matchToken(CHAIN_ID.ETH_GOERLI, 18, '', 'ETH'),
     [TOKEN_ID.WRAP]: matchToken(CHAIN_ID.ETH_GOERLI, 18, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 'WETH'),
-    [TOKEN_ID.USDC]: matchToken(CHAIN_ID.ETH_GOERLI, 18, '0xE66D4a30d177369d134e0E49a9096D357C0e8383', 'bUSDC')
+    [TOKEN_ID.USDC]: matchToken(CHAIN_ID.ETH_GOERLI, 18, '0xE66D4a30d177369d134e0E49a9096D357C0e8383', 'bUSDC'),
+    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.ETH_GOERLI, 6, '0xd71513F3efAe4d20d570b76ca16C83FDC40ec121', 'USDT')
 }
 
 export const TOKENS_MAP: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.NATIVE]: matchToken(CHAIN_ID.MAP_MAINNET, 18, '', 'MAPO'),
     [TOKEN_ID.WRAP]: matchToken(CHAIN_ID.MAP_MAINNET, 18, '0x13CB04d4a5Dfb6398Fc5AB005a6c84337256eE23', 'wMAPO'),
-    [TOKEN_ID.USDC]: matchToken(CHAIN_ID.MAP_MAINNET, 18, '0x424D3bcdC96F42aC919F276D7D4f6C94f24e0703', 'mUSDC')
+    [TOKEN_ID.USDC]: matchToken(CHAIN_ID.MAP_MAINNET, 18, '0x424D3bcdC96F42aC919F276D7D4f6C94f24e0703', 'mUSDC'),
 }
 export const TOKENS_MAP_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.NATIVE]: matchToken(CHAIN_ID.MAP_TEST, 18, '', 'MAPO'),
@@ -224,7 +229,9 @@ export const TOKENS_MAP_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.BNB]: matchToken(CHAIN_ID.MAP_TEST, 18, '0xc0fAa9255A4099D50C2b356bFbD440B69359cEa3', 'mBNB'),
     [TOKEN_ID.METH]: matchToken(CHAIN_ID.MAP_TEST, 18, '0x41358EFc7d49d19F76E1E3bdD694f3bff9af3b36', 'mETH'),
     [TOKEN_ID.MOST]: matchToken(CHAIN_ID.MAP_TEST, 18, '0xc74bc33a95a62D90672aEFAf4bA784285903cf09', 'MOST'),
-    [TOKEN_ID.NEAR]: matchToken(CHAIN_ID.MAP_TEST, 18, '0xf1b33B4aB498e17C82bA903e5256533cBf51e1Fd', 'bNEAR')
+    [TOKEN_ID.NEAR]: matchToken(CHAIN_ID.MAP_TEST, 18, '0xf1b33B4aB498e17C82bA903e5256533cBf51e1Fd', 'bNEAR'),
+    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.MAP_TEST, 6, '0x292cB08f506A5579310c34E177eA1A542b9975ae', 'USDT')
+
 }
 
 export const TOKENS_BNB: { [tokenid: TOKEN_ID | string]: Currency } = {
@@ -240,6 +247,8 @@ export const TOKENS_BNB_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.NEAR]: matchToken(CHAIN_ID.BNB_TEST, 18, '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c', 'bNEAR'),
     [TOKEN_ID.MOST]: matchToken(CHAIN_ID.BNB_TEST, 18, '0x688f3Ef5f728995a9DcB299DAEC849CA2E49ddE1', 'MOST'),
     [TOKEN_ID.MAP]: matchToken(CHAIN_ID.BNB_TEST, 18, '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273', 'BTMAP'),
+    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.BNB_TEST, 6, '0xd29A1a2025Dc30D7DC18764a36aBF47B93AdaE61', 'USDT')
+
 }
 
 export const TOKENS_POLYGON: { [tokenid: TOKEN_ID | string]: Currency } = {
@@ -253,7 +262,9 @@ export const TOKENS_POLYGON_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.BMOS]: matchToken(CHAIN_ID.POLYGON_TEST, 18, '0x85485E03aEc8bF84a4B1fF5bfAE2E069179149bC', 'bMOS'),
     [TOKEN_ID.MOST]: matchToken(CHAIN_ID.POLYGON_TEST, 18, '0x6d4570191C7B5835226a0bE18734A8E922ff353B', 'MOST'),
     [TOKEN_ID.MAP]: matchToken(CHAIN_ID.POLYGON_TEST, 18, '0xE6687528C7b85115a038D806339dd7E7b869B87C', 'bMAP'),
-    [TOKEN_ID.USDC]: matchToken(CHAIN_ID.POLYGON_TEST, 18, '0xe1D8eAB4e616156E11e1c59D1a0E0EFeD66f4cfa', 'bUSDC'),
+    [TOKEN_ID.USDC]: matchToken(CHAIN_ID.POLYGON_TEST, 18, '0xd8f69e1F100Db655d4503545C3BB308CAab4a3B6', 'bUSDC'),
+    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.POLYGON_TEST, 6, '0xd29A1a2025Dc30D7DC18764a36aBF47B93AdaE61', 'USDT')
+
 }
 
 export const TOKENS_NEAR: { [tokenid: TOKEN_ID | string]: Currency } = {
@@ -267,4 +278,6 @@ export const TOKENS_NEAR_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.USDC]: matchToken(CHAIN_ID.NEAR_TEST, 6, 'usdc.map007.testnet', 'USDC'),
     [TOKEN_ID.MOST]: matchToken(CHAIN_ID.NEAR_TEST, 24, 'most.mos2.mfac.maplabs.testnet', 'MOST'),
     [TOKEN_ID.MAP]: matchToken(CHAIN_ID.NEAR_TEST, 24, 'mapo.maplabs.testnet', 'MAPO'),
+    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.MAP_TEST, 6, 'usdt.nap007.testnet', 'USDT')
+
 }
