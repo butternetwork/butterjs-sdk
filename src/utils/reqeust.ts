@@ -441,10 +441,13 @@ export function assembleNearVersionTargetSwapParamArrayFromRoutes(
     console.log('assembleNearVersionTargetSwapParamArrayFromRoutes', routes)
     let swapParamArray: any[] = [];
     for (let route of routes) {
+        if (!route.path || route.path.length===0){
+            continue;
+        }
         let swapParam: any = {};
         swapParam.amount_in = route.amountIn;
         swapParam.min_amount_out = route.amountOut;
-        const routerIndex = getRouterIndex(
+        let routerIndex = getRouterIndex(
             route.chainId,
             route.dexName
         );

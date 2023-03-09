@@ -128,6 +128,24 @@ export class ButterSmartSwap {
             fromToken.chainId,
             options
         );
+        // vlog('swap',{
+        //     fromAddress,
+        //     toAddress,
+        //     toChainId,
+        //     amountIn,
+        //     swapData
+        // })
+        //
+        // return {}
+        /*
+      如果来源链为MAP
+        1用户选择除了USDC以外的token的话，目的链的可选token只能是同一种token + USDC
+        2如果用户在MAP上选择USDC， 那么目的链的token不受限制；
+
+      如果目的链为MAP，
+        1用户在来源链上选择除USDC以外的token时，MAP上只能选择同一种token + USDC，
+        2如果用户在来源链上选择USDC，那么目的链MAP的可选token不受限制
+         */
 
         if (fromToken.isNative) {
             // if input token is Native coin, call transferOutNative method
