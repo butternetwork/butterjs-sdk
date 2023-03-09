@@ -247,7 +247,7 @@ export const TOKENS_BNB_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.NEAR]: matchToken(CHAIN_ID.BNB_TEST, 18, '0xa064aA3F10dE46cb114E543A9f8D90770cFb0d7c', 'bNEAR'),
     [TOKEN_ID.MOST]: matchToken(CHAIN_ID.BNB_TEST, 18, '0x688f3Ef5f728995a9DcB299DAEC849CA2E49ddE1', 'MOST'),
     [TOKEN_ID.MAP]: matchToken(CHAIN_ID.BNB_TEST, 18, '0xad4c2B6e113113d345c167F7BdAA5A5D1cD00273', 'BTMAP'),
-    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.BNB_TEST, 6, '0xd29A1a2025Dc30D7DC18764a36aBF47B93AdaE61', 'USDT')
+    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.BNB_TEST, 6, '0xE66D4a30d177369d134e0E49a9096D357C0e8383', 'USDT')
 
 }
 
@@ -278,6 +278,6 @@ export const TOKENS_NEAR_TEST: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.USDC]: matchToken(CHAIN_ID.NEAR_TEST, 6, 'usdc.map007.testnet', 'USDC'),
     [TOKEN_ID.MOST]: matchToken(CHAIN_ID.NEAR_TEST, 24, 'most.mos2.mfac.maplabs.testnet', 'MOST'),
     [TOKEN_ID.MAP]: matchToken(CHAIN_ID.NEAR_TEST, 24, 'mapo.maplabs.testnet', 'MAPO'),
-    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.MAP_TEST, 6, 'usdt.nap007.testnet', 'USDT')
+    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.NEAR_TEST, 6, 'usdt.map007.testnet', 'USDT')
 
 }
