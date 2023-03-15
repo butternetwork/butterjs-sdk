@@ -1,9 +1,20 @@
 import {Chain, Currency} from "../beans";
 import {
-    CHAIN_ID, CHAIN_NAME, TOKEN_ID,
-    TOKENS_BNB, TOKENS_BNB_TEST, TOKENS_GOERLI, TOKENS_MAP, TOKENS_MAP_TEST,
-    TOKENS_NEAR, TOKENS_NEAR_TEST, TOKENS_POLYGON, TOKENS_POLYGON_TEST, TOKENS_PRIV
+    CHAIN_ID,
+    CHAIN_NAME,
+    TOKEN_ID,
+    TOKENS_BNB,
+    TOKENS_BNB_TEST, TOKENS_ETH,
+    TOKENS_GOERLI,
+    TOKENS_MAP,
+    TOKENS_MAP_TEST,
+    TOKENS_NEAR,
+    TOKENS_NEAR_TEST,
+    TOKENS_POLYGON,
+    TOKENS_POLYGON_TEST,
+    TOKENS_PRIV
 } from "./config";
+import Decimal from "decimal.js";
 
 export {CHAIN_ID, CHAIN_NAME, TOKEN_ID} from './config';
 
@@ -20,6 +31,13 @@ const TOKEN_GOERLI = (tokenId: TOKEN_ID | string): Currency => {
         return ((current as Currency)).copy;
     }
     throw new Error(`Not Support this Token(${tokenId}) in ETH Goerli Chain`)
+}
+const TOKEN_ETH = (tokenId: TOKEN_ID | string, isTest = false): Currency => {
+    let current: any=TOKENS_ETH[tokenId];
+    if (current) {
+        return ((current as Currency)).copy;
+    }
+    throw new Error(`Not Support this Token(${tokenId}) in MAP | ${isTest}`)
 }
 const TOKEN_MAP = (tokenId: TOKEN_ID | string, isTest = true): Currency => {
     let current: any;
@@ -111,6 +129,12 @@ export const TO_CHAIN_ID = (str: CHAIN_ID | CHAIN_NAME | string) => {
 }
 
 export const CHAINS = (chainId: CHAIN_ID | string): Chain => {
+    if (chainId){
+        try {
+            chainId = `${new Decimal(chainId).toNumber()}`
+        } catch (e) {
+        }
+    }
     if (chainId === CHAIN_ID.MAP_MAINNET) {
         return new Chain(CHAIN_ID.MAP_MAINNET,
             'MAPO Mainnet', 'MAPO',
@@ -263,6 +287,12 @@ export const TOKENS = (chainId: CHAIN_ID | string, tokenId: TOKEN_ID | string): 
  * @constructor
  */
 export const AVAILABLE_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
+    if (chainId){
+        try {
+            chainId = `${new Decimal(chainId).toNumber()}`
+        } catch (e) {
+        }
+    }
     let items = [];
     if (chainId === CHAIN_ID.MAP_MAINNET) {
         for (const key in TOKENS_MAP) {
@@ -332,17 +362,47 @@ export const AVAILABLE_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
  * @constructor
  */
 export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
+    if (chainId){
+        try {
+            chainId = `${new Decimal(chainId).toNumber()}`
+        } catch (e) {
+        }
+    }
+    if (chainId === CHAIN_ID.ETH) {
+        return [
+            TOKEN_ETH(TOKEN_ID.MAP,false),
+        ]
+    }
     if (chainId === CHAIN_ID.MAP_MAINNET) {
-        return [];
+        return [
+            TOKEN_MAP(TOKEN_ID.WRAP,false),
+            TOKEN_MAP(TOKEN_ID.USDC,false),
+            TOKEN_MAP(TOKEN_ID.USDT,false),
+            TOKEN_MAP(TOKEN_ID.DAI,false),
+        ];
     }
     if (chainId === CHAIN_ID.BNB_MAINNET) {
-        return [TOKEN_BNB(TOKEN_ID.USDC, false)];
+        return [
+            TOKEN_BNB(TOKEN_ID.MAP, false),
+            TOKEN_BNB(TOKEN_ID.USDC, false),
+            TOKEN_BNB(TOKEN_ID.USDT, false),
+            TOKEN_BNB(TOKEN_ID.DAI, false),
+        ];
     }
     if (chainId === CHAIN_ID.POLYGON_MAINNET) {
-        return [TOKEN_POLYGON(TOKEN_ID.USDC, false)];
+        return [
+            TOKEN_POLYGON(TOKEN_ID.USDC, false),
+            TOKEN_POLYGON(TOKEN_ID.USDT, false),
+            TOKEN_POLYGON(TOKEN_ID.DAI, false),
+        ];
     }
     if (chainId === CHAIN_ID.NEAR_MAINNET) {
-        return [TOKEN_NEAR(TOKEN_ID.USDC, false)];
+        return [
+            TOKEN_NEAR(TOKEN_ID.MAP, false),
+            TOKEN_NEAR(TOKEN_ID.USDC, false),
+            TOKEN_NEAR(TOKEN_ID.USDT, false),
+            TOKEN_NEAR(TOKEN_ID.DAI, false),
+        ];
     }
     if (chainId === CHAIN_ID.ETH_PRIV) {
         return [];
@@ -365,20 +425,21 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
             TOKEN_BNB(TOKEN_ID.NATIVE),
             TOKEN_BNB(TOKEN_ID.USDC),
             TOKEN_BNB(TOKEN_ID.USDT),
-            TOKEN_BNB(TOKEN_ID.BMOS),
+            TOKEN_BNB(TOKEN_ID.MOS),
         ];
     }
     if (chainId === CHAIN_ID.POLYGON_TEST) {
         return [
             TOKEN_POLYGON(TOKEN_ID.NATIVE),
             TOKEN_POLYGON(TOKEN_ID.USDC),
-            TOKEN_POLYGON(TOKEN_ID.BMOS),
+            TOKEN_POLYGON(TOKEN_ID.MOS),
             TOKEN_POLYGON(TOKEN_ID.USDT),
         ];
     }
     if (chainId === CHAIN_ID.NEAR_TEST) {
         return [
             TOKEN_NEAR(TOKEN_ID.NATIVE),
+            TOKEN_NEAR(TOKEN_ID.MOST),
             TOKEN_NEAR(TOKEN_ID.USDC),
             TOKEN_NEAR(TOKEN_ID.USDT)
         ];
@@ -388,7 +449,7 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
 
 export const NEAR_CONNECT = (chainId: CHAIN_ID | string) => {
     const connectionConfig = {
-        networkId: chainId === CHAIN_ID.NEAR_TEST ? 'testnet' : '',
+        networkId: chainId === CHAIN_ID.NEAR_TEST ? 'testnet' : 'mainnet',
         nodeUrl: CHAINS(chainId).rpc,
     };
     if (!connectionConfig.networkId) {
@@ -400,6 +461,12 @@ export const NEAR_CONNECT = (chainId: CHAIN_ID | string) => {
 }
 
 export const IS_MAP = (id: string): boolean => {
+    if (id){
+        try {
+            id = `${new Decimal(id).toNumber()}`
+        } catch (e) {
+        }
+    }
     switch (id) {
         case CHAIN_ID.MAP_MAINNET:
         case CHAIN_ID.MAP_TEST:
@@ -420,6 +487,12 @@ export const IS_NEAR = (id: string): boolean => {
 };
 
 export const IS_EVM = (id: string): boolean => {
+    if (id){
+        try {
+            id = `${new Decimal(id).toNumber()}`
+        } catch (e) {
+        }
+    }
     switch (id) {
         case '1':
         case CHAIN_ID.POLYGON_MAINNET:
@@ -437,6 +510,12 @@ export const IS_EVM = (id: string): boolean => {
 };
 
 export const IS_MAINNET = (id: string): boolean => {
+    if (id){
+        try {
+            id = `${new Decimal(id).toNumber()}`
+        } catch (e) {
+        }
+    }
     switch (id) {
         case '1':
         case CHAIN_ID.MAP_MAINNET:

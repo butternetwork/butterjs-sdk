@@ -39,14 +39,14 @@ export async function verifyNearAccountId(accountId: string, chainId: string): P
   // @ts-ignore
   const near = await connect(connectionConfig);
   const account = await near.account(accountId);
+  console.log('verifyNearAccountId',accountId,account);
   try {
     return {
       isValid: true,
       state: await account.state(),
     };
   } catch (e) {
-    // @ts-ignore
-    console.log(e.message);
+    console.log('verifyNearAccountId',accountId,e);
     return {
       isValid: false,
       // @ts-ignore
