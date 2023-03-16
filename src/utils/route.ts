@@ -6,12 +6,14 @@ const vlog = createVLog('RouteUtil')
 const ROUTE_MAP = (chainId: string | CHAIN_ID): any[] => {
     vlog('ROUTER_MAP',chainId);
     switch (chainId) {
+        case CHAIN_ID.ETH:
+            return [['UniswapV2', 0]];
         case CHAIN_ID.MAP_MAINNET:
             return [];
         case CHAIN_ID.BNB_MAINNET:
-            return [];
+            return [['Pancakeswap', 0]];
         case CHAIN_ID.POLYGON_MAINNET:
-            return [];
+            return [['Quickswap', 0]];
         case CHAIN_ID.NEAR_MAINNET:
             return [];
         case CHAIN_ID.MAP_TEST:
