@@ -15,7 +15,7 @@ import {ButterFee, ButterFeeDistribution, ButterFeeRate, ButterJsonRpcProvider, 
 
 import {
     asciiToString,
-    assembleCrossChainRouteFromJson,
+    assembleCrossChainRouteFromJson, createVLog,
     getHexAddress,
     getRelayChainToken,
     getToChainToken,
@@ -33,6 +33,8 @@ import {CodeResult} from 'near-api-js/lib/providers/provider';
 import Web3 from 'web3';
 import TokenRegisterMetadata from '../../abis/TokenRegister.json';
 
+const vlog = createVLog('DataFetch');
+
 /**
  * get fee for bridging srcToken to targetChain
  * @param srcToken
@@ -47,7 +49,6 @@ export async function getBridgeFee(
     mapRpcProvider: ButterJsonRpcProvider
 ): Promise<ButterFee> {
     const chainId: string = mapRpcProvider.chainId.toString();
-
     const mapChainId: string = mapRpcProvider.chainId.toString();
     const mapProvider = new ethers.providers.JsonRpcProvider(
         mapRpcProvider.url ? mapRpcProvider.url : CHAINS(mapChainId).rpc
@@ -203,8 +204,6 @@ export async function getSwapFee(
             .toString();
     }
     const distribution = await getDistributeRate(mapChainId);
-    console.log('11123123123123213123');
-    console.log('distribution', distribution);
     return Promise.resolve({
         feeToken: getToken(
             getHexAddress(
@@ -388,10 +387,9 @@ export async function getTokenCandidatesOneByOne(
 export async function getTokenCandidates(
     fromChainId: string,
     toChainId: string,
-    provider: ButterJsonRpcProvider
-): Promise<Currency[]> {
+    provider: ButterJsonRpcProvider): Promise<Currency[]> {
     // @ts-ignore
-    const mapUrl:string = provider.url ? provider.url : CHAINS(provider.chainId.toString()).rpc;
+    const mapUrl: string = provider.url ? provider.url : CHAINS(provider.chainId.toString()).rpc;
     const web3 = new Web3(mapUrl);
 
     const tokenRegisterContract = new web3.eth.Contract(
@@ -445,10 +443,7 @@ export async function getTokenCandidates(
  * @param tokenAddress
  * @param chainId
  */
-export async function isTokenMintable(
-    tokenAddress: string,
-    chainId: string
-): Promise<boolean> {
+export async function isTokenMintable(tokenAddress: string, chainId: string): Promise<boolean> {
     const rpcUrl = CHAINS(chainId).rpc;
     const rpcProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
     if (IS_MAP(chainId)) {
@@ -489,9 +484,7 @@ export async function isTokenMintable(
     }
 }
 
-export async function getDistributeRate(
-    mapChainId: string
-): Promise<ButterFeeDistribution> {
+export async function getDistributeRate(mapChainId: string): Promise<ButterFeeDistribution> {
     const rpcUrl = CHAINS(mapChainId).rpc;
     const rpcProvider = new ethers.providers.JsonRpcProvider(rpcUrl);
     if (!IS_MAP(mapChainId)) {

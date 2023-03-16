@@ -135,6 +135,16 @@ export const CHAINS = (chainId: CHAIN_ID | string): Chain => {
         } catch (e) {
         }
     }
+    if (chainId === CHAIN_ID.ETH) {
+        return new Chain(CHAIN_ID.ETH,
+            'Ethereum', 'ETH',
+            '',
+            'https://etherscan.io/',
+            'https://files.maplabs.io/bridge/eth.png',
+            CHAIN_NAME.ETH_GOERLI,
+            TOKEN_ETH(TOKEN_ID.NATIVE, false),
+        );
+    }
     if (chainId === CHAIN_ID.MAP_MAINNET) {
         return new Chain(CHAIN_ID.MAP_MAINNET,
             'MAPO Mainnet', 'MAPO',
@@ -246,6 +256,9 @@ export const CHAINS = (chainId: CHAIN_ID | string): Chain => {
 }
 
 export const TOKENS = (chainId: CHAIN_ID | string, tokenId: TOKEN_ID | string): Currency | null => {
+    if (chainId === CHAIN_ID.ETH) {
+        return TOKEN_ETH(tokenId, false);
+    }
     if (chainId === CHAIN_ID.MAP_MAINNET) {
         return TOKEN_MAP(tokenId, false);
     }
@@ -294,6 +307,12 @@ export const AVAILABLE_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
         }
     }
     let items = [];
+    if (chainId === CHAIN_ID.ETH) {
+        for (const key in TOKENS_ETH) {
+            items.push(TOKEN_MAP(key, false));
+        }
+        return items;
+    }
     if (chainId === CHAIN_ID.MAP_MAINNET) {
         for (const key in TOKENS_MAP) {
             items.push(TOKEN_MAP(key, false));
@@ -370,12 +389,14 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
     }
     if (chainId === CHAIN_ID.ETH) {
         return [
+            TOKEN_ETH(TOKEN_ID.NATIVE,false),
             TOKEN_ETH(TOKEN_ID.MAP,false),
         ]
     }
     if (chainId === CHAIN_ID.MAP_MAINNET) {
         return [
-            TOKEN_MAP(TOKEN_ID.WRAP,false),
+            TOKEN_MAP(TOKEN_ID.NATIVE,false),
+            // TOKEN_MAP(TOKEN_ID.WRAP,false),
             TOKEN_MAP(TOKEN_ID.USDC,false),
             TOKEN_MAP(TOKEN_ID.USDT,false),
             TOKEN_MAP(TOKEN_ID.DAI,false),
@@ -383,14 +404,16 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
     }
     if (chainId === CHAIN_ID.BNB_MAINNET) {
         return [
-            TOKEN_BNB(TOKEN_ID.MAP, false),
+            TOKEN_BNB(TOKEN_ID.NATIVE, false),
             TOKEN_BNB(TOKEN_ID.USDC, false),
             TOKEN_BNB(TOKEN_ID.USDT, false),
+            TOKEN_BNB(TOKEN_ID.MAP, false),
             TOKEN_BNB(TOKEN_ID.DAI, false),
         ];
     }
     if (chainId === CHAIN_ID.POLYGON_MAINNET) {
         return [
+            TOKEN_POLYGON(TOKEN_ID.NATIVE, false),
             TOKEN_POLYGON(TOKEN_ID.USDC, false),
             TOKEN_POLYGON(TOKEN_ID.USDT, false),
             TOKEN_POLYGON(TOKEN_ID.DAI, false),
@@ -398,6 +421,7 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
     }
     if (chainId === CHAIN_ID.NEAR_MAINNET) {
         return [
+            TOKEN_NEAR(TOKEN_ID.NATIVE, false),
             TOKEN_NEAR(TOKEN_ID.MAP, false),
             TOKEN_NEAR(TOKEN_ID.USDC, false),
             TOKEN_NEAR(TOKEN_ID.USDT, false),

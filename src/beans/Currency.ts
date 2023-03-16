@@ -37,6 +37,9 @@ export abstract class Currency {
      */
     public readonly logo?: string;
 
+    public readonly tokenId?: string;
+
+
     /**
      * Constructs an instance of the base class `BaseCurrency`.
      * @param chainId the chain ID on which this currency resides
@@ -52,7 +55,8 @@ export abstract class Currency {
         address: string,
         symbol?: string,
         name?: string,
-        logo?: string
+        logo?: string,
+        tokenId?: string,
     ) {
         invariant(
             decimals >= 0 && decimals < 255 && Number.isInteger(decimals),
@@ -64,6 +68,7 @@ export abstract class Currency {
         this.symbol = symbol;
         this.name = name;
         this.logo = logo;
+        this.tokenId = tokenId?tokenId:symbol;
     }
 
     // static from(data:any):Currency{

@@ -4,8 +4,6 @@ import {Currency} from "./Currency";
 export class Token  extends Currency{
     readonly isNative: boolean=false;
     readonly isToken: boolean=true;
-    public readonly tokenId?: string;
-
     constructor(   chainId: string,
                    decimals: number,
                    address: string,
@@ -14,8 +12,7 @@ export class Token  extends Currency{
                    logo?: string,
                    tokenId?: string
     ) {
-        super(chainId, decimals, address, symbol, name, logo);
-        this.tokenId = tokenId?tokenId:symbol;
+        super(chainId, decimals, address, symbol, name, logo,tokenId);
     }
 
     static from(data:any):Currency{

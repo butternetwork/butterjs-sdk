@@ -14,7 +14,8 @@ export class NEARCoin extends Currency{
             ZERO_ADDRESS,
             'NEAR',
             'NEAR',
-            'https://cryptologos.cc/logos/near-protocol-near-logo.png'
+            'https://cryptologos.cc/logos/near-protocol-near-logo.png',
+            'NEAR'
         );
     }
 

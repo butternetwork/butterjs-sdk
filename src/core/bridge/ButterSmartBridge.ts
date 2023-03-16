@@ -4,7 +4,7 @@ import {BridgeRequestParam, ButterTransactionResponse, NearAccountState} from '.
 import {IMapOmnichainService} from '../../libs/interfaces/IMapOmnichainService';
 import {createMOSInstance} from '../../libs/utils/mosUtils';
 
-export class ButterBridge {
+export class ButterSmartBridge {
   /**
    * The BridgeToken method is used to bridge token from one chain to another.
    * see {@link BridgeRequestParam} for detail

@@ -19,7 +19,6 @@ import {
 import {IMapOmnichainService} from '../../libs/interfaces/IMapOmnichainService';
 import {createMOSInstance} from '../../libs/utils/mosUtils';
 import BUTTER_ROUTER_METADATA from '../../abis/ButterRouter.json';
-// import {ButterRouter} from '../../libs/butter-router/ButterRouter';
 import {ButterRouter as ButterRouterV2} from '../../libs/router/ButterRouter';
 
 const vlog = createVLog('ButterSmartSwap');

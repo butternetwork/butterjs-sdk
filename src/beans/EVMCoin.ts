@@ -12,9 +12,10 @@ export class EVMCoin extends Currency{
         decimals: number,
         symbol?: string,
         name?: string,
-        logo?: string
+        logo?: string,
+        tokenId?: string
     ) {
-        super(chainId, decimals, ZERO_ADDRESS, symbol, name, logo);
+        super(chainId, decimals, ZERO_ADDRESS, symbol, name, logo,tokenId);
     }
 
     public get wrapped(): Token {
@@ -28,7 +29,7 @@ export class EVMCoin extends Currency{
     }
 
     get copy(): EVMCoin {
-        return new EVMCoin(this.chainId,this.decimals,this.symbol,this.name,this.logo);
+        return new EVMCoin(this.chainId,this.decimals,this.symbol,this.name,this.logo,this.tokenId);
     }
 
 }

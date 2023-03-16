@@ -2,9 +2,11 @@ import {ethers} from 'ethers';
 import {BUTTER_SMART_ROUTER_URL, BUTTER_SMART_ROUTER_URL_MAINNET, IS_MAINNET} from '../../constants';
 import {Currency} from '../../beans';
 import {RouteResponse} from '../../types';
+import {createVLog} from "../../utils";
 
 const superagent = require('superagent');
 
+const vlog = createVLog('ButterSmartRouter')
 export class ButterSmartRouter {
     async getBestRoute(
         fromToken: Currency,
@@ -13,6 +15,7 @@ export class ButterSmartRouter {
     ): Promise<RouteResponse> {
         const fromChainId = fromToken.chainId;
         const toChainId = toToken.chainId;
+        vlog('getBestRoute',`FromId:${fromChainId} ${fromToken.symbol}`,' | ',`ToId:${toChainId} ${toToken.symbol}`)
         if (IS_MAINNET(fromChainId) != IS_MAINNET(toChainId)) {
             throw new Error(
                 `getBestRoute: fromToken and toToken not on the same network. From: ${fromChainId}, To: ${toChainId}`
@@ -34,12 +37,12 @@ export class ButterSmartRouter {
             `tokenOutAddress=${toToken.address}&` +
             `tokenOutDecimal=${toToken.decimals}&` +
             `tokenOutSymbol=${toToken.symbol}`;
-        console.log(requestUrl);
+        vlog('getBestRoute','request url: ',requestUrl);
         let routeResponse: RouteResponse;
         try {
             const response = await superagent.get(requestUrl);
             const data = response.body;
-            console.log('getBestRoute', data)
+            console.log('getBestRoute', 'result:',data)
             if (data.hasOwnProperty('status') && data.hasOwnProperty('error')) {
                 routeResponse = {
                     status: 200,
