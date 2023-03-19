@@ -78,7 +78,7 @@ export const matchNative = (chainId: CHAIN_ID | string, decimals: number, name: 
 
     if (_name === 'MAP' || _name === 'MAPO') {
         return new EVMCoin(chainId, decimals,
-            'MAP', ' MAP Protocol (MAP)', 'https://files.maplabs.io/bridge/map.png');
+            'MAP', ' MAP Protocol (MAP)', 'https://files.maplabs.io/bridge/map.png','MAPO');
     }
     throw new Error(`Not Support this Native Token(${name}) in Chain Id ${chainId}`);
 }
@@ -141,11 +141,11 @@ export const matchToken = (chainId: CHAIN_ID | string, decimals: number,
     }
     if (_name === 'MAP') {
         return new Token(chainId, decimals, address,
-            'MAP', ' MAP Protocol (MAP)', 'https://files.maplabs.io/bridge/map.png',_name);
+            'MAP', ' MAP Protocol (MAP)', 'https://files.maplabs.io/bridge/map.png','MAPO');
     }
     if (_name === 'MAPO') {
         return new Token(chainId, decimals, address,
-            'MAPO', ' MAP Protocol (MAPO)', 'https://files.maplabs.io/bridge/map.png',_name);
+            'MAPO', ' MAP Protocol (MAPO)', 'https://files.maplabs.io/bridge/map.png','MAPO');
     }
     if (_name === 'MOS') {
         return new Token(chainId, decimals, address,
@@ -226,6 +226,9 @@ export const MOS_CONTRACT_NEAR_ADDRESSES: any = _MOS_CONTRACT_NEAR_ADDRESSES;
 
 export const TOKENS_ETH: { [tokenid: TOKEN_ID | string]: Currency } = {
     [TOKEN_ID.NATIVE]: matchNative(CHAIN_ID.ETH, 18, 'ETH' ),
+    [TOKEN_ID.USDC]: matchToken(CHAIN_ID.ETH, 18, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 'USDC'),
+    [TOKEN_ID.USDT]: matchToken(CHAIN_ID.ETH, 18, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 'USDT'),
+    [TOKEN_ID.DAI]: matchToken(CHAIN_ID.ETH, 18, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 'DAI'),
     [TOKEN_ID.MAP]: matchToken(CHAIN_ID.ETH, 18, '0x9e976f211daea0d652912ab99b0dc21a7fd728e4', 'MAP'),
 }
 export const TOKENS_PRIV: { [tokenid: TOKEN_ID | string]: Currency } = {

@@ -390,6 +390,9 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
     if (chainId === CHAIN_ID.ETH) {
         return [
             TOKEN_ETH(TOKEN_ID.NATIVE,false),
+            TOKEN_ETH(TOKEN_ID.USDC,false),
+            TOKEN_ETH(TOKEN_ID.USDT,false),
+            TOKEN_ETH(TOKEN_ID.DAI,false),
             TOKEN_ETH(TOKEN_ID.MAP,false),
         ]
     }
@@ -417,12 +420,13 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
             TOKEN_POLYGON(TOKEN_ID.USDC, false),
             TOKEN_POLYGON(TOKEN_ID.USDT, false),
             TOKEN_POLYGON(TOKEN_ID.DAI, false),
+            TOKEN_POLYGON(TOKEN_ID.MAP, false),
         ];
     }
     if (chainId === CHAIN_ID.NEAR_MAINNET) {
         return [
             TOKEN_NEAR(TOKEN_ID.NATIVE, false),
-            TOKEN_NEAR(TOKEN_ID.MAP, false),
+            // TOKEN_NEAR(TOKEN_ID.MAP, false),
             TOKEN_NEAR(TOKEN_ID.USDC, false),
             TOKEN_NEAR(TOKEN_ID.USDT, false),
             TOKEN_NEAR(TOKEN_ID.DAI, false),
