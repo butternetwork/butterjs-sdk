@@ -53,6 +53,9 @@
 | DAI   | Mapo (22776)            | 0xEdDfAac857cb94aE8A0347e2b1b06f21AA1AAeFA                   | 18       | mintable |
 | WETH  | Mapo (22776)            | 0x05ab928d446d8ce6761e368c8e7be03c3168a9ec                   | 18       | mintable |
 | MAPO  | ETH (1)                 | 0x9e976f211daea0d652912ab99b0dc21a7fd728e4                   | 18       |          |
+| USDT  | ETH (1)                 | 0xdAC17F958D2ee523a2206206994597C13D831ec7                   | 6        |          |
+| USDC  | ETH (1)                 | 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48                   | 6        |          |
+| DAI   | ETH (1)                 | 0x6B175474E89094C44Da98b954EedeAC495271d0F                   | 18       |          |
 | MAPO  | BNB (56)                | 0x8105ECe4ce08B6B6449539A5db23e23b973DfA8f                   | 18       | mintable |
 | USDC  | BNB (56)                | 0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d                   | 18       |          |
 | USDT  | BNB (56)                | 0x55d398326f99059fF775485246999027B3197955                   | 18       |          |

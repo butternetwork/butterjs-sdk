@@ -150,7 +150,8 @@ export const CHAINS = (chainId: CHAIN_ID | string): Chain => {
             'MAPO Mainnet', 'MAPO',
             'https://poc3-rpc.maplabs.io/',
             'https://makalu.mapscan.io/',
-            'https://files.maplabs.io/bridge/map.png',
+            'https://files.mapprotocol.io/bridge/map2.png',
+            // 'https://files.maplabs.io/bridge/map.png',
             CHAIN_NAME.MAP_MAINNET,
             TOKEN_MAP(TOKEN_ID.NATIVE, false),
         );
