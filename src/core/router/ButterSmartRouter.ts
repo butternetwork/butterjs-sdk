@@ -3,12 +3,80 @@ import {BUTTER_SMART_ROUTER_URL, BUTTER_SMART_ROUTER_URL_MAINNET, IS_MAINNET} fr
 import {Currency} from '../../beans';
 import {RouteResponse} from '../../types';
 import {createVLog} from "../../utils";
+import {Canceler} from "../tools/canceler";
+import Decimal from "decimal.js";
 
 const superagent = require('superagent');
 
 const vlog = createVLog('ButterSmartRouter')
 
 export class ButterSmartRouter {
+    requesters?:any;
+    public readonly canceler?:Canceler;
+
+    constructor(canceler?:Canceler) {
+        this.canceler = canceler;
+        this.requesters={};
+        if (this.canceler){
+            this.canceler.on('CallCancel',(key:string)=>{});
+            this.canceler.on('CallCancelAll',()=>{});
+        }
+    }
+
+    async queryRoute(from:Currency,to:Currency,
+                     amount:string|number,
+                     cancelerKey?:string){
+        return new Promise((resolve, reject)=>{
+            const fromChainId = from.chainId;
+            const toChainId = to.chainId;
+            if (IS_MAINNET(fromChainId) != IS_MAINNET(toChainId)) {
+                reject(new Error(
+                    `queryRoute: fromToken and toToken not on the same network. From: ${fromChainId}, To: ${toChainId}`
+                ));
+            }
+            let amountObj = new Decimal(amount);
+            if (amountObj.isZero()){
+               reject(new Error(`Amount must be greater than 0`));
+            }
+            const smartRouterServerUrl = IS_MAINNET(fromChainId)
+                ? BUTTER_SMART_ROUTER_URL_MAINNET
+                : BUTTER_SMART_ROUTER_URL;
+            let routeResponse: RouteResponse = {
+                status: 200,
+                code: 10000,
+                msg: '',
+                data: ''
+            }
+            let amountIn = amountObj.toString();
+            if (from.decimals){
+                amountIn=ethers.utils.formatUnits(amountIn, from.decimals);
+            }
+            const requestUrl =
+                smartRouterServerUrl +
+                `?fromChainId=${fromChainId}&` +
+                `toChainId=${toChainId}&` +
+                `amountIn=${amountIn}&` +
+                `tokenInAddress=${from.address}&` +
+                `tokenInDecimal=${from.decimals}&` +
+                `tokenInSymbol=${from.symbol}&` +
+                `tokenOutAddress=${to.address}&` +
+                `tokenOutDecimal=${to.decimals}&` +
+                `tokenOutSymbol=${to.symbol}`;
+            const request = superagent.get(requestUrl);
+            if (cancelerKey){
+                this.requesters[cancelerKey]=request;
+            }
+            request.then((response:any)=>{
+
+            }).catch((error:any)=>{
+                if (error && error.message==='Aborted'){
+
+                }
+                reject(error)
+            })
+        })
+    }
+
     async getBestRoute(
         fromToken: Currency,
         toToken: Currency,

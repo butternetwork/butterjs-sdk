@@ -28,7 +28,6 @@
   "license": "GPL-3.0-or-later",
   "devDependencies": {
     "@types/jest": "^29.2.3",
-    "axios": "^1.2.1",
     "dotenv": "^16.0.2",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -43,6 +42,7 @@
     "@types/bn.js": "^5.1.1",
     "bn.js": "^5.2.1",
     "decimal.js": "^10.4.3",
+    "eventemitter3": "^5.0.0",
     "near-api-js": "^1.0.0",
     "superagent": "^8.0.9",
     "tiny-invariant": "^1.2.0",
