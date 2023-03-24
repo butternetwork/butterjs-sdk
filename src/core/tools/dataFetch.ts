@@ -139,7 +139,7 @@ export async function getSwapFee(
         srcRoute.length === 0 ||
         srcRoute[0]!.path.length === 0
     ) {
-        vlog('getSwapFee','getBridgeFee')
+        vlog('getSwapFee','getBridgeFee','before request')
         let result = await getBridgeFee(srcToken, targetChain, amount, mapRpcProvider);
         vlog('getSwapFee','getBridgeFee',result);
         return result;
@@ -214,6 +214,7 @@ export async function getSwapFee(
             .toString();
     }
     const distribution = await getDistributeRate(mapChainId);
+    vlog('getSwapFee',' | tokenOutAddress:',tokenOut.address, ' | srcToken:',srcToken.chainId, ' | IS_NEAR:',!IS_NEAR(srcToken.chainId))
     return Promise.resolve({
         feeToken: getToken(
             getHexAddress(
