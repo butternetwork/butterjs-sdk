@@ -59,6 +59,7 @@ export class ButterSmartSwap {
             slippage = DEFAULT_SLIPPAGE;
         }
         const route: ButterCrossChainRoute = assembleCrossChainRouteFromJson(swapRouteStr, slippage);
+        vlog('swap','route',route);
         let swapData = '';
         // convert near address to hex
         if (IS_NEAR(toChainId)) {

@@ -390,7 +390,7 @@ export function assembleNearSwapMsgFromRoute(
     };
 
     targetSwapData.swap_param = assembleNearVersionTargetSwapParamArrayFromRoutes(
-        routes.targetChain
+        routes.targetChain?routes.targetChain:routes.mapChain
     );
 
     const swapInfo = {

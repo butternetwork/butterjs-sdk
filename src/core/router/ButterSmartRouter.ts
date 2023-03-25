@@ -62,6 +62,10 @@ export class ButterSmartRouter {
             //     amountIn = amountObj.toFixed(0);
             // }
             amountIn = amountObj.toFixed();
+            if (amountIn.indexOf('.')<0){
+                amountIn=`${amountIn}.0`;
+            }
+
             vlog('queryRoute', `FromId:${fromChainId} ${from.symbol}(${from.decimals})`, ' | ', `ToId:${toChainId} ${to.symbol}`,' | ',amountIn)
 
             const requestUrl =
