@@ -32,8 +32,37 @@ import {CodeResult} from 'near-api-js/lib/providers/provider';
 
 import Web3 from 'web3';
 import TokenRegisterMetadata from '../../abis/TokenRegister.json';
+import Decimal from "decimal.js";
 
 const vlog = createVLog('DataFetch');
+
+export async function getFeeAmountAndInfo(
+    fromToken: Currency | any,
+    amount: string | number,
+    toChain: string | number,
+    mapRpcProvider: ButterJsonRpcProvider | any): Promise<any> {
+    // vlog('getFeeAmountAndInfo', fromToken);
+    // vlog('getFeeAmountAndInfo', amount);
+    // vlog('getFeeAmountAndInfo', toChain);
+    // vlog('getFeeAmountAndInfo', mapRpcProvider);
+    let _amount = new Decimal(amount).toString();
+    let _fromChain = fromToken.chainId;
+    let _toChain = new Decimal(toChain).toString();
+    const chainId: string = mapRpcProvider.chainId.toString();
+    const mapChainId: string = mapRpcProvider.chainId.toString();
+    const mapProvider = new ethers.providers.JsonRpcProvider(
+        mapRpcProvider.url ? mapRpcProvider.url : CHAINS(mapChainId).rpc
+    );
+    const tokenRegister = new TokenRegister(
+        TOKEN_REGISTER(chainId)!,
+        mapProvider
+    );
+    let result = await tokenRegister.getFeeAmountAndInfo(fromToken, _amount, _toChain);
+    const distribution = await getDistributeRate(mapChainId);
+    result.feeDistribution=distribution;
+    vlog('getFeeAmountAndInfo', 'result',result);
+    return result;
+}
 
 /**
  * get fee for bridging srcToken to targetChain
@@ -48,7 +77,11 @@ export async function getBridgeFee(
     amount: string,
     mapRpcProvider: ButterJsonRpcProvider
 ): Promise<ButterFee> {
-    vlog('getBridgeFee',srcToken.chainId,targetChain,amount,'mapRpcProvider:',mapRpcProvider);
+    vlog('getBridgeFee', 'srcToken', JSON.stringify(srcToken));
+    vlog('getBridgeFee', 'targetChain', JSON.stringify(targetChain));
+    vlog('getBridgeFee', 'amount', amount);
+    vlog('getBridgeFee', 'mapRpcProvider', mapRpcProvider);
+    // vlog('getBridgeFee',srcToken.chainId,targetChain,amount,'mapRpcProvider:',mapRpcProvider);
     const chainId: string = mapRpcProvider.chainId.toString();
     const mapChainId: string = mapRpcProvider.chainId.toString();
     const mapProvider = new ethers.providers.JsonRpcProvider(
@@ -61,7 +94,7 @@ export async function getBridgeFee(
     let feeAmount = '';
     let feeRate: ButterFeeRate = {lowest: '0', rate: '0', highest: '0'};
     if (IS_MAP(srcToken.chainId)) {
-        vlog('getBridgeFee',`src token is map`);
+        vlog('getBridgeFee', `src token is map`);
         const tokenAddress = srcToken.isNative
             ? srcToken.wrapped.address
             : srcToken.address;
@@ -69,13 +102,13 @@ export async function getBridgeFee(
             tokenAddress,
             targetChain
         );
-        vlog('getBridgeFee',`src token is map`,'tokenFeeRate',tokenFeeRate);
+        vlog('getBridgeFee', `src token is map`, 'tokenFeeRate', tokenFeeRate);
         feeRate.lowest = tokenFeeRate.lowest.toString();
         feeRate.highest = tokenFeeRate.highest.toString();
         feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
         feeAmount = _getFeeAmount(amount, feeRate);
     } else {
-        vlog('getBridgeFee',`src token is ${srcToken.chainId}`);
+        vlog('getBridgeFee', `src token is ${srcToken.chainId}`);
         const mapTokenAddress = await tokenRegister.getRelayChainToken(
             srcToken.chainId.toString(),
             srcToken
@@ -90,7 +123,7 @@ export async function getBridgeFee(
             mapTokenAddress,
             targetChain
         );
-        vlog('getBridgeFee',`src token is ${srcToken.chainId}`,'tokenFeeRate',tokenFeeRate);
+        vlog('getBridgeFee', `src token is ${srcToken.chainId}`, 'tokenFeeRate', tokenFeeRate);
         feeRate.lowest = tokenFeeRate.lowest;
         feeRate.highest = tokenFeeRate.highest;
         feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
@@ -131,6 +164,11 @@ export async function getSwapFee(
     routeStr: string,
     mapRpcProvider: ButterJsonRpcProvider
 ): Promise<ButterFee> {
+    vlog('getSwapFee', 'srcToken', JSON.stringify(srcToken));
+    vlog('getSwapFee', 'targetChain', targetChain);
+    vlog('getSwapFee', 'amount', amount);
+    vlog('getSwapFee', 'routeStr', routeStr);
+    vlog('getSwapFee', 'mapRpcProvider', JSON.stringify(mapRpcProvider));
     const routes = assembleCrossChainRouteFromJson(routeStr, DEFAULT_SLIPPAGE);
     const srcRoute = routes.srcChain;
 
@@ -139,9 +177,9 @@ export async function getSwapFee(
         srcRoute.length === 0 ||
         srcRoute[0]!.path.length === 0
     ) {
-        vlog('getSwapFee','getBridgeFee','before request')
+        vlog('getSwapFee', 'getBridgeFee', 'before request')
         let result = await getBridgeFee(srcToken, targetChain, amount, mapRpcProvider);
-        vlog('getSwapFee','getBridgeFee',result);
+        vlog('getSwapFee', 'getBridgeFee', result);
         return result;
     }
 
@@ -166,7 +204,7 @@ export async function getSwapFee(
     let feeAmount = '';
     let feeRate: ButterFeeRate = {lowest: '0', rate: '0', highest: '0'};
     if (IS_MAP(srcToken.chainId)) {
-        vlog('getSwapFee','srcToken is map');
+        vlog('getSwapFee', 'srcToken is map');
         const tokenAddress = srcToken.isNative
             ? srcToken.wrapped.address
             : srcToken.address;
@@ -179,7 +217,7 @@ export async function getSwapFee(
         feeRate.rate = BigNumber.from(tokenFeeRate.rate).div(100).toString();
         feeAmount = _getFeeAmount(amount, feeRate);
     } else {
-        vlog('getSwapFee',`srcToken is ${srcToken.chainId}`);
+        vlog('getSwapFee', `srcToken is ${srcToken.chainId}`);
         const mapTokenAddress = await tokenRegister.getRelayChainToken(
             srcToken.chainId.toString(),
             tokenOut
@@ -214,7 +252,7 @@ export async function getSwapFee(
             .toString();
     }
     const distribution = await getDistributeRate(mapChainId);
-    vlog('getSwapFee',' | tokenOutAddress:',tokenOut.address, ' | srcToken:',srcToken.chainId, ' | IS_NEAR:',!IS_NEAR(srcToken.chainId))
+    vlog('getSwapFee', ' | tokenOutAddress:', tokenOut.address, ' | srcToken:', srcToken.chainId, ' | IS_NEAR:', !IS_NEAR(srcToken.chainId))
     return Promise.resolve({
         feeToken: getToken(
             getHexAddress(

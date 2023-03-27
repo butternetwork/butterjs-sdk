@@ -136,4 +136,40 @@ export class TokenRegister {
       return await this.contract.checkMintable(tokenAddress);
     } else throw new Error('check mintable error');
   }
+
+  async getFeeAmountAndInfo(fromToken:Currency,amount:string,toChain:string):Promise<any>{
+    if (fromToken.isNative) {
+      fromToken = fromToken.wrapped;
+    }
+    let token = getHexAddress(fromToken.address, fromToken.chainId, false);
+    if (this.contract instanceof ethers.Contract) {
+      let result = await this.contract.getFeeAmountAndInfo(
+          fromToken.chainId, token, amount,toChain);
+
+      let _result={
+        feeAmount:result._feeAmount.toString(),
+        feeRate:{
+          highest:result._feeRate.highest.toString(),
+          lowest:result._feeRate.lowest.toString(),
+          rate:result._feeRate.rate.toString(),
+        },
+        fromToken:{
+          chainId:fromToken.chainId,
+          address:fromToken.address,
+          decimals:fromToken.decimals,
+          symbol:fromToken.symbol,
+          tokenId:fromToken.tokenId,
+        },
+        relayToken:{
+          address:result._relayToken,
+          decimals:result._relayTokenDecimals,
+        },
+        toToken:{
+          address:result._toToken,
+          decimals:result._toTokenDecimals,
+        }
+      }
+      return _result;
+    } else return null;
+  }
 }

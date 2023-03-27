@@ -3,6 +3,7 @@ import {IS_EVM, IS_NEAR, NEAR_CONNECT,} from '../constants';
 import {Token} from '../beans';
 import {connect} from 'near-api-js';
 import {NearAccountState} from '../types';
+import Decimal from "decimal.js";
 
 /**
  * Validates an address and returns the parsed (checksummed) version of that address
@@ -114,6 +115,21 @@ export function asciiToString(input: number[]): string {
     ret += String.fromCharCode(input[i]!);
   }
   return ret;
+}
+
+export function toDecimalsNumber(from:string|number,decimals:number,fixed?:any){
+  let de = new Decimal(from).mul(Math.pow(10,decimals));
+  if (fixed){
+    return de.toFixed(fixed);
+  }
+  return de.toString();
+}
+export function fromDecimalsNumber(from:string|number,decimals:any,fixed?:any){
+  let de = new Decimal(from).div(Math.pow(10,decimals));
+  if (fixed){
+    return de.toFixed(fixed);
+  }
+  return de.toString();
 }
 
 export function createVLog(tag:string){
