@@ -53,10 +53,7 @@ export async function getFeeAmountAndInfo(
     const mapProvider = new ethers.providers.JsonRpcProvider(
         mapRpcProvider.url ? mapRpcProvider.url : CHAINS(mapChainId).rpc
     );
-    const tokenRegister = new TokenRegister(
-        TOKEN_REGISTER(chainId)!,
-        mapProvider
-    );
+    const tokenRegister = new TokenRegister(TOKEN_REGISTER(chainId)!, mapProvider);
     let result = await tokenRegister.getFeeAmountAndInfo(fromToken, _amount, _toChain);
     const distribution = await getDistributeRate(mapChainId);
     result.feeDistribution=distribution;

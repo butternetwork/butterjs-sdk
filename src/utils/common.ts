@@ -132,6 +132,10 @@ export function fromDecimalsNumber(from:string|number,decimals:any,fixed?:any){
   return de.toString();
 }
 
+export function getTokenBytes(address:string,chainId:string){
+
+}
+
 export function createVLog(tag:string){
   const vlog = (...data:any[]) => {
     console.log(`🐣🦚[${tag}] `,...data);

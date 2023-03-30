@@ -11,6 +11,10 @@ export type ButterContractType = ethers.Contract | Contract;
 export type ButterReceiptType = TransactionReceipt | EthersTransactionReceipt;
 export type NearProviderType = NearNetworkConfig | WalletConnection;
 export type ButterJsonRpcProvider = {
-  url?: string; // use default if not present
-  chainId: number;
+    url?: string; // use default if not present
+    chainId: number;
 };
+
+export type bytes = String;
+export type uint256 = String;
+export type address = String;
