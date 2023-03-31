@@ -147,7 +147,7 @@ export const CHAINS = (chainId: CHAIN_ID | string): Chain => {
     }
     if (chainId === CHAIN_ID.MAP_MAINNET) {
         return new Chain(CHAIN_ID.MAP_MAINNET,
-            'MAPO Mainnet', 'MAPO',
+            'MAPO Relay Chain', 'MAPO',
             'https://poc3-rpc.maplabs.io/',
             'https://makalu.mapscan.io/',
             'https://files.mapprotocol.io/bridge/map2.png',
@@ -178,7 +178,7 @@ export const CHAINS = (chainId: CHAIN_ID | string): Chain => {
     }
     if (chainId === CHAIN_ID.NEAR_MAINNET) {
         return new Chain(CHAIN_ID.NEAR_MAINNET,
-            'Near', 'NEAR',
+            'Near Mainnet', 'NEAR',
             'https://rpc.mainnet.near.org',
             'https://explorer.near.org/',
             'https://cryptologos.cc/logos/near-protocol-near-logo.png',
@@ -404,6 +404,7 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
             TOKEN_MAP(TOKEN_ID.USDC,false),
             TOKEN_MAP(TOKEN_ID.USDT,false),
             TOKEN_MAP(TOKEN_ID.DAI,false),
+            TOKEN_MAP(TOKEN_ID.WETH,false),
         ];
     }
     if (chainId === CHAIN_ID.BNB_MAINNET) {
@@ -413,6 +414,7 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
             TOKEN_BNB(TOKEN_ID.USDT, false),
             TOKEN_BNB(TOKEN_ID.MAP, false),
             TOKEN_BNB(TOKEN_ID.DAI, false),
+            TOKEN_BNB(TOKEN_ID.WETH, false),
         ];
     }
     if (chainId === CHAIN_ID.POLYGON_MAINNET) {
@@ -422,17 +424,20 @@ export const SUPPORT_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
             TOKEN_POLYGON(TOKEN_ID.USDT, false),
             TOKEN_POLYGON(TOKEN_ID.DAI, false),
             TOKEN_POLYGON(TOKEN_ID.MAP, false),
+            TOKEN_POLYGON(TOKEN_ID.WETH, false),
         ];
     }
     if (chainId === CHAIN_ID.NEAR_MAINNET) {
         return [
             TOKEN_NEAR(TOKEN_ID.NATIVE, false),
-            // TOKEN_NEAR(TOKEN_ID.MAP, false),
             TOKEN_NEAR(TOKEN_ID.USDC, false),
             TOKEN_NEAR(TOKEN_ID.USDT, false),
+            TOKEN_NEAR(TOKEN_ID.MAP, false),
             TOKEN_NEAR(TOKEN_ID.DAI, false),
+            TOKEN_NEAR(TOKEN_ID.WETH, false),
         ];
     }
+
     if (chainId === CHAIN_ID.ETH_PRIV) {
         return [];
     }
