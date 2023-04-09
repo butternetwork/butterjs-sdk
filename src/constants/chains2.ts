@@ -147,7 +147,7 @@ export const CHAINS = (chainId: CHAIN_ID | string): Chain => {
     }
     if (chainId === CHAIN_ID.MAP_MAINNET) {
         return new Chain(CHAIN_ID.MAP_MAINNET,
-            'MAPO Relay Chain', 'MAPO',
+            'MAP Relay Chain', 'MAPO',
             'https://poc3-rpc.maplabs.io/',
             'https://makalu.mapscan.io/',
             'https://files.mapprotocol.io/bridge/map2.png',
@@ -178,7 +178,7 @@ export const CHAINS = (chainId: CHAIN_ID | string): Chain => {
     }
     if (chainId === CHAIN_ID.NEAR_MAINNET) {
         return new Chain(CHAIN_ID.NEAR_MAINNET,
-            'Near Mainnet', 'NEAR',
+            'Near Protocol', 'NEAR',
             'https://rpc.mainnet.near.org',
             'https://explorer.near.org/',
             'https://cryptologos.cc/logos/near-protocol-near-logo.png',
@@ -310,7 +310,7 @@ export const AVAILABLE_TOKENS = (chainId: CHAIN_ID | string): Currency[] => {
     let items = [];
     if (chainId === CHAIN_ID.ETH) {
         for (const key in TOKENS_ETH) {
-            items.push(TOKEN_MAP(key, false));
+            items.push(TOKEN_ETH(key, false));
         }
         return items;
     }

@@ -74,8 +74,7 @@ export class ButterRouter {
                 _options.gasLimit = options.gas;
             }
 
-            const entranceTx: ContractTransaction = await this.contract.entrance(
-                coreData, swapData, amount, toChain, to, _options);
+            const entranceTx: ContractTransaction = await this.contract.entrance(coreData, swapData, amount, toChain, to, _options);
             return assembleEVMTransactionResponse(entranceTx.hash!, this.provider);
         } else {
             _options.from = from;

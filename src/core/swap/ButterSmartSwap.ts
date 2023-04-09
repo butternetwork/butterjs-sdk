@@ -25,7 +25,7 @@ const vlog = createVLog('ButterSmartSwap');
 export class ButterSmartSwap {
 
     _checkParams(params: SwapRequestParam) {
-        vlog('_checkParams',params);
+        // vlog('_checkParams',params);
         let {fromToken, options} = params;
         const fromChainId = fromToken.chainId;
         if (IS_EVM(fromChainId)) {
@@ -187,7 +187,7 @@ export class ButterSmartSwap {
         // check validity of toAddress according to toChainId
         toAddress = validateAndParseAddressByChainId(toAddress, toChainId);
         const route: ButterCrossChainRoute = assembleCrossChainRouteFromJson(swapRouteStr, DEFAULT_SLIPPAGE);
-        vlog('estimateGas','route',route);
+        // vlog('estimateGas','route',route);
         let swapData = '';
         if (IS_EVM(fromChainId)) {
             swapData = await assembleTargetSwapDataFromRoute(route, toToken);

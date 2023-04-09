@@ -172,7 +172,7 @@ export class ButterSmartRouter {
         try {
             const response = await superagent.get(requestUrl);
             const data = response.body;
-            vlog('getBestRoute', 'result:', data);
+            // vlog('getBestRoute', 'result:', data);
             if (data.hasOwnProperty('status')) {
                 routeResponse.status = data.hasOwnProperty('status');
                 routeResponse.code = 10001;
