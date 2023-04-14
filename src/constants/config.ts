@@ -78,7 +78,8 @@ export const matchNative = (chainId: CHAIN_ID | string, decimals: number, name: 
 
     if (_name === 'MAP' || _name === 'MAPO') {
         return new EVMCoin(chainId, decimals,
-            'MAPO', ' MAP Protocol (MAPO)', 'https://files.maplabs.io/bridge/map2.png','MAPO');
+            // 'MAPO', ' MAP Protocol (MAPO)', 'https://files.maplabs.io/bridge/map2.png','MAPO');
+            'MAPO', ' MAP Protocol (MAPO)', 'https://cdn.befiwalletdao.com/image/icon_local_map_checked_3gfyyv.png','MAPO');
     }
     throw new Error(`Not Support this Native Token(${name}) in Chain Id ${chainId}`);
 }
@@ -141,7 +142,8 @@ export const matchToken = (chainId: CHAIN_ID | string, decimals: number,
     }
     if (_name === 'MAP'|| _name === 'MAPO') {
         return new Token(chainId, decimals, address,
-            'MAP', ' MAP Protocol (MAP)', 'https://files.maplabs.io/bridge/map2.png','MAPO');
+            'MAP', ' MAP Protocol (MAP)', 'https://cdn.befiwalletdao.com/image/icon_local_map_checked_3gfyyv.png','MAPO');
+            // 'MAP', ' MAP Protocol (MAP)', 'https://files.maplabs.io/bridge/map3.png','MAPO');
     }
     if (_name === 'MOS') {
         return new Token(chainId, decimals, address,

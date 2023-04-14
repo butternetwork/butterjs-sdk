@@ -39,7 +39,7 @@ export class ButterSmartRouter {
 
     async queryRoute(from: Currency, to: Currency,
                      amount: string | number,
-                     cancelerKey?: string) {
+                     cancelerKey?: string,isTest?:Boolean) {
         return new Promise((resolve, reject) => {
             const fromChainId = from.chainId;
             const toChainId = to.chainId;
