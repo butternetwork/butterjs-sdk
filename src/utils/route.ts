@@ -9,7 +9,7 @@ const ROUTE_MAP = (chainId: string | CHAIN_ID): any[] => {
         case CHAIN_ID.ETH:
             return [['UniswapV2', 0]];
         case CHAIN_ID.MAP_MAINNET:
-            return [];
+            return [["Hiveswap",0]];
         case CHAIN_ID.BNB_MAINNET:
             return [['Pancakeswap', 0]];
         case CHAIN_ID.POLYGON_MAINNET:

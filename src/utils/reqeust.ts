@@ -214,6 +214,7 @@ export async function assembleEVMSwapDataFromRoute(
     route: ButterCrossChainRoute,
     targetChainTokenOut: Currency
 ): Promise<string> {
+    console.log('assembleEVMSwapDataFromRoute');
     const mapRoute = route.mapChain;
     const mapTargetTokenAddress = mapRoute[0]!.tokenOut.address;
     let swapData = [];
@@ -261,6 +262,7 @@ export async function assembleEVMSwapDataFromRoute(
             swapRoute.chainId,
             swapRoute.dexName
         );
+        console.log('assembleEVMSwapDataFromRoute','for of',{chainId:swapRoute.chainId,dexName:swapRoute.dexName,routerIndex});
         if (routerIndex === undefined) {
             throw new Error('assembleSrcSwapDataFromRoute: routerIndex is undefined');
         }
