@@ -119,14 +119,14 @@ export function asciiToString(input: number[]): string {
 
 export function toDecimalsNumber(from:string|number,decimals:number,fixed?:any){
   let de = new Decimal(from).mul(Math.pow(10,decimals));
-  if (fixed){
+  if (!isNaN(fixed)){
     return de.toFixed(fixed);
   }
   return de.toString();
 }
 export function fromDecimalsNumber(from:string|number,decimals:any,fixed?:any){
   let de = new Decimal(from).div(Math.pow(10,decimals));
-  if (fixed){
+  if (!isNaN(fixed)){
     return de.toFixed(fixed);
   }
   return de.toString();

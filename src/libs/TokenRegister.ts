@@ -3,7 +3,7 @@ import TokenRegisterMetadata from '../abis/TokenRegister.json';
 import {Provider} from '@ethersproject/abstract-provider';
 import {ButterContractType, ButterFeeRate, ButterProviderType, ButterTransactionReceipt} from '../types';
 import {Eth} from 'web3-eth';
-import {adaptEthReceipt, getHexAddress} from '../utils';
+import {adaptEthReceipt, fromDecimalsNumber, getHexAddress, toDecimalsNumber} from '../utils';
 import {Currency} from '../beans';
 
 export class TokenRegister {
@@ -142,9 +142,9 @@ export class TokenRegister {
       fromToken = fromToken.wrapped;
     }
     let token = getHexAddress(fromToken.address, fromToken.chainId, false);
+    // let _amount = toDecimalsNumber(amount,fromToken.decimals);
     if (this.contract instanceof ethers.Contract) {
-      let result = await this.contract.getFeeAmountAndInfo(
-          fromToken.chainId, token, amount,toChain);
+      let result = await this.contract.getFeeAmountAndInfo(fromToken.chainId, token, amount,toChain);
 
       let _result={
         feeAmount:result._feeAmount.toString(),

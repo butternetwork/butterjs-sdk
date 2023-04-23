@@ -45,7 +45,7 @@ export async function getFeeAmountAndInfo(
     // vlog('getFeeAmountAndInfo', amount);
     // vlog('getFeeAmountAndInfo', toChain);
     // vlog('getFeeAmountAndInfo', mapRpcProvider);
-    let _amount = new Decimal(amount).toString();
+    let _amount = new Decimal(amount).toFixed(0);
     let _fromChain = fromToken.chainId;
     let _toChain = new Decimal(toChain).toString();
     const chainId: string = mapRpcProvider.chainId.toString();
